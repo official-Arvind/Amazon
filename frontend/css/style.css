@@ -8,9 +8,9 @@
    ============================================= */
 :root {
     /* Dark Mode Colors */
-    --color-bg-primary: #0a0e27;
-    --color-bg-secondary: #141829;
-    --color-bg-tertiary: #1a1f3a;
+    --color-bg-primary: #54089b;
+    --color-bg-secondary: #ff9101bd;
+    --color-bg-tertiary: #000000;
     
     /* Text Colors */
     --color-text-primary: #ffffff;
