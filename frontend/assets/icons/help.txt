@@ -1,0 +1,46 @@
+ICONS DIRECTORY - SVG AND ICON ASSETS
+
+PURPOSE:
+This directory stores all SVG icons, logos, and small graphics.
+
+ICON TYPES:
+- Navigation icons (hamburger, menu, close)
+- Action icons (cart, heart/wishlist, user, search)
+- Brand logos
+- Social media icons
+- Status icons (checkmark, warning, info, error)
+- Category icons
+
+FORMATS:
+- SVG (preferred - scalable, lightweight, inline-able)
+- PNG fallback for older browsers (if needed)
+- Keep icon files small and optimized
+
+NAMING CONVENTION:
+- Use descriptive, lowercase names: icon-cart.svg, logo-main.svg
+- Group related icons with prefixes: icon-*, logo-*
+
+SVG BEST PRACTICES:
+- Keep SVG files clean and optimized
+- Remove unnecessary attributes and metadata
+- Use SVGO tool for automatic optimization
+- Make SVGs accessible with proper titles and descriptions
+- Can be embedded directly in HTML or used as img src
+
+DEVELOPER TASKS:
+1. Add SVG icons for all UI elements (search, cart, user, etc.)
+2. Optimize SVG files before adding
+3. Use inline SVGs in HTML for styling flexibility
+4. Add proper alt text or aria-labels to icons
+5. Ensure icons are scalable and look good at different sizes
+6. Test icon appearance in dark mode
+
+EXAMPLE USAGE IN HTML:
+<svg width="24" height="24" viewBox="0 0 24 24">
+  <!-- SVG content -->
+</svg>
+
+TOOLS FOR SVG OPTIMIZATION:
+- SVGO (svgo.dev)
+- Figma export with proper settings
+- Iconoir, Feather Icons, or Heroicons for icon libraries

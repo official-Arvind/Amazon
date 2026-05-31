@@ -1,0 +1,60 @@
+BACKEND DIRECTORY - SERVER AND DATABASE LOGIC
+
+PURPOSE:
+This directory will contain all backend services, database configurations, and server-side logic.
+Currently set up for Firebase, but can be extended to include Node.js/Express later.
+
+DIRECTORY STRUCTURE:
+- js/: Firebase configuration and backend functions
+  * firebase-config.js: Firebase project setup and initialization
+  * auth.js: User authentication logic
+  * (More files will be added as backend grows)
+
+WHAT GOES HERE:
+- Firebase configuration and initialization
+- User authentication (sign up, login, logout)
+- Database operations (Firestore/Realtime Database)
+- Cloud storage interactions (file uploads)
+- Cloud functions (server-side logic)
+- API endpoints and data validation
+- Admin operations
+
+CURRENTLY USING:
+- Firebase (Firestore, Authentication, Storage, Cloud Functions)
+- Pure JavaScript (Node.js compatible)
+
+FUTURE ADDITIONS:
+- Firebase Admin SDK for backend operations
+- Cloud Firestore rules and security policies
+- Cloud Functions for complex server logic
+- Stripe integration for payments
+- Email service for notifications
+
+DEVELOPER TASKS:
+1. Add Firebase SDK imports and initialization
+2. Implement user authentication flows
+3. Set up Firestore database schema
+4. Create Cloud Functions for business logic
+5. Implement data validation and error handling
+6. Write security rules for Firestore access
+7. Test all backend logic thoroughly
+8. Monitor Firebase usage and optimize queries
+
+FIREBASE STRUCTURE:
+- Users collection: User profiles and preferences
+- Products collection: Product catalog
+- Orders collection: Customer orders
+- Cart collection: User shopping carts
+
+SECURITY:
+- Never commit Firebase credentials to GitHub
+- Use environment variables for sensitive data
+- Follow Firebase security best practices
+- Always validate data on the backend
+- Implement proper authentication and authorization
+
+TESTING:
+- Use Firebase Emulator Suite for local testing
+- Test all database operations
+- Verify security rules work as expected
+- Test error handling and edge cases

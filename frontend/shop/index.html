@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Shop our curated collection of premium, minimalist products.">
+    <title>Shop - Minimalist Store</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <a href="/" class="logo-text">Minimalist</a>
+            </div>
+            <div class="navbar-menu">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/shop/" class="nav-link active">Shop</a>
+                <a href="/about/" class="nav-link">About</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+            <div class="navbar-icons">
+                <button class="icon-btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn" aria-label="Cart">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn" aria-label="Account">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Shop Hero Section -->
+    <section class="shop-hero">
+        <div class="shop-hero-content">
+            <h1 class="hero-title">Premium Collection</h1>
+            <p class="hero-subtitle">Discover our carefully curated selection of minimalist products</p>
+        </div>
+        <div class="hero-background"></div>
+    </section>
+
+    <!-- Shop Content -->
+    <section class="shop-section">
+        <div class="shop-container">
+            <!-- Sidebar Filters -->
+            <aside class="shop-sidebar">
+                <div class="filter-group">
+                    <h3 class="filter-title">Categories</h3>
+                    <div class="filter-options">
+                        <label class="filter-label">
+                            <input type="checkbox" name="category"> All Products
+                        </label>
+                        <label class="filter-label">
+                            <input type="checkbox" name="category"> Audio
+                        </label>
+                        <label class="filter-label">
+                            <input type="checkbox" name="category"> Accessories
+                        </label>
+                        <label class="filter-label">
+                            <input type="checkbox" name="category"> Tech
+                        </label>
+                        <label class="filter-label">
+                            <input type="checkbox" name="category"> Lighting
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h3 class="filter-title">Price Range</h3>
+                    <div class="price-range">
+                        <input type="range" min="0" max="1000" value="1000" class="price-slider">
+                        <p>$0 - $1000+</p>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h3 class="filter-title">Sort By</h3>
+                    <select class="sort-select">
+                        <option value="featured">Featured</option>
+                        <option value="newest">Newest</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="popular">Most Popular</option>
+                    </select>
+                </div>
+
+                <button class="filter-reset">Reset Filters</button>
+            </aside>
+
+            <!-- Products Grid -->
+            <div class="shop-products">
+                <h2 class="products-count">Showing 12 Products</h2>
+                
+                <div class="products-grid">
+                    <!-- Product Card 1 -->
+                    <article class="product-card">
+                        <div class="product-image">
+                            <img src="../assets/images/product-1.jpg" alt="Premium Wireless Earbuds">
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Premium Wireless Earbuds</h3>
+                            <p class="product-category">Audio</p>
+                            <div class="product-footer">
+                                <span class="product-price">$249.99</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 2 -->
+                    <article class="product-card">
+                        <div class="product-image">
+                            <img src="../assets/images/product-2.jpg" alt="Elegant Watch">
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Elegant Watch</h3>
+                            <p class="product-category">Accessories</p>
+                            <div class="product-footer">
+                                <span class="product-price">$399.99</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 3 -->
+                    <article class="product-card">
+                        <div class="product-image">
+                            <img src="../assets/images/product-3.jpg" alt="Minimalist Phone Stand">
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Minimalist Phone Stand</h3>
+                            <p class="product-category">Tech Accessories</p>
+                            <div class="product-footer">
+                                <span class="product-price">$79.99</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 4 -->
+                    <article class="product-card">
+                        <div class="product-image">
+                            <img src="../assets/images/product-4.jpg" alt="Premium Desk Lamp">
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Premium Desk Lamp</h3>
+                            <p class="product-category">Lighting</p>
+                            <div class="product-footer">
+                                <span class="product-price">$189.99</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Repeat additional products as needed -->
+                    <article class="product-card">
+                        <div class="product-image">
+                            <img src="../assets/images/product-1.jpg" alt="Premium Product">
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Premium Headphones</h3>
+                            <p class="product-category">Audio</p>
+                            <div class="product-footer">
+                                <span class="product-price">$299.99</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="product-card">
+                        <div class="product-image">
+                            <img src="../assets/images/product-2.jpg" alt="Minimalist Wallet">
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Minimalist Wallet</h3>
+                            <p class="product-category">Accessories</p>
+                            <div class="product-footer">
+                                <span class="product-price">$59.99</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn">Next</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About</h4>
+                <ul>
+                    <li><a href="/about/">About Us</a></li>
+                    <li><a href="#careers">Careers</a></li>
+                    <li><a href="#press">Press</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#help">Help Center</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                    <li><a href="#cookies">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Minimalist Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+FRONTEND DIRECTORY - README FOR DEVELOPERS
+
+This is the main frontend directory for the Minimalist e-commerce store.
+
+WHAT GOES HERE:
+- All user-facing pages (HTML, CSS, JavaScript)
+- Static assets (images, icons, SVGs)
+- Styles and layout for the entire website
+
+DIRECTORY BREAKDOWN:
+- index.html: Main homepage (entry point for the website)
+- about/: About page (accessed via /about/ - clean URL routing)
+- shop/: Shop/Products page (accessed via /shop/ - clean URL routing)
+- css/: All stylesheets (styles.css contains the dark mode design)
+- js/: All vanilla JavaScript files (main.js, utilities, event handlers)
+- assets/: Static files like images and icons
+
+HOW TO USE:
+1. Each subdirectory has its own index.html for clean URL routing
+2. All pages link to the same css/style.css and js/main.js
+3. Never use .html extensions in URLs - use folder-based routing
+4. Keep all styling in css/style.css (single source of truth)
+5. Keep all JS logic in js/main.js (avoid multiple JS files initially)
+
+DEVELOPER NOTES:
+- Pure HTML5 and vanilla CSS3 only (no frameworks)
+- Vanilla JavaScript only (no frameworks or jQuery)
+- All pages should be responsive and dark mode compatible
+- Test all pages locally before committing

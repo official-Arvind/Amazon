@@ -1,0 +1,37 @@
+IMAGES DIRECTORY - PRODUCT AND CONTENT IMAGES
+
+PURPOSE:
+This directory stores all product photos, banners, backgrounds, and other image assets.
+
+IMAGE TYPES:
+- Product photos (JPG, PNG, WebP)
+- Hero/banner images
+- Background images
+- Sample product images for development
+
+NAMING CONVENTION:
+- Use descriptive, lowercase names with hyphens: product-name.jpg
+- Include dimensions in filename if needed: product-photo-300x300.jpg
+- Example: wireless-earbuds-product.jpg, hero-banner.jpg
+
+OPTIMIZATION:
+- Compress all images before adding to the project
+- Use appropriate formats:
+  * JPG for photos (smaller file size)
+  * PNG for graphics with transparency
+  * WebP for modern browsers (convert from JPG/PNG)
+- Aim for under 200KB per image in most cases
+- Use responsive images with srcset for different screen sizes
+
+DEVELOPER TASKS:
+1. Add all product images to this folder
+2. Name files clearly and consistently
+3. Optimize images for web (use tools like TinyPNG, ImageOptim)
+4. Update HTML img tags with correct paths: ../assets/images/filename.jpg
+5. Consider using lazy loading for performance
+6. Add alt text to all images (accessibility)
+
+TOOLS:
+- TinyPNG (tinypng.com) for compression
+- ImageOptim (imageoptim.com) for batch optimization
+- Use a CDN or cloud storage (like Firebase Storage) for production
