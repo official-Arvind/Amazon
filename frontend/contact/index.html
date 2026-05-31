@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us</title>
-    <body>
-        <!-- Navigation Bar -->
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-logo">
@@ -13,73 +15,82 @@
             </div>
             <div class="navbar-menu">
                 <a href="../" class="nav-link">Home</a>
-                <a href="../shop/" class="nav-link active">Shop</a>
+                <a href="../shop/" class="nav-link">Shop</a>
                 <a href="../about/" class="nav-link">About</a>
-                <a href="./" class="nav-link">Contact</a>
-            </body>
-    <style>
-        body {
-            background-color: #11141a;
-            color: #ffffff;
-            font-family: system-ui, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            text-align: center;
-            padding: 30px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        p {
-            color: #8a8f98;
-            margin: 5px 0 35px 0;
-            font-size: 1.1rem;
-        }
-
-        .whatsapp-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background-color: #25d366;
-            color: white;
-            text-decoration: none;
-            padding: 15px 35px;
-            border-radius: 30px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: background 0.2s;
-        }
-
-        .whatsapp-btn:hover {
-            background-color: #1ebd54;
-        }
-
-        .whatsapp-btn img {
-            width: 24px;
-            height: 24px;
-        }
-    </style>
-</head>
-<body>
+                <!-- Updated to 'active' since this is the contact page -->
+                <a href="./" class="nav-link active">Contact</a>
+            </div>
+            <div class="navbar-icons">
+                <button class="icon-btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn" aria-label="Cart">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn" aria-label="Account">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
 
     <div class="container">
         <h1>Contact</h1>
         <p>We are here for your service. Feel free to contact us via:</p>
         
-        <a href="https://wa.me" target="_blank" class="whatsapp-btn">
-            <img src="https://wikimedia.org" alt="WhatsApp">
+        <!-- Restored your complete phone API link and fixed the official asset icon source -->
+        <a href="https://wa.me/+916206938828 target="_blank" class="whatsapp-btn">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Logo">
             WhatsApp
         </a>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About</h4>
+                <ul>
+                    <!-- Updated path relative syntax to point perfectly to about folder -->
+                    <li><a href="../about/">About Us</a></li>
+                    <li><a href="#careers">Careers</a></li>
+                    <li><a href="#press">Press</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#help">Help Center</a></li>
+                    <!-- Updated path relative syntax to point perfectly to contact folder -->
+                    <li><a href="./">Contact Us</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                    <li><a href="#cookies">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Minimalist Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
 </body>
 </html>
