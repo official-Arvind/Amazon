@@ -1,0 +1,76 @@
+name: Deploy to GitHub Pages (Manual - dev-1 only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Deploy branch (dev-1 or main)'
+        required: true
+        type: choice
+        options:
+          - dev-1
+          - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate branch
+        run: |
+          echo "Deploying from branch: ${{ github.ref_name }}"
+          echo "Requested branch: ${{ github.event.inputs.branch }}"
+          
+          if [[ "${{ github.ref_name }}" != "${{ github.event.inputs.branch }}" ]]; then
+            echo "❌ Error: Current branch (${{ github.ref_name }}) does not match requested branch (${{ github.event.inputs.branch }})"
+            exit 1
+          fi
+
+      - name: Remove admin folder if main branch
+        if: github.event.inputs.branch == 'main'
+        run: |
+          echo "🔒 Removing admin folder (main branch deployment)"
+          rm -rf frontend/admin
+          echo "✓ Admin folder removed"
+
+      - name: Prepare deployment
+        if: github.event.inputs.branch == 'dev-1'
+        run: |
+          echo "✓ Preparing dev-1 deployment with admin panel"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'frontend/'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Deployment Summary
+        run: |
+          echo "═══════════════════════════════════════"
+          echo "📊 Deployment Summary"
+          echo "═══════════════════════════════════════"
+          echo "Branch: ${{ github.event.inputs.branch }}"
+          echo "Admin Panel Included: ${{ github.event.inputs.branch == 'dev-1' && 'Yes ✓' || 'No (Removed)' }}"
+          echo "Deployment URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "═══════════════════════════════════════"

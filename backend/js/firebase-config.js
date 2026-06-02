@@ -17,12 +17,7 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebas
 import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 import { getFirestore, enableIndexedDbPersistence } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 
-/**
- * Firebase Configuration
- * REPLACE WITH YOUR ACTUAL CREDENTIALS FROM FIREBASE CONSOLE
- * 
- * Get these from Firebase Console > Project Settings > Your Apps > Web
- */
+
 const firebaseConfig = {
   apiKey: "AIzaSyDjpgHpiMsO7SP_DtcWbhJ_tMgsDJVSnu4",
   authDomain: "studio-vih63.firebaseapp.com",

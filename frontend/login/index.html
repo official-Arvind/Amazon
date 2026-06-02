@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ZONIX - Login & Signup">
+    <title>ZONIX - Authentication</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../" class="navbar-logo">ZONIX</a>
+            <p class="subtitle">The Marketplace, Redefined</p>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="auth-container">
+        <!-- Left Panel - Branding -->
+        <div class="auth-left">
+            <div class="auth-branding">
+                <h1>Welcome to ZONIX</h1>
+                <p>Discover premium, curated products for the modern lifestyle.</p>
+                <div class="auth-features">
+                    <div class="feature">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Secure shopping</span>
+                    </div>
+                    <div class="feature">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Fast checkout</span>
+                    </div>
+                    <div class="feature">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Exclusive deals</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Auth Forms -->
+        <div class="auth-right">
+            <!-- Toggle Buttons -->
+            <div class="auth-toggle">
+                <button class="toggle-btn active" id="loginTabBtn" data-tab="login">Login</button>
+                <button class="toggle-btn" id="signupTabBtn" data-tab="signup">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form active" data-form="login">
+                <h2>Login to Your Account</h2>
+                
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="loginEmail" 
+                        name="email" 
+                        placeholder="you@example.com" 
+                        required
+                    />
+                    <span class="error-msg" id="loginEmailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="password-input">
+                        <input 
+                            type="password" 
+                            id="loginPassword" 
+                            name="password" 
+                            placeholder="••••••••" 
+                            required
+                        />
+                        <button type="button" class="toggle-password" id="toggleLoginPassword">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="error-msg" id="loginPasswordError"></span>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="rememberMe" id="rememberMe" />
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#forgot-password" class="forgot-password" id="forgotPasswordLink">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="auth-button" id="loginBtn">Login</button>
+                <span class="error-msg" id="loginError"></span>
+
+                <!-- Admin Login Section -->
+                <div class="admin-section">
+                    <div class="divider">
+                        <span>Or</span>
+                    </div>
+                    <button type="button" class="admin-button" id="adminToggleBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <path d="M12 1v6m0 6v6"></path>
+                            <path d="M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24"></path>
+                            <path d="M1 12h6m6 0h6"></path>
+                            <path d="M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24"></path>
+                        </svg>
+                        Login as Admin
+                    </button>
+                </div>
+
+                <p class="auth-footer">
+                    Don't have an account? <a href="#" class="auth-link" id="switchToSignup">Sign up here</a>
+                </p>
+            </form>
+
+            <!-- Signup Form -->
+            <form id="signupForm" class="auth-form" data-form="signup">
+                <h2>Create Your Account</h2>
+                
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="signupName" 
+                        name="displayName" 
+                        placeholder="John Doe" 
+                        required
+                    />
+                    <span class="error-msg" id="signupNameError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="signupEmail" 
+                        name="email" 
+                        placeholder="you@example.com" 
+                        required
+                    />
+                    <span class="error-msg" id="signupEmailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <div class="password-input">
+                        <input 
+                            type="password" 
+                            id="signupPassword" 
+                            name="password" 
+                            placeholder="Minimum 8 characters" 
+                            required
+                        />
+                        <button type="button" class="toggle-password" id="toggleSignupPassword">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="error-msg" id="signupPasswordError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <div class="password-input">
+                        <input 
+                            type="password" 
+                            id="signupConfirmPassword" 
+                            name="confirmPassword" 
+                            placeholder="Re-enter password" 
+                            required
+                        />
+                        <button type="button" class="toggle-password" id="toggleSignupConfirmPassword">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="error-msg" id="signupConfirmPasswordError"></span>
+                </div>
+
+                <div class="form-group terms">
+                    <label class="checkbox">
+                        <input type="checkbox" name="agreeTerms" id="agreeTerms" required />
+                        <span>I agree to the Terms of Service and Privacy Policy</span>
+                    </label>
+                    <span class="error-msg" id="termsError"></span>
+                </div>
+
+                <button type="submit" class="auth-button" id="signupBtn">Create Account</button>
+                <span class="error-msg" id="signupError"></span>
+
+                <p class="auth-footer">
+                    Already have an account? <a href="#" class="auth-link" id="switchToLogin">Login here</a>
+                </p>
+            </form>
+
+            <!-- Admin Login Form -->
+            <form id="adminForm" class="auth-form" data-form="admin">
+                <h2>Admin Login</h2>
+                <p class="admin-note">🔐 Admin access only. Unauthorized access is prohibited.</p>
+                
+                <div class="form-group">
+                    <label for="adminEmail">Admin Email</label>
+                    <input 
+                        type="email" 
+                        id="adminEmail" 
+                        name="email" 
+                        placeholder="admin@zonix.com" 
+                        required
+                    />
+                    <span class="error-msg" id="adminEmailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="adminPassword">Admin Password</label>
+                    <div class="password-input">
+                        <input 
+                            type="password" 
+                            id="adminPassword" 
+                            name="password" 
+                            placeholder="••••••••" 
+                            required
+                        />
+                        <button type="button" class="toggle-password" id="toggleAdminPassword">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="error-msg" id="adminPasswordError"></span>
+                </div>
+
+                <button type="submit" class="auth-button admin-button-submit" id="adminLoginBtn">Login as Admin</button>
+                <span class="error-msg" id="adminError"></span>
+
+                <div class="admin-section">
+                    <button type="button" class="back-button" id="backFromAdminBtn">
+                        ← Back to Login
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <script type="module" src="auth.js"></script>
+</body>
+</html>
