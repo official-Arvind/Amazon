@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Shop our curated collection of premium, minimalist products.">
-    <title>Shop - Minimalist Store</title>
+    <meta name="description" content="Shop our curated collection of premium products at ZONIX.">
+    <title>Shop - ZONIX</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -12,13 +12,13 @@
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-logo">
-                <a href="/" class="logo-text">Minimalist</a>
+                <a href="../" class="logo-text">ZONIX</a>
             </div>
             <div class="navbar-menu">
                 <a href="../" class="nav-link">Home</a>
                 <a href="./" class="nav-link active">Shop</a>
                 <a href="../about/" class="nav-link">About</a>
-                <a href="../contact" class="nav-link">Contact</a>
+                <a href="../contact/" class="nav-link">Contact</a>
             </div>
             <div class="navbar-icons">
                 <button class="icon-btn" aria-label="Search">
@@ -47,10 +47,9 @@
     <!-- Shop Hero Section -->
     <section class="shop-hero">
         <div class="shop-hero-content">
-            <h1 class="hero-title">Premium Collection</h1>
-            <p class="hero-subtitle">Discover our carefully curated selection of minimalist products</p>
+            <h1 class="hero-title">Our Collection</h1>
+            <p class="hero-subtitle">Discover premium curated products for the modern lifestyle</p>
         </div>
-        <div class="hero-background"></div>
     </section>
 
     <!-- Shop Content -->
@@ -68,13 +67,10 @@
                             <input type="checkbox" name="category"> Audio
                         </label>
                         <label class="filter-label">
-                            <input type="checkbox" name="category"> Accessories
-                        </label>
-                        <label class="filter-label">
                             <input type="checkbox" name="category"> Tech
                         </label>
                         <label class="filter-label">
-                            <input type="checkbox" name="category"> Lighting
+                            <input type="checkbox" name="category"> Accessories
                         </label>
                     </div>
                 </div>
@@ -82,8 +78,8 @@
                 <div class="filter-group">
                     <h3 class="filter-title">Price Range</h3>
                     <div class="price-range">
-                        <input type="range" min="0" max="1000" value="1000" class="price-slider">
-                        <p>$0 - $1000+</p>
+                        <input type="range" min="0" max="150000" value="150000" class="price-slider">
+                        <p>₹0 - ₹150,000+</p>
                     </div>
                 </div>
 
@@ -97,6 +93,208 @@
                         <option value="popular">Most Popular</option>
                     </select>
                 </div>
+
+                <button class="filter-reset">Reset Filters</button>
+            </aside>
+
+            <!-- Products Grid -->
+            <div class="shop-products">
+                <h2 class="products-count">Showing 12 Products</h2>
+                
+                <div class="products-grid">
+                    <!-- Product Card 1 -->
+                    <article class="product-card">
+                        <div class="product-image-container">
+                            <img src="../assets/images/monitor.jpg" alt="4K Gaming Monitor" class="product-image" />
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">4K Gaming Monitor</h3>
+                            <div class="product-footer">
+                                <span class="product-price">₹32,499</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 2 -->
+                    <article class="product-card">
+                        <div class="product-image-container">
+                            <img src="../assets/images/mouse.jpg" alt="Gaming Mouse Pro" class="product-image" />
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Gaming Mouse Pro</h3>
+                            <div class="product-footer">
+                                <span class="product-price">₹2,499</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 3 -->
+                    <article class="product-card">
+                        <div class="product-image-container">
+                            <img src="../assets/images/chair.jpg" alt="Ergonomic Chair Elite" class="product-image" />
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Ergonomic Chair Elite</h3>
+                            <div class="product-footer">
+                                <span class="product-price">₹18,999</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 4 -->
+                    <article class="product-card">
+                        <div class="product-image-container">
+                            <img src="../assets/images/speaker.jpg" alt="Tribit StormBox" class="product-image" />
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Tribit StormBox</h3>
+                            <div class="product-footer">
+                                <span class="product-price">₹24,999</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 5 -->
+                    <article class="product-card">
+                        <div class="product-image-container">
+                            <img src="../assets/images/watch.jpg" alt="Premium Smartwatch" class="product-image" />
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Premium Smartwatch</h3>
+                            <div class="product-footer">
+                                <span class="product-price">₹1,19,999</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 6 -->
+                    <article class="product-card">
+                        <div class="product-image-container">
+                            <img src="../assets/images/headphones.jpg" alt="Sony Headphones Pro" class="product-image" />
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Sony Headphones Pro</h3>
+                            <div class="product-footer">
+                                <span class="product-price">₹18,490</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 7 -->
+                    <article class="product-card">
+                        <div class="product-image-container">
+                            <img src="../assets/images/vr.jpg" alt="VR Headset Pro" class="product-image" />
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">VR Headset Pro</h3>
+                            <div class="product-footer">
+                                <span class="product-price">₹49,999</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 8 -->
+                    <article class="product-card">
+                        <div class="product-image-container">
+                            <img src="../assets/images/drone.jpg" alt="Pro Drone 4K" class="product-image" />
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Pro Drone 4K</h3>
+                            <div class="product-footer">
+                                <span class="product-price">₹71,999</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn">Next</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="../shop/">Shop All</a></li>
+                    <li><a href="../about/">About ZONIX</a></li>
+                    <li><a href="#collections">Collections</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#help">Help Center</a></li>
+                    <li><a href="../contact/">Contact Us</a></li>
+                    <li><a href="#shipping">Shipping Info</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                    <li><a href="#returns">Returns</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ZONIX. The Marketplace, Redefined.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+</body>
+</html>
 
                 <button class="filter-reset">Reset Filters</button>
             </aside>
