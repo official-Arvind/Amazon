@@ -51,21 +51,19 @@ export const db = getFirestore(app);
 
 /**
  * Enable Offline Persistence for Firestore
- * Allows app to work offline and sync when connection is restored
  */
-enableIndexedDbPersistence(db)
-  .then(() => {
-    console.log('✓ Firestore offline persistence enabled');
-  })
-  .catch((err) => {
-    if (err.code === 'failed-precondition') {
+import { enableIndexedDbPersistence } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+
+try {
+  await enableIndexedDbPersistence(db);
+  console.log('✓ Firestore offline persistence enabled');
+} catch (err) {
+  if (err.code == 'failed-precondition') {
       console.warn('⚠ Multiple tabs open - offline persistence disabled');
-    } else if (err.code === 'unimplemented') {
+  } else if (err.code == 'unimplemented') {
       console.warn('⚠ Browser does not support offline persistence');
-    } else {
-      console.error('✗ Offline persistence error:', err);
-    }
-  });
+  }
+}
 
 export default app;
 // import { initializeApp } from "firebase/app";
