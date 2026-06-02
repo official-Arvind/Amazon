@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Help & FAQs - ZONIX">
+    <title>Help Center - ZONIX</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <a href="../" class="logo-text">ZONIX</a>
+            </div>
+            <div class="navbar-menu">
+                <a href="../" class="nav-link">Home</a>
+                <a href="../shop/" class="nav-link">Shop</a>
+                <a href="../about/" class="nav-link">About</a>
+                <a href="../contact/" class="nav-link">Contact</a>
+            </div>
+            <div class="navbar-icons">
+                <button class="icon-btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn" aria-label="Cart">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn" aria-label="Account">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Help Hero -->
+    <section class="shop-hero">
+        <div class="shop-hero-content">
+            <h1 class="hero-title">Help Center</h1>
+            <p class="hero-subtitle">Find answers to common questions</p>
+        </div>
+    </section>
+
+    <!-- Help Content -->
+    <section class="content-section">
+        <div class="help-container">
+            <!-- Search Bar -->
+            <div class="help-search">
+                <input type="text" id="helpSearch" placeholder="Search FAQs..." class="help-search-input">
+            </div>
+
+            <!-- FAQ Categories -->
+            <div class="help-categories">
+                <h2>Popular Topics</h2>
+                <div class="category-grid">
+                    <button class="category-card" data-category="shipping">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-5-9h10v2H7z"></path>
+                        </svg>
+                        Shipping
+                    </button>
+                    <button class="category-card" data-category="returns">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 4v6h6M23 20v-6h-6"></path>
+                            <path d="M20.49 9A9 9 0 0 0 5.64 5.64M3.51 15A9 9 0 0 0 18.36 18.36"></path>
+                        </svg>
+                        Returns & Refunds
+                    </button>
+                    <button class="category-card" data-category="payment">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                        </svg>
+                        Payment & Pricing
+                    </button>
+                    <button class="category-card" data-category="account">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        Account
+                    </button>
+                    <button class="category-card" data-category="product">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        Products
+                    </button>
+                    <button class="category-card" data-category="technical">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                            <line x1="1" y1="3" x2="23" y2="3"></line>
+                            <path d="M10 12v4M14 12v4"></path>
+                        </svg>
+                        Technical Issues
+                    </button>
+                </div>
+            </div>
+
+            <!-- Accordion FAQs -->
+            <div class="help-accordion">
+                <h2>Frequently Asked Questions</h2>
+
+                <!-- Shipping Questions -->
+                <div class="accordion-category" id="shipping">
+                    <h3 class="category-title">Shipping</h3>
+                    
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>How long does shipping take?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <p>Standard shipping typically takes 5-7 business days. Express shipping takes 2-3 business days, and overnight delivery is available for next-business-day arrival. Shipping times are calculated from the order confirmation date.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>Is free shipping available?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <p>Yes! We offer free standard shipping on all orders. Express and overnight shipping options are available at an additional cost.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>Can I track my order?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <p>Absolutely! Once your order ships, you'll receive a tracking number via email. You can use this to monitor your package's progress in real-time.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Returns Questions -->
+                <div class="accordion-category" id="returns">
+                    <h3 class="category-title">Returns & Refunds</h3>
+                    
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>What is your return policy?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <p>We offer 30 days from the date of purchase to return items in original, unused condition. To initiate a return, contact our support team with your order number.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>How long do refunds take?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <p>Once we receive and inspect your returned item, refunds are typically processed within 5-7 business days. The refund will be credited to your original payment method.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>Who pays for return shipping?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <p>For defective or incorrect items, we provide a prepaid return label. For regular returns due to change of mind, return shipping is the customer's responsibility.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Questions -->
+                <div class="accordion-category" id="payment">
+                    <h3 class="category-title">Payment & Pricing</h3>
+                    
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>What payment methods do you accept?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <p>We accept all major credit and debit cards, UPI, digital wallets, and other popular payment methods. All transactions are encrypted and secure.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>Are there any hidden charges?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <p>No. The price you see at checkout is the final price. GST (18%) is included for Indian customers. International customers may see additional customs duties.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>Do you offer discounts or promotions?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <p>Yes! Subscribe to our newsletter to receive exclusive discount codes and promotional offers. We also run seasonal sales throughout the year.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Questions -->
+                <div class="accordion-category" id="account">
+                    <h3 class="category-title">Account</h3>
+                    
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>How do I create an account?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <p>Click on the Account icon in the top navigation bar and select "Sign Up". Provide your email and create a password. You'll receive a confirmation email shortly.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>Can I purchase without an account?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <p>Yes! Checkout as a guest if you prefer. However, creating an account helps you track orders and save addresses for faster future purchases.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>How do I reset my password?</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <p>On the login page, click "Forgot Password?" and enter your email. You'll receive instructions to reset your password within minutes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Support -->
+            <div class="help-contact">
+                <h2>Still need help?</h2>
+                <p>Our support team is here to assist you</p>
+                <a href="../contact/" class="cta-button">Contact Support</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="../shop/">Shop All</a></li>
+                    <li><a href="../about/">About ZONIX</a></li>
+                    <li><a href="#collections">Collections</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="./">Help Center</a></li>
+                    <li><a href="../contact/">Contact Us</a></li>
+                    <li><a href="#shipping">Shipping Info</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                    <li><a href="#returns">Returns</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ZONIX. The Marketplace, Redefined.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+</body>
+</html>

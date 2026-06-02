@@ -1,53 +1,78 @@
 /**
- * Firebase Configuration File
+ * Firebase Configuration and Initialization
+ * Uses Firebase v9+ Modular Web SDK
  * 
- * This file handles all Firebase setup and initialization.
- * 
- * INCLUDES:
- * - Firebase SDK import and initialization
- * - Project configuration
- * - Service exports (Auth, Firestore, Storage, etc.)
- * 
- * MODULES SETUP:
- * - Authentication (firebase.auth)
- * - Firestore Database (firebase.firestore)
- * - Cloud Storage (firebase.storage)
- * - Cloud Functions (firebase.functions)
- * 
- * TODO:
- * - Add Firebase project credentials
- * - Initialize each service
- * - Export configured services
- * 
- * SECURITY:
- * - DO NOT commit API keys to version control
- * - Use environment variables for sensitive data
- * - Follow Firebase security best practices
- * - Implement Firestore security rules
- * 
- * CREDENTIALS:
- * Replace with your Firebase project credentials:
- * - API Key
- * - Auth Domain
- * - Project ID
- * - Storage Bucket
- * - Messaging Sender ID
- * - App ID
+ * SETUP INSTRUCTIONS:
+ * 1. Create a Firebase project at https://console.firebase.google.com
+ * 2. Add a Web app to your project
+ * 3. Copy your Firebase config credentials below
+ * 4. Enable Authentication (Email/Password) in Firebase Console
+ * 5. Enable Firestore Database in Firebase Console
+ * 6. Set Firestore security rules as specified in documentation
  */
 
 'use strict';
 
-// Firebase configuration placeholder
-// const firebaseConfig = {
-//     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-//     authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-//     projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-//     storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-//     messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-//     appId: process.env.REACT_APP_FIREBASE_APP_ID
-// };
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+import { getFirestore, enableIndexedDbPersistence } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 
-// Firebase initialization placeholder
+/**
+ * Firebase Configuration
+ * REPLACE WITH YOUR ACTUAL CREDENTIALS FROM FIREBASE CONSOLE
+ * 
+ * Get these from Firebase Console > Project Settings > Your Apps > Web
+ */
+const firebaseConfig = {
+  apiKey: "AIzaSyDjpgHpiMsO7SP_DtcWbhJ_tMgsDJVSnu4",
+  authDomain: "studio-vih63.firebaseapp.com",
+  projectId: "studio-vih63",
+  storageBucket: "studio-vih63.firebasestorage.app",
+  messagingSenderId: "771569986455",
+  appId: "1:771569986455:web:bbfc575f548251d505f2d2",
+  measurementId: "G-KRX08RSM3M"
+};
+
+/**
+ * Initialize Firebase App
+ */
+let app;
+try {
+  app = initializeApp(firebaseConfig);
+  console.log('✓ Firebase App initialized successfully');
+} catch (error) {
+  console.error('✗ Firebase initialization failed:', error);
+}
+
+/**
+ * Initialize Firebase Authentication
+ */
+export const auth = getAuth(app);
+
+/**
+ * Initialize Firestore Database
+ */
+export const db = getFirestore(app);
+
+/**
+ * Enable Offline Persistence for Firestore
+ * Allows app to work offline and sync when connection is restored
+ */
+enableIndexedDbPersistence(db)
+  .then(() => {
+    console.log('✓ Firestore offline persistence enabled');
+  })
+  .catch((err) => {
+    if (err.code === 'failed-precondition') {
+      console.warn('⚠ Multiple tabs open - offline persistence disabled');
+    } else if (err.code === 'unimplemented') {
+      console.warn('⚠ Browser does not support offline persistence');
+    } else {
+      console.error('✗ Offline persistence error:', err);
+    }
+  });
+
+export default app;
 // import { initializeApp } from "firebase/app";
 // import { getAuth } from "firebase/auth";
 // import { getFirestore } from "firebase/firestore";
