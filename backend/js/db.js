@@ -388,6 +388,190 @@ export async function getOrderById(orderId) {
  */
 export async function updateOrderStatus(orderId, status) {
   try {
+    console.log('Updating order status:', orderId, '->', status);
+    
+    const validStatuses = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+      throw new Error(`Invalid status. Must be one of: ${validStatuses.join(', ')}`);
+    }
+
+    const orderRef = doc(db, 'orders', orderId);
+    await updateDoc(orderRef, {
+      status: status,
+      updatedAt: Timestamp.now()
+    });
+
+    console.log('✓ Order status updated');
+  } catch (error) {
+    console.error('✗ Error updating order status:', error.message);
+    throw error;
+  }
+}
+
+// =============================================
+// USER FUNCTIONS
+// =============================================
+
+/**
+ * Create or update user profile
+ * @param {string} userId - User ID
+ * @param {Object} userData - User information
+ * @returns {Promise<Object>} User object
+ * @throws {Error} If operation fails
+ */
+export async function saveUserProfile(userId, userData) {
+  try {
+    console.log('Saving user profile:', userId);
+
+    const userRef = doc(db, 'users', userId);
+    
+    await setDoc(userRef, {
+      email: userData.email,
+      displayName: userData.displayName || 'User',
+      phone: userData.phone || '',
+      profilePicture: userData.profilePicture || '',
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+      ...userData
+    }, { merge: true });
+
+    console.log('✓ User profile saved');
+    return { id: userId, ...userData };
+  } catch (error) {
+    console.error('✗ Error saving user profile:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Get user profile
+ * @param {string} userId - User ID
+ * @returns {Promise<Object>} User object or null
+ * @throws {Error} If fetch fails
+ */
+export async function getUserProfile(userId) {
+  try {
+    console.log('Fetching user profile:', userId);
+
+    const userRef = doc(db, 'users', userId);
+    const docSnap = await getDoc(userRef);
+
+    if (!docSnap.exists()) {
+      console.warn('User profile not found:', userId);
+      return null;
+    }
+
+    return {
+      id: docSnap.id,
+      ...docSnap.data()
+    };
+  } catch (error) {
+    console.error('✗ Error fetching user profile:', error.message);
+    throw error;
+  }
+}
+
+// =============================================
+// ADDRESS FUNCTIONS
+// =============================================
+
+/**
+ * Save an address for a user
+ * @param {string} userId - User ID
+ * @param {Object} addressData - Address information
+ * @returns {Promise<Object>} Address object with ID
+ * @throws {Error} If operation fails
+ */
+export async function saveAddress(userId, addressData) {
+  try {
+    console.log('Saving address for user:', userId);
+
+    const addressesRef = collection(db, 'users', userId, 'addresses');
+    const docRef = await addDoc(addressesRef, {
+      ...addressData,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now()
+    });
+
+    console.log('✓ Address saved');
+    return { id: docRef.id, ...addressData };
+  } catch (error) {
+    console.error('✗ Error saving address:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Get all addresses for a user
+ * @param {string} userId - User ID
+ * @returns {Promise<Array>} Array of addresses
+ * @throws {Error} If fetch fails
+ */
+export async function getSavedAddresses(userId) {
+  try {
+    console.log('Fetching addresses for user:', userId);
+
+    const addressesRef = collection(db, 'users', userId, 'addresses');
+    const snapshot = await getDocs(addressesRef);
+
+    const addresses = [];
+    snapshot.forEach((doc) => {
+      addresses.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+
+    console.log(`✓ Fetched ${addresses.length} addresses`);
+    return addresses;
+  } catch (error) {
+    console.error('✗ Error fetching addresses:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Delete an address
+ * @param {string} userId - User ID
+ * @param {string} addressId - Address ID
+ * @returns {Promise<void>}
+ * @throws {Error} If operation fails
+ */
+export async function deleteAddress(userId, addressId) {
+  try {
+    console.log('Deleting address:', addressId);
+
+    const addressRef = doc(db, 'users', userId, 'addresses', addressId);
+    await deleteDoc(addressRef);
+
+    console.log('✓ Address deleted');
+  } catch (error) {
+    console.error('✗ Error deleting address:', error.message);
+    throw error;
+  }
+}
+
+// =============================================
+// EXPORTS
+// =============================================
+
+export default {
+  getProducts,
+  getProductById,
+  addToCart,
+  getCartItems,
+  removeFromCart,
+  clearCart,
+  createOrder,
+  getOrders,
+  getOrderById,
+  updateOrderStatus,
+  saveUserProfile,
+  getUserProfile,
+  saveAddress,
+  getSavedAddresses,
+  deleteAddress
+};
     if (!['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'].includes(status)) {
       throw new Error('Invalid order status');
     }

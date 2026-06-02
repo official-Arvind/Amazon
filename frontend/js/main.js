@@ -1,22 +1,14 @@
 /**
- * Main Application JavaScript
- * Firebase-integrated e-commerce frontend
+ * ZONIX Main Application - Complete Frontend Integration
+ * Firebase v9+ Modular Web SDK
  * 
- * MODULES:
- * - Authentication (login, signup, logout)
- * - Product management (display, filtering, search)
- * - Shopping cart (add, remove, update, display)
- * - Checkout (form validation, order creation)
- * - User profile (orders, addresses, settings)
- * - Navigation & UI interactions
- * 
- * DEPENDENCIES:
- * - backend/js/firebase-config.js (Firebase initialization)
- * - backend/js/auth.js (Authentication functions)
- * - backend/js/db.js (Database functions)
- * 
- * IMPORTS:
- * This file uses ES6 modules via CDN (Firebase v9+)
+ * Handles all user interactions:
+ * - Authentication & session management
+ * - Product catalog & search
+ * - Shopping cart management
+ * - Checkout & order creation
+ * - User profile & addresses
+ * - Navigation & UI updates
  */
 
 'use strict';
@@ -25,8 +17,29 @@
 // IMPORTS
 // =============================================
 
-import { subscribeToAuthState, loginWithEmail, signUpWithEmail, logoutUser, resetPassword } from '../backend/js/auth.js';
-import { getProducts, getProductById, addToCart, getCartItems, removeFromCart, clearCart, createOrder, getOrders, saveAddress, getSavedAddresses } from '../backend/js/db.js';
+import { 
+  subscribeToAuthState, 
+  getCurrentUser,
+  loginWithEmail, 
+  signUpWithEmail, 
+  logoutUser, 
+  resetPassword
+} from '../backend/js/auth.js';
+
+import {
+  getProducts,
+  getProductById,
+  addToCart,
+  getCartItems,
+  removeFromCart,
+  clearCart,
+  createOrder,
+  getOrders,
+  saveUserProfile,
+  getUserProfile,
+  getSavedAddresses,
+  saveAddress
+} from '../backend/js/db.js';
 
 // =============================================
 // GLOBAL STATE
@@ -37,9 +50,10 @@ const appState = {
   isAuthenticated: false,
   cart: [],
   products: [],
-  filteredProducts: [],
+  orders: [],
   currentPage: 'home',
-  isLoading: false
+  isLoading: false,
+  addresses: []
 };
 
 // =============================================
@@ -49,27 +63,440 @@ const appState = {
 /**
  * Initialize application on DOM ready
  */
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('✓ App initializing...');
+document.addEventListener('DOMContentLoaded', async () => {
+  console.log('✓ ZONIX App initializing...');
   
-  // Load persisted data
-  loadLocalData();
-  
-  // Initialize Firebase auth listener
-  initAuthListener();
-  
-  // Initialize UI components
-  initNavigation();
-  initProducts();
-  initCart();
-  initCheckout();
-  initProfile();
-  initHelp();
-  initButtons();
-  initAuthForms();
-  
-  console.log('✓ App initialized');
+  try {
+    // Initialize Firebase auth listener
+    initAuthListener();
+    
+    // Initialize UI components
+    initializeUI();
+    
+    // Load initial data
+    await loadProducts();
+    
+    console.log('✓ App ready');
+  } catch (error) {
+    console.error('✗ Initialization error:', error);
+    showNotification('Failed to load application', 'error');
+  }
 });
+
+/**
+ * Initialize auth state listener
+ */
+function initAuthListener() {
+  subscribeToAuthState((authState) => {
+    appState.isAuthenticated = authState.isAuthenticated;
+    appState.currentUser = authState.user;
+    
+    console.log('Auth state:', authState.isAuthenticated ? 'authenticated' : 'not authenticated');
+    
+    updateAuthUI();
+    
+    if (authState.isAuthenticated) {
+      loadUserData();
+    }
+  });
+}
+
+/**
+ * Initialize all UI components
+ */
+function initializeUI() {
+  setupNavigation();
+  setupSearch();
+  setupCartIcon();
+  setupProductCards();
+}
+
+/**
+ * Setup navigation links
+ */
+function setupNavigation() {
+  const navLinks = document.querySelectorAll('.navbar-menu .nav-link');
+  navLinks.forEach(link => {
+    link.addEventListener('click', function() {
+      navLinks.forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+}
+
+/**
+ * Setup search functionality
+ */
+function setupSearch() {
+  const searchBtns = document.querySelectorAll('[aria-label="Search"]');
+  searchBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = document.querySelector('input[placeholder*="search"], input[placeholder*="Search"]');
+      if (input && input.value.trim()) {
+        window.location.href = `shop/?q=${encodeURIComponent(input.value)}`;
+      }
+    });
+  });
+}
+
+/**
+ * Setup cart icon click
+ */
+function setupCartIcon() {
+  const cartIcon = document.querySelector('[aria-label="Cart"]');
+  if (cartIcon) {
+    cartIcon.addEventListener('click', () => {
+      window.location.href = 'cart/';
+    });
+  }
+}
+
+/**
+ * Setup product cards
+ */
+function setupProductCards() {
+  const productCards = document.querySelectorAll('.product-card');
+  productCards.forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => {
+      const productName = card.querySelector('.product-name')?.textContent;
+      if (productName) {
+        window.location.href = `shop/?search=${encodeURIComponent(productName)}`;
+      }
+    });
+  });
+}
+
+// =============================================
+// AUTHENTICATION
+// =============================================
+
+/**
+ * Update UI based on auth status
+ */
+function updateAuthUI() {
+  const accountBtn = document.querySelector('[aria-label="Account"]');
+  if (!accountBtn) return;
+  
+  if (appState.isAuthenticated && appState.currentUser) {
+    accountBtn.href = 'profile/';
+    accountBtn.title = `Logged in as ${appState.currentUser.email}`;
+  } else {
+    accountBtn.href = 'login/';
+    accountBtn.title = 'Login to your account';
+  }
+}
+
+/**
+ * Load user data
+ */
+async function loadUserData() {
+  if (!appState.currentUser) return;
+  
+  try {
+    // Load cart
+    const cartItems = await getCartItems(appState.currentUser.uid);
+    appState.cart = cartItems;
+    updateCartBadge();
+    console.log('✓ Cart loaded:', cartItems.length, 'items');
+    
+    // Load addresses
+    const addresses = await getSavedAddresses(appState.currentUser.uid);
+    appState.addresses = addresses;
+    console.log('✓ Addresses loaded');
+    
+  } catch (error) {
+    console.error('✗ Error loading user data:', error);
+  }
+}
+
+/**
+ * Update cart badge count
+ */
+function updateCartBadge() {
+  const cartIcon = document.querySelector('[aria-label="Cart"]');
+  if (!cartIcon) return;
+  
+  const existingBadge = cartIcon.querySelector('.badge');
+  if (existingBadge) existingBadge.remove();
+  
+  if (appState.cart.length > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'badge';
+    badge.textContent = appState.cart.length;
+    badge.style.cssText = `
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #ff9900;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+    `;
+    cartIcon.style.position = 'relative';
+    cartIcon.appendChild(badge);
+  }
+}
+
+// =============================================
+// PRODUCTS
+// =============================================
+
+/**
+ * Load all products
+ */
+async function loadProducts() {
+  try {
+    console.log('Loading products...');
+    const products = await getProducts();
+    appState.products = products;
+    console.log('✓ Loaded', products.length, 'products');
+    return products;
+  } catch (error) {
+    console.error('✗ Error loading products:', error);
+    showNotification('Failed to load products', 'error');
+    return [];
+  }
+}
+
+/**
+ * Get single product
+ */
+async function getProduct(productId) {
+  try {
+    return await getProductById(productId);
+  } catch (error) {
+    console.error('✗ Error fetching product:', error);
+    return null;
+  }
+}
+
+// =============================================
+// SHOPPING CART
+// =============================================
+
+/**
+ * Add item to cart
+ */
+async function addItemToCart(productId, quantity = 1) {
+  if (!appState.isAuthenticated) {
+    showNotification('Please login to add items', 'warning');
+    setTimeout(() => {
+      window.location.href = 'login/';
+    }, 1000);
+    return false;
+  }
+  
+  try {
+    await addToCart(appState.currentUser.uid, productId, quantity);
+    
+    const cartItems = await getCartItems(appState.currentUser.uid);
+    appState.cart = cartItems;
+    updateCartBadge();
+    
+    showNotification('Item added to cart', 'success');
+    return true;
+  } catch (error) {
+    console.error('✗ Error:', error);
+    showNotification(error.message || 'Failed to add to cart', 'error');
+    return false;
+  }
+}
+
+/**
+ * Remove item from cart
+ */
+async function removeItemFromCart(productId) {
+  if (!appState.isAuthenticated) return false;
+  
+  try {
+    await removeFromCart(appState.currentUser.uid, productId);
+    
+    const cartItems = await getCartItems(appState.currentUser.uid);
+    appState.cart = cartItems;
+    updateCartBadge();
+    
+    showNotification('Item removed', 'success');
+    return true;
+  } catch (error) {
+    console.error('✗ Error:', error);
+    showNotification('Failed to remove item', 'error');
+    return false;
+  }
+}
+
+/**
+ * Clear cart
+ */
+async function clearUserCart() {
+  if (!appState.isAuthenticated) return false;
+  
+  try {
+    await clearCart(appState.currentUser.uid);
+    appState.cart = [];
+    updateCartBadge();
+    showNotification('Cart cleared', 'success');
+    return true;
+  } catch (error) {
+    console.error('✗ Error:', error);
+    return false;
+  }
+}
+
+/**
+ * Get cart total
+ */
+function getCartTotal() {
+  return appState.cart.reduce((total, item) => {
+    return total + (item.price * item.quantity);
+  }, 0);
+}
+
+// =============================================
+// ORDERS
+// =============================================
+
+/**
+ * Create order from cart
+ */
+async function createUserOrder(shippingData) {
+  if (!appState.isAuthenticated) {
+    showNotification('Please login first', 'warning');
+    return false;
+  }
+  
+  if (appState.cart.length === 0) {
+    showNotification('Cart is empty', 'warning');
+    return false;
+  }
+  
+  try {
+    const orderData = {
+      items: appState.cart.map(item => ({
+        productId: item.productId,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity
+      })),
+      shippingAddress: shippingData.address,
+      shippingMethod: shippingData.method || 'standard',
+      paymentMethod: shippingData.payment || 'card',
+      subtotal: getCartTotal(),
+      shippingCost: shippingData.shippingCost || 0,
+      tax: shippingData.tax || 0,
+      total: shippingData.total || getCartTotal()
+    };
+    
+    const order = await createOrder(appState.currentUser.uid, orderData);
+    
+    if (shippingData.address) {
+      await saveAddress(appState.currentUser.uid, shippingData.address);
+    }
+    
+    appState.cart = [];
+    updateCartBadge();
+    
+    showNotification('Order created successfully!', 'success');
+    return order;
+  } catch (error) {
+    console.error('✗ Error:', error);
+    showNotification(error.message || 'Failed to create order', 'error');
+    return false;
+  }
+}
+
+/**
+ * Get user orders
+ */
+async function getUserOrders() {
+  if (!appState.isAuthenticated) return [];
+  
+  try {
+    const orders = await getOrders(appState.currentUser.uid);
+    appState.orders = orders;
+    console.log('✓ Loaded', orders.length, 'orders');
+    return orders;
+  } catch (error) {
+    console.error('✗ Error:', error);
+    return [];
+  }
+}
+
+// =============================================
+// UI HELPERS
+// =============================================
+
+/**
+ * Show notification
+ */
+function showNotification(message, type = 'info') {
+  let toast = document.getElementById('toast');
+  
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    document.body.appendChild(toast);
+  }
+  
+  const colors = {
+    'success': '#16a34a',
+    'error': '#dc2626',
+    'warning': '#ea8c2b',
+    'info': '#0066cc'
+  };
+  
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    background-color: ${colors[type] || colors['info']};
+    color: white;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    z-index: 9999;
+    display: block;
+  `;
+  
+  setTimeout(() => {
+    toast.style.display = 'none';
+  }, 3000);
+}
+
+// =============================================
+// EXPORTS
+// =============================================
+
+export {
+  appState,
+  addItemToCart,
+  removeItemFromCart,
+  clearUserCart,
+  getCartTotal,
+  createUserOrder,
+  getUserOrders,
+  getProduct,
+  loadProducts,
+  showNotification,
+  updateCartBadge,
+  loadUserData,
+  getCurrentUser
+};
+
+export default {
+  appState,
+  addItemToCart,
+  removeItemFromCart,
+  createUserOrder,
+  showNotification
+};
 
 /**
  * Load data from localStorage
