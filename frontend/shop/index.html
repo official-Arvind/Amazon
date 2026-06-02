@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-logo">
@@ -33,18 +32,17 @@
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
-                </button>
+                </a>
                 <a href="../profile/" class="icon-btn" aria-label="Account">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                </button>
+                </a>
             </div>
         </div>
     </nav>
 
-    <!-- Shop Hero Section -->
     <section class="shop-hero">
         <div class="shop-hero-content">
             <h1 class="hero-title">Our Collection</h1>
@@ -52,10 +50,8 @@
         </div>
     </section>
 
-    <!-- Shop Content -->
     <section class="shop-section">
         <div class="shop-container">
-            <!-- Sidebar Filters -->
             <aside class="shop-sidebar">
                 <div class="filter-group">
                     <h3 class="filter-title">Categories</h3>
@@ -97,13 +93,11 @@
                 <button class="filter-reset">Reset Filters</button>
             </aside>
 
-            <!-- Products Grid -->
             <div class="shop-products">
-                <h2 class="products-count">Showing 12 Products</h2>
+                <h2 class="products-count">Showing 8 Products</h2>
                 
                 <div class="products-grid">
-                    <!-- Product Card 1 -->
-                    <article class="product-card">
+                    <article class="product-card" data-product-id="prod_001">
                         <div class="product-image-container">
                             <img src="../assets/images/monitor.jpg" alt="4K Gaming Monitor" class="product-image" />
                             <button class="wishlist-btn" aria-label="Add to wishlist">
@@ -114,14 +108,15 @@
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">4K Gaming Monitor</h3>
+                            <p class="product-category">Tech</p>
                             <div class="product-footer">
                                 <span class="product-price">₹32,499</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
                             </div>
                         </div>
                     </article>
 
-                    <!-- Product Card 2 -->
-                    <article class="product-card">
+                    <article class="product-card" data-product-id="prod_002">
                         <div class="product-image-container">
                             <img src="../assets/images/mouse.jpg" alt="Gaming Mouse Pro" class="product-image" />
                             <button class="wishlist-btn" aria-label="Add to wishlist">
@@ -132,14 +127,15 @@
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">Gaming Mouse Pro</h3>
+                            <p class="product-category">Accessories</p>
                             <div class="product-footer">
                                 <span class="product-price">₹2,499</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
                             </div>
                         </div>
                     </article>
 
-                    <!-- Product Card 3 -->
-                    <article class="product-card">
+                    <article class="product-card" data-product-id="prod_003">
                         <div class="product-image-container">
                             <img src="../assets/images/chair.jpg" alt="Ergonomic Chair Elite" class="product-image" />
                             <button class="wishlist-btn" aria-label="Add to wishlist">
@@ -150,14 +146,15 @@
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">Ergonomic Chair Elite</h3>
+                            <p class="product-category">Furniture</p>
                             <div class="product-footer">
                                 <span class="product-price">₹18,999</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
                             </div>
                         </div>
                     </article>
 
-                    <!-- Product Card 4 -->
-                    <article class="product-card">
+                    <article class="product-card" data-product-id="prod_004">
                         <div class="product-image-container">
                             <img src="../assets/images/speaker.jpg" alt="Tribit StormBox" class="product-image" />
                             <button class="wishlist-btn" aria-label="Add to wishlist">
@@ -168,14 +165,15 @@
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">Tribit StormBox</h3>
+                            <p class="product-category">Audio</p>
                             <div class="product-footer">
                                 <span class="product-price">₹24,999</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
                             </div>
                         </div>
                     </article>
 
-                    <!-- Product Card 5 -->
-                    <article class="product-card">
+                    <article class="product-card" data-product-id="prod_005">
                         <div class="product-image-container">
                             <img src="../assets/images/watch.jpg" alt="Premium Smartwatch" class="product-image" />
                             <button class="wishlist-btn" aria-label="Add to wishlist">
@@ -186,14 +184,15 @@
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">Premium Smartwatch</h3>
+                            <p class="product-category">Accessories</p>
                             <div class="product-footer">
                                 <span class="product-price">₹1,19,999</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
                             </div>
                         </div>
                     </article>
 
-                    <!-- Product Card 6 -->
-                    <article class="product-card">
+                    <article class="product-card" data-product-id="prod_006">
                         <div class="product-image-container">
                             <img src="../assets/images/headphones.jpg" alt="Sony Headphones Pro" class="product-image" />
                             <button class="wishlist-btn" aria-label="Add to wishlist">
@@ -204,14 +203,15 @@
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">Sony Headphones Pro</h3>
+                            <p class="product-category">Audio</p>
                             <div class="product-footer">
                                 <span class="product-price">₹18,490</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
                             </div>
                         </div>
                     </article>
 
-                    <!-- Product Card 7 -->
-                    <article class="product-card">
+                    <article class="product-card" data-product-id="prod_007">
                         <div class="product-image-container">
                             <img src="../assets/images/vr.jpg" alt="VR Headset Pro" class="product-image" />
                             <button class="wishlist-btn" aria-label="Add to wishlist">
@@ -222,14 +222,15 @@
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">VR Headset Pro</h3>
+                            <p class="product-category">Tech</p>
                             <div class="product-footer">
                                 <span class="product-price">₹49,999</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
                             </div>
                         </div>
                     </article>
 
-                    <!-- Product Card 8 -->
-                    <article class="product-card">
+                    <article class="product-card" data-product-id="prod_008">
                         <div class="product-image-container">
                             <img src="../assets/images/drone.jpg" alt="Pro Drone 4K" class="product-image" />
                             <button class="wishlist-btn" aria-label="Add to wishlist">
@@ -240,14 +241,15 @@
                         </div>
                         <div class="product-info">
                             <h3 class="product-name">Pro Drone 4K</h3>
+                            <p class="product-category">Tech</p>
                             <div class="product-footer">
                                 <span class="product-price">₹71,999</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
                             </div>
                         </div>
                     </article>
                 </div>
 
-                <!-- Pagination -->
                 <div class="pagination">
                     <button class="pagination-btn active">1</button>
                     <button class="pagination-btn">2</button>
@@ -258,13 +260,12 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
                 <h4>Explore</h4>
                 <ul>
-                    <li><a href="../shop/">Shop All</a></li>
+                    <li><a href="./">Shop All</a></li>
                     <li><a href="../about/">About ZONIX</a></li>
                     <li><a href="#collections">Collections</a></li>
                 </ul>
@@ -272,7 +273,7 @@
             <div class="footer-section">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="#help">Help Center</a></li>
+                    <li><a href="../help/">Help Center</a></li>
                     <li><a href="../contact/">Contact Us</a></li>
                     <li><a href="#shipping">Shipping Info</a></li>
                 </ul>
@@ -291,184 +292,6 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="../js/main.js"></script>
-</body>
-</html>
-
-                <button class="filter-reset">Reset Filters</button>
-            </aside>
-
-            <!-- Products Grid -->
-            <div class="shop-products">
-                <h2 class="products-count">Showing 12 Products</h2>
-                
-                <div class="products-grid">
-                    <!-- Product Card 1 -->
-                    <article class="product-card">
-                        <div class="product-image">
-                            <img src="../assets/images/product-1.jpg" alt="Premium Wireless Earbuds">
-                            <button class="wishlist-btn" aria-label="Add to wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Premium Wireless Earbuds</h3>
-                            <p class="product-category">Audio</p>
-                            <div class="product-footer">
-                                <span class="product-price">$249.99</span>
-                                <button class="add-to-cart-btn">Add to Cart</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Product Card 2 -->
-                    <article class="product-card">
-                        <div class="product-image">
-                            <img src="../assets/images/product-2.jpg" alt="Elegant Watch">
-                            <button class="wishlist-btn" aria-label="Add to wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Elegant Watch</h3>
-                            <p class="product-category">Accessories</p>
-                            <div class="product-footer">
-                                <span class="product-price">$399.99</span>
-                                <button class="add-to-cart-btn">Add to Cart</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Product Card 3 -->
-                    <article class="product-card">
-                        <div class="product-image">
-                            <img src="../assets/images/product-3.jpg" alt="Minimalist Phone Stand">
-                            <button class="wishlist-btn" aria-label="Add to wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Minimalist Phone Stand</h3>
-                            <p class="product-category">Tech Accessories</p>
-                            <div class="product-footer">
-                                <span class="product-price">$79.99</span>
-                                <button class="add-to-cart-btn">Add to Cart</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Product Card 4 -->
-                    <article class="product-card">
-                        <div class="product-image">
-                            <img src="../assets/images/product-4.jpg" alt="Premium Desk Lamp">
-                            <button class="wishlist-btn" aria-label="Add to wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Premium Desk Lamp</h3>
-                            <p class="product-category">Lighting</p>
-                            <div class="product-footer">
-                                <span class="product-price">$189.99</span>
-                                <button class="add-to-cart-btn">Add to Cart</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Repeat additional products as needed -->
-                    <article class="product-card">
-                        <div class="product-image">
-                            <img src="../assets/images/product-1.jpg" alt="Premium Product">
-                            <button class="wishlist-btn" aria-label="Add to wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Premium Headphones</h3>
-                            <p class="product-category">Audio</p>
-                            <div class="product-footer">
-                                <span class="product-price">$299.99</span>
-                                <button class="add-to-cart-btn">Add to Cart</button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="product-card">
-                        <div class="product-image">
-                            <img src="../assets/images/product-2.jpg" alt="Minimalist Wallet">
-                            <button class="wishlist-btn" aria-label="Add to wishlist">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Minimalist Wallet</h3>
-                            <p class="product-category">Accessories</p>
-                            <div class="product-footer">
-                                <span class="product-price">$59.99</span>
-                                <button class="add-to-cart-btn">Add to Cart</button>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-
-                <!-- Pagination -->
-                <div class="pagination">
-                    <button class="pagination-btn active">1</button>
-                    <button class="pagination-btn">2</button>
-                    <button class="pagination-btn">3</button>
-                    <button class="pagination-btn">Next</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>About</h4>
-                <ul>
-                    <li><a href="../about/">About Us</a></li>
-                    <li><a href="#careers">Careers</a></li>
-                    <li><a href="#press">Press</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Support</h4>
-                <ul>
-                    <li><a href="#help">Help Center</a></li>
-                    <li><a href="../contact/">Contact Us</a></li>
-                    <li><a href="#faq">FAQ</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#privacy">Privacy Policy</a></li>
-                    <li><a href="#terms">Terms of Service</a></li>
-                    <li><a href="#cookies">Cookie Policy</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Minimalist Store. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
     <script src="../js/main.js"></script>
 </body>
 </html>
