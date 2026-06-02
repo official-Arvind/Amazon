@@ -17,14 +17,14 @@
 // IMPORTS
 // =============================================
 
-import { 
+import {
   subscribeToAuthState, 
   getCurrentUser,
   loginWithEmail, 
   signUpWithEmail, 
   logoutUser, 
   resetPassword
-} from '../backend/js/auth.js';
+} from '../../backend/js/auth.js';
 
 import {
   getProducts,
@@ -39,7 +39,7 @@ import {
   getUserProfile,
   getSavedAddresses,
   saveAddress
-} from '../backend/js/db.js';
+} from '../../backend/js/db.js';
 
 // =============================================
 // GLOBAL STATE
