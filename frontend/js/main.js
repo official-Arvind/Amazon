@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupNavigation();
   setupSearch();
   
-  // 2. Initialize Page-Specific Logic
+  // 2. Initialize Page-Specific Logic based on URL
   const path = window.location.pathname;
   
   if (path.includes('/cart/')) {
@@ -80,6 +80,7 @@ function initAuthListener() {
     } else {
       appState.cart = [];
       updateCartBadge();
+      // If on a protected page, redirect to login
       if (window.location.pathname.includes('/profile/') || window.location.pathname.includes('/checkout/')) {
         window.location.href = '../login/';
       }
@@ -91,11 +92,15 @@ function updateAuthUI() {
   const accountBtn = document.querySelector('[aria-label="Account"]');
   if (!accountBtn) return;
   
+  // Check if we are in the root directory or a subdirectory to set correct relative path
+  const inRoot = !window.location.pathname.includes('/frontend/') || window.location.pathname.endsWith('/frontend/') || window.location.pathname.endsWith('/frontend/index.html');
+  const prefix = inRoot ? '' : '../';
+
   if (appState.isAuthenticated) {
-    accountBtn.href = window.location.pathname.includes('frontend/') ? 'profile/' : '../profile/';
+    accountBtn.href = prefix + 'profile/';
     accountBtn.title = 'My Profile';
   } else {
-    accountBtn.href = window.location.pathname.includes('frontend/') ? 'login/' : '../login/';
+    accountBtn.href = prefix + 'login/';
     accountBtn.title = 'Login';
   }
 }
@@ -122,18 +127,22 @@ function showLoginModal() {
   modal.className = 'modal-overlay';
   modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 10000;';
   
+  // Calculate correct path to login page
+  const inRoot = !window.location.pathname.includes('/frontend/') || window.location.pathname.endsWith('/frontend/') || window.location.pathname.endsWith('/frontend/index.html');
+  const loginPath = inRoot ? 'login/' : '../login/';
+
   modal.innerHTML = `
     <div class="modal-content" style="background: white; padding: 2.5rem; border-radius: 8px; max-width: 400px; width: 90%; position: relative;">
       <button class="modal-close" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
       <h2 style="margin-bottom: 1.5rem; color: #0a0e27;">Login Required</h2>
       <p style="margin-bottom: 1.5rem; color: #565656;">Please login to add items to your cart and checkout.</p>
       <form id="loginModalForm">
-        <input type="email" id="modalLoginEmail" placeholder="Email address" required style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 4px;">
-        <input type="password" id="modalLoginPassword" placeholder="Password" required style="width: 100%; padding: 0.75rem; margin-bottom: 1.5rem; border: 1px solid #ddd; border-radius: 4px;">
+        <input type="email" id="modalLoginEmail" placeholder="Email address" required style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+        <input type="password" id="modalLoginPassword" placeholder="Password" required style="width: 100%; padding: 0.75rem; margin-bottom: 1.5rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
         <button type="submit" style="width: 100%; padding: 0.75rem; background: #0066cc; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Login</button>
       </form>
-      <div style="text-align: center; margin-top: 1rem;">
-        <a href="../login/" style="color: #0066cc; text-decoration: none; font-size: 0.875rem;">Don't have an account? Sign up</a>
+      <div style="text-align: center; margin-top: 1.5rem;">
+        <a href="${loginPath}" style="color: #0066cc; text-decoration: none; font-size: 0.875rem;">Don't have an account? Sign up</a>
       </div>
     </div>
   `;
@@ -146,13 +155,20 @@ function showLoginModal() {
     e.preventDefault();
     const email = document.getElementById('modalLoginEmail').value;
     const password = document.getElementById('modalLoginPassword').value;
+    const submitBtn = e.target.querySelector('button[type="submit"]');
     
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Logging in...';
+    submitBtn.disabled = true;
+
     try {
       await loginWithEmail(email, password);
       modal.remove();
       showNotification('Login successful!', 'success');
     } catch (error) {
       showNotification(error.message, 'error');
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
     }
   });
 }
@@ -165,7 +181,8 @@ function setupNavigation() {
   navLinks.forEach(link => {
     const currentPath = window.location.pathname;
     const href = link.getAttribute('href');
-    if (currentPath.includes(href.replace('../', '')) && href !== './') {
+    // Prevent matching root to everything
+    if (href !== './' && href !== '../' && currentPath.includes(href.replace('../', ''))) {
       navLinks.forEach(l => l.classList.remove('active'));
       link.classList.add('active');
     }
@@ -272,10 +289,12 @@ function displayCartItems() {
   if (!container) return;
   
   if (appState.cart.length === 0) {
+    const inRoot = !window.location.pathname.includes('/frontend/') || window.location.pathname.endsWith('/frontend/') || window.location.pathname.endsWith('/frontend/index.html');
+    const shopPath = inRoot ? 'shop/' : '../shop/';
     container.innerHTML = `
       <div class="empty-cart" style="text-align: center; padding: 3rem;">
         <p style="color: #565656; margin-bottom: 1rem; font-size: 1.1rem;">Your cart is empty</p>
-        <a href="../shop/" class="cta-button">Continue Shopping</a>
+        <a href="${shopPath}" class="cta-button">Continue Shopping</a>
       </div>
     `;
     updateCartSummary();
@@ -484,7 +503,9 @@ async function loadProfileData() {
     const ordersList = document.getElementById('ordersList');
     if (ordersList) {
       if (orders.length === 0) {
-        ordersList.innerHTML = '<p>No orders yet. <a href="../shop/" style="color:#0066cc;">Start shopping</a></p>';
+        const inRoot = !window.location.pathname.includes('/frontend/') || window.location.pathname.endsWith('/frontend/') || window.location.pathname.endsWith('/frontend/index.html');
+        const shopPath = inRoot ? 'shop/' : '../shop/';
+        ordersList.innerHTML = `<p>No orders yet. <a href="${shopPath}" style="color:#0066cc;">Start shopping</a></p>`;
       } else {
         ordersList.innerHTML = orders.map(order => `
           <div style="border: 1px solid #eee; padding: 1.5rem; border-radius: 4px; margin-bottom: 1rem;">
