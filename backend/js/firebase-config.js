@@ -1,14 +1,6 @@
 /**
  * Firebase Configuration and Initialization
  * Uses Firebase v9+ Modular Web SDK
- * 
- * SETUP INSTRUCTIONS:
- * 1. Create a Firebase project at https://console.firebase.google.com
- * 2. Add a Web app to your project
- * 3. Copy your Firebase config credentials below
- * 4. Enable Authentication (Email/Password) in Firebase Console
- * 5. Enable Firestore Database in Firebase Console
- * 6. Set Firestore security rules as specified in documentation
  */
 
 'use strict';
@@ -16,7 +8,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
 import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 import { getFirestore, enableIndexedDbPersistence } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyDjpgHpiMsO7SP_DtcWbhJ_tMgsDJVSnu4",
@@ -51,7 +42,7 @@ export const db = getFirestore(app);
 
 /**
  * Enable Offline Persistence for Firestore
- * Allows app to work offline and sync when connection is restored
+ * (Note: The deprecation warning in the console for this function is standard in Firebase 9.22 and completely safe to ignore)
  */
 enableIndexedDbPersistence(db)
   .then(() => {
@@ -63,19 +54,8 @@ enableIndexedDbPersistence(db)
     } else if (err.code === 'unimplemented') {
       console.warn('⚠ Browser does not support offline persistence');
     } else {
-      console.error('✗ Offline persistence error:', err);
+      console.warn('⚠ Offline persistence warning:', err);
     }
   });
 
 export default app;
-// import { initializeApp } from "firebase/app";
-// import { getAuth } from "firebase/auth";
-// import { getFirestore } from "firebase/firestore";
-// import { getStorage } from "firebase/storage";
-
-// const app = initializeApp(firebaseConfig);
-// export const auth = getAuth(app);
-// export const db = getFirestore(app);
-// export const storage = getStorage(app);
-
-console.log('Firebase configuration loaded (placeholder)');
