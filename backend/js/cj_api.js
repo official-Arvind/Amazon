@@ -83,3 +83,59 @@ export async function fetchCjProducts(page = 1, size = 20, keyword = "") {
         throw error;
     }
 }
+
+/**
+ * Push an order to CJ Dropshipping for fulfillment.
+ * Uses payType=3 (Create order only, no direct payment deduction).
+ * @param {Object} orderData Our Firebase order object
+ * @returns {Promise<Object>} The created CJ order data
+ */
+export async function createCjOrder(orderData) {
+    try {
+        const token = await getCjAccessToken();
+        
+        // Map Firebase order products to CJ format
+        const cjProducts = orderData.items.map(item => ({
+            vid: item.cjProductId || item.productId, // Fallback if no specific cj variant id
+            quantity: item.quantity,
+            storeLineItemId: item.productId // Just for our reference in CJ dashboard
+        }));
+
+        const cjPayload = {
+            orderNumber: orderData.orderNumber,
+            shippingCustomerName: orderData.shippingAddress.name,
+            shippingAddress: orderData.shippingAddress.street,
+            shippingCity: orderData.shippingAddress.city,
+            shippingProvince: orderData.shippingAddress.state,
+            shippingCountryCode: orderData.shippingAddress.country || 'US',
+            shippingCountry: orderData.shippingAddress.country || 'USA',
+            shippingZip: orderData.shippingAddress.zip,
+            shippingPhone: orderData.shippingAddress.phone,
+            logisticName: "CJPacket", // Generic default, can be customized
+            fromCountryCode: "CN",
+            platform: "custom", // Important since we are a custom app
+            payType: 3, // Create order only
+            products: cjProducts
+        };
+
+        const response = await fetch(`${CJ_API_BASE}/shopping/order/createOrderV2`, {
+            method: 'POST',
+            headers: {
+                'CJ-Access-Token': token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(cjPayload)
+        });
+
+        const result = await response.json();
+        
+        if (result.code === 200) {
+            return result.data;
+        } else {
+            throw new Error(result.message || "Failed to create order on CJ Dropshipping");
+        }
+    } catch (error) {
+        console.error("CJ API Create Order Error:", error);
+        throw error;
+    }
+}

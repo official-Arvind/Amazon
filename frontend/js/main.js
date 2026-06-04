@@ -62,6 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initHelp();
   } else if (path.includes('/shop/') || path.endsWith('shop/index.html')) {
     loadShopProducts();
+  } else if (path.includes('/info/') || path.endsWith('info/index.html')) {
+    loadInfoPage();
   } else if (path === '/' || path.endsWith('/index.html') || path.endsWith('/frontend/')) {
     loadShopProducts('featuredProductsGrid', 4);
   }
@@ -195,10 +197,31 @@ function setupNavigation() {
 }
 
 function setupSearch() {
-  const searchBtns = document.querySelectorAll('[aria-label="Search"]');
-  searchBtns.forEach(btn => {
+  const searchInputs = document.querySelectorAll('.search-input');
+  const searchBtns = document.querySelectorAll('.search-btn');
+
+  const executeSearch = (input) => {
+    const query = input.value.trim();
+    if (query) {
+      const inRoot = !window.location.pathname.includes('/frontend/') || window.location.pathname.endsWith('/frontend/') || window.location.pathname.endsWith('/frontend/index.html');
+      const shopPath = inRoot ? 'shop/' : '../shop/';
+      window.location.href = `${shopPath}?q=${encodeURIComponent(query)}`;
+    }
+  };
+
+  searchInputs.forEach(input => {
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        executeSearch(input);
+      }
+    });
+  });
+
+  searchBtns.forEach((btn, index) => {
     btn.addEventListener('click', () => {
-      showNotification('Search functionality coming soon!', 'info');
+      if (searchInputs[index]) {
+        executeSearch(searchInputs[index]);
+      }
     });
   });
 }
@@ -274,16 +297,30 @@ async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) 
   
   try {
     const products = await getProducts();
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('q')?.toLowerCase();
+
+    let filteredProducts = products;
+    if (searchQuery && maxItems === 0) {
+      filteredProducts = products.filter(p => 
+        p.name.toLowerCase().includes(searchQuery) || 
+        (p.category && p.category.toLowerCase().includes(searchQuery))
+      );
+      
+      const searchTitle = document.querySelector('.section-title');
+      if (searchTitle) {
+        searchTitle.textContent = `Search Results for "${searchQuery}"`;
+      }
+    }
     
-    if (products.length === 0) {
-      container.innerHTML = '<div class="empty-state">No products available at the moment.</div>';
-      // Also update products count if it exists
+    if (filteredProducts.length === 0) {
+      container.innerHTML = '<div class="empty-state">No products found matching your search.</div>';
       const countEl = document.querySelector('.products-count');
       if(countEl) countEl.textContent = 'Showing 0 Products';
       return;
     }
     
-    const displayProducts = maxItems > 0 ? products.slice(0, maxItems) : products;
+    const displayProducts = maxItems > 0 ? filteredProducts.slice(0, maxItems) : filteredProducts;
     
     container.innerHTML = displayProducts.map(product => `
       <article class="product-card" data-product-id="${product.id}">
@@ -632,4 +669,74 @@ function initHelp() {
       });
     });
   });
+}
+
+// =============================================
+// INFO PAGE LOADER
+// =============================================
+function loadInfoPage() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const page = urlParams.get('page') || 'help';
+  
+  const titleEl = document.getElementById('infoTitle');
+  const contentEl = document.getElementById('infoContent');
+  if (!titleEl || !contentEl) return;
+
+  const contentMap = {
+    help: {
+      title: 'Help Center',
+      content: `
+        <p>Welcome to the ZONIX Help Center. How can we assist you today?</p>
+        <h3>Frequently Asked Questions</h3>
+        <ul>
+          <li><strong>How do I track my order?</strong> You can track your order in the "Returns & Orders" section of your account.</li>
+          <li><strong>What payment methods do you accept?</strong> We accept major credit cards, debit cards, and UPI.</li>
+        </ul>
+      `
+    },
+    shipping: {
+      title: 'Shipping Information',
+      content: `
+        <p>At ZONIX, we strive to deliver your products as quickly and safely as possible.</p>
+        <h3>Standard Delivery</h3>
+        <p>Orders are typically processed within 24 hours and delivered within 3-5 business days.</p>
+        <h3>Express Delivery</h3>
+        <p>Available in select pin codes for next-day delivery.</p>
+      `
+    },
+    privacy: {
+      title: 'Privacy Policy',
+      content: `
+        <p>Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal information.</p>
+        <h3>Information Collection</h3>
+        <p>We collect information you provide directly to us when you create an account, make a purchase, or contact customer support.</p>
+      `
+    },
+    terms: {
+      title: 'Terms of Service',
+      content: `
+        <p>Please read these Terms of Service carefully before using the ZONIX website.</p>
+        <p>By accessing or using our service, you agree to be bound by these terms.</p>
+      `
+    },
+    returns: {
+      title: 'Returns & Refunds',
+      content: `
+        <p>If you're not completely satisfied with your purchase, you can return it within 30 days of delivery.</p>
+        <h3>Return Process</h3>
+        <p>Go to your Orders page, select the item, and click "Return Item". Follow the instructions to print your return label.</p>
+      `
+    },
+    collections: {
+      title: 'ZONIX Collections',
+      content: `
+        <p>Discover our curated collections of premium tech, lifestyle, and home goods.</p>
+        <p>Check out our <a href="../shop/">Shop</a> page to explore all available products.</p>
+      `
+    }
+  };
+
+  const pageData = contentMap[page] || contentMap['help'];
+  titleEl.textContent = pageData.title;
+  contentEl.innerHTML = pageData.content;
 }

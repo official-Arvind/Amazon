@@ -30,6 +30,7 @@ import {
 } from '../../backend/js/admin.js';
 import { logoutUser } from '../../backend/js/auth.js';
 import { importCjProductsToFirebase } from '../../backend/js/cj_import.js';
+import { createCjOrder } from '../../backend/js/cj_api.js';
 
 // =============================================
 // DOM ELEMENTS
@@ -453,6 +454,7 @@ function populateAllOrdersTable(orders) {
             <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
             <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
           </select>
+          <button class="btn-small" onclick="window.handleCjFulfillment('${order.id}')" style="background-color: #ffd814; color: #000; border: none; margin-top: 5px;">Fulfill via CJ</button>
         </td>
       </tr>
     `;
@@ -512,15 +514,73 @@ function showToast(message, type = 'info') {
 // GLOBAL HANDLERS FOR INLINE EVENTS
 // =============================================
 
-window.handleStatusChange = async function(selectElement) {
-  const orderId = selectElement.getAttribute('data-id');
-  const newStatus = selectElement.value;
+window.handleStatusChange = async (select) => {
+  const orderId = select.dataset.id;
+  const newStatus = select.value;
+  
   try {
     showLoading(true);
     await updateOrderStatus(orderId, newStatus);
-    showToast(`Order status updated to ${newStatus}`, 'success');
+    showToast('Order status updated successfully', 'success');
+    
+    // Update local data
+    const orderIndex = window.adminData.orders.findIndex(o => o.id === orderId);
+    if (orderIndex > -1) {
+      window.adminData.orders[orderIndex].status = newStatus;
+    }
   } catch (error) {
-    showToast('Failed to update status: ' + error.message, 'error');
+    showToast('Failed to update order status: ' + error.message, 'error');
+    // Revert select visually
+    const order = window.adminData.orders.find(o => o.id === orderId);
+    if (order) {
+      select.value = order.status;
+    }
+  } finally {
+    showLoading(false);
+  }
+};
+
+window.handleCjFulfillment = async (orderId) => {
+  const order = window.adminData.orders.find(o => o.id === orderId);
+  if (!order) return;
+  
+  if (!confirm(`Are you sure you want to push Order ${order.id.substring(0,8)} to CJ Dropshipping for fulfillment?`)) {
+    return;
+  }
+  
+  try {
+    showLoading(true);
+    showToast('Sending order to CJ Dropshipping...', 'info');
+    
+    // Ensure missing fields have defaults for CJ API
+    const orderData = {
+      ...order,
+      orderNumber: order.orderNumber || `ZONIX-${order.id}`,
+      shippingAddress: {
+        ...order.shippingAddress,
+        name: order.shippingAddress?.name || order.userEmail || 'Customer',
+        street: order.shippingAddress?.street || '123 Main St',
+        city: order.shippingAddress?.city || 'New York',
+        state: order.shippingAddress?.state || 'NY',
+        zip: order.shippingAddress?.zip || '10001',
+        phone: order.shippingAddress?.phone || '1234567890'
+      }
+    };
+
+    const cjResult = await createCjOrder(orderData);
+    
+    // Update status to confirmed if successfully pushed
+    await updateOrderStatus(orderId, 'confirmed');
+    
+    showToast(`Order pushed successfully to CJ! CJ Order ID: ${cjResult.orderId || 'Success'}`, 'success');
+    
+    // Refresh table
+    const orders = await getAllOrders();
+    window.adminData.orders = orders;
+    populateAllOrdersTable(orders);
+    
+  } catch (error) {
+    showToast('Failed to fulfill via CJ: ' + error.message, 'error');
   } finally {
     showLoading(false);
   }

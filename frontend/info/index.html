@@ -3,16 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="ZONIX - The Marketplace, Redefined. Premium luxury e-commerce for high-end tech and lifestyle products.">
-    <title>ZONIX - The Marketplace, Redefined</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Information | Zonix</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .info-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            min-height: 50vh;
+        }
+        .info-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #0a0e27;
+            border-bottom: 2px solid #f2f2f2;
+            padding-bottom: 10px;
+        }
+        .info-content {
+            line-height: 1.6;
+            color: #444;
+            font-size: 1.1rem;
+        }
+        .info-content h3 {
+            margin-top: 25px;
+            color: #0a0e27;
+        }
+        .info-content p {
+            margin-bottom: 15px;
+        }
+        .info-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
-    <!--- Navigation Bar --->
+    <!-- Top Navigation -->
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-logo">
-                <a href="./" class="logo-text">ZONIX</a>
+                <a href="../" class="logo-text">ZONIX</a>
             </div>
             
             <div class="navbar-deliver">
@@ -34,17 +70,17 @@
             </div>
 
             <div class="navbar-icons">
-                <a href="login/" class="nav-link-custom">
+                <a href="../login/" class="nav-link-custom">
                     <span class="nav-small">Hello, sign in</span>
                     <span class="nav-bold">Account & Lists</span>
                 </a>
                 
-                <a href="shop/" class="nav-link-custom">
+                <a href="../shop/" class="nav-link-custom">
                     <span class="nav-small">Returns</span>
                     <span class="nav-bold">& Orders</span>
                 </a>
 
-                <a href="cart/" class="nav-link-custom cart-link">
+                <a href="../cart/" class="nav-link-custom cart-link">
                     <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
@@ -56,36 +92,19 @@
         </div>
     </nav>
     <div class="sub-navbar">
-        <a href="./" class="sub-nav-link">All</a>
-        <a href="shop/" class="sub-nav-link">Shop</a>
-        <a href="about/" class="sub-nav-link">About Zonix</a>
-        <a href="contact/" class="sub-nav-link">Customer Service</a>
+        <a href="../" class="sub-nav-link">All</a>
+        <a href="../shop/" class="sub-nav-link">Shop</a>
+        <a href="../about/" class="sub-nav-link">About Zonix</a>
+        <a href="../contact/" class="sub-nav-link">Customer Service</a>
     </div>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-wrapper">
-            <div class="hero-content">
-                <h1 class="hero-title">The Marketplace, Redefined</h1>
-                <p class="hero-subtitle">Discover premium, curated products for the modern lifestyle.</p>
-                <a href="shop/" class="cta-button">Explore Collections</a>
-            </div>
-            <div class="hero-image">
-                <img src="assets/images/keyboard.jpg" alt="High-end RGB Mechanical Keyboard" />
-            </div>
+    <!-- Main Content Area -->
+    <main class="info-container">
+        <h1 class="info-title" id="infoTitle">Loading...</h1>
+        <div class="info-content" id="infoContent">
+            <p>Please wait while we load the content.</p>
         </div>
-    </section>
-
-    <!-- Products Section -->
-    <section class="products-section" id="products">
-        <div class="products-container">
-            <h2 class="section-title">Featured Products</h2>
-            <div class="products-grid" id="featuredProductsGrid">
-                <!-- Products dynamically loaded from Firebase -->
-                <div class="loading-state">Loading products...</div>
-            </div>
-        </div>
-    </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
@@ -93,25 +112,25 @@
             <div class="footer-section">
                 <h4>Explore</h4>
                 <ul>
-                    <li><a href="shop/">Shop All</a></li>
-                    <li><a href="about/">About ZONIX</a></li>
-                    <li><a href="info/?page=collections">Collections</a></li>
+                    <li><a href="../shop/">Shop All</a></li>
+                    <li><a href="../about/">About ZONIX</a></li>
+                    <li><a href="?page=collections">Collections</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4>Support</h4>
                 <ul>
-                    <li><a href="info/?page=help">Help Center</a></li>
-                    <li><a href="contact/">Contact Us</a></li>
-                    <li><a href="info/?page=shipping">Shipping Info</a></li>
+                    <li><a href="?page=help">Help Center</a></li>
+                    <li><a href="../contact/">Contact Us</a></li>
+                    <li><a href="?page=shipping">Shipping Info</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4>Legal</h4>
                 <ul>
-                    <li><a href="info/?page=privacy">Privacy Policy</a></li>
-                    <li><a href="info/?page=terms">Terms of Service</a></li>
-                    <li><a href="info/?page=returns">Returns</a></li>
+                    <li><a href="?page=privacy">Privacy Policy</a></li>
+                    <li><a href="?page=terms">Terms of Service</a></li>
+                    <li><a href="?page=returns">Returns</a></li>
                 </ul>
             </div>
         </div>
@@ -121,6 +140,6 @@
     </footer>
 
     <!-- Scripts -->
-    <script type="module" src="js/main.js"></script>
+    <script type="module" src="../js/main.js"></script>
 </body>
 </html>
