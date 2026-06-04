@@ -308,7 +308,7 @@ async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) 
     
     // Update products count
     const countEl = document.querySelector('.products-count');
-    if(countEl) countEl.textContent = \`Showing \${displayProducts.length} Products\`;
+    if(countEl) countEl.textContent = `Showing ${displayProducts.length} Products`;
     
     // Re-initialize add to cart listeners
     initProducts();
