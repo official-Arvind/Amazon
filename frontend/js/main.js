@@ -15,6 +15,7 @@ import {
 } from '../../backend/js/auth.js';
 
 import {
+  getProducts,
   addToCart,
   getCartItems,
   removeFromCart,
@@ -59,6 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initProfile();
   } else if (path.includes('/help/')) {
     initHelp();
+  } else if (path.includes('/shop/') || path.endsWith('shop/index.html')) {
+    loadShopProducts();
+  } else if (path === '/' || path.endsWith('/index.html') || path.endsWith('/frontend/')) {
+    loadShopProducts('featuredProductsGrid', 4);
   }
 
   // 3. Initialize Products (Add to Cart buttons) everywhere
@@ -221,6 +226,10 @@ function showNotification(message, type = 'info') {
 function initProducts() {
   const productCards = document.querySelectorAll('.product-card');
   productCards.forEach(card => {
+    // Avoid attaching multiple listeners if re-rendered
+    if (card.dataset.initialized === 'true') return;
+    card.dataset.initialized = 'true';
+    
     const addBtn = card.querySelector('.add-to-cart-btn');
     if (addBtn) {
       addBtn.addEventListener('click', async (e) => {
@@ -257,6 +266,56 @@ function initProducts() {
       });
     }
   });
+}
+
+async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  
+  try {
+    const products = await getProducts();
+    
+    if (products.length === 0) {
+      container.innerHTML = '<div class="empty-state">No products available at the moment.</div>';
+      // Also update products count if it exists
+      const countEl = document.querySelector('.products-count');
+      if(countEl) countEl.textContent = 'Showing 0 Products';
+      return;
+    }
+    
+    const displayProducts = maxItems > 0 ? products.slice(0, maxItems) : products;
+    
+    container.innerHTML = displayProducts.map(product => `
+      <article class="product-card" data-product-id="${product.id}">
+          <div class="product-image-container">
+              <img src="${product.image || '../assets/images/placeholder.jpg'}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/400x400?text=Image+Not+Found'"/>
+              <button class="wishlist-btn" aria-label="Add to wishlist">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+              </button>
+          </div>
+          <div class="product-info">
+              <h3 class="product-name">${product.name}</h3>
+              <p class="product-category">${product.category || 'General'}</p>
+              <div class="product-footer">
+                  <span class="product-price">₹${product.price}</span>
+                  <button class="add-to-cart-btn">Add to Cart</button>
+              </div>
+          </div>
+      </article>
+    `).join('');
+    
+    // Update products count
+    const countEl = document.querySelector('.products-count');
+    if(countEl) countEl.textContent = \`Showing \${displayProducts.length} Products\`;
+    
+    // Re-initialize add to cart listeners
+    initProducts();
+  } catch (error) {
+    container.innerHTML = '<div class="error-state">Failed to load products. Please try again later.</div>';
+    console.error('Error loading products:', error);
+  }
 }
 
 // =============================================

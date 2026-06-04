@@ -29,6 +29,7 @@ import {
   getStatusClass
 } from '../../backend/js/admin.js';
 import { logoutUser } from '../../backend/js/auth.js';
+import { importCjProductsToFirebase } from '../../backend/js/cj_import.js';
 
 // =============================================
 // DOM ELEMENTS
@@ -50,6 +51,7 @@ const editProductForm = document.getElementById('editProductForm');
 const editProductModal = document.getElementById('editProductModal');
 const closeEditModal = document.getElementById('closeEditModal');
 const cancelEditBtn = document.getElementById('cancelEditBtn');
+const importCjBtn = document.getElementById('importCjBtn');
 
 // Store data globally for editing
 window.adminData = {
@@ -119,6 +121,11 @@ function initializeEventListeners() {
 
   // Logout
   logoutBtn.addEventListener('click', handleLogout);
+
+  // Import CJ Products
+  if (importCjBtn) {
+    importCjBtn.addEventListener('click', handleImportCjProducts);
+  }
 }
 
 /**
@@ -223,6 +230,34 @@ async function handleAddProduct(e) {
     errorEl.textContent = error.message || 'Failed to add product';
     errorEl.classList.add('show');
     showToast(error.message, 'error');
+  } finally {
+    showLoading(false);
+  }
+}
+
+/**
+ * Handle CJ Products import
+ */
+async function handleImportCjProducts() {
+  if (!confirm('This will fetch products from CJ Dropshipping and import them into the store. Continue?')) {
+    return;
+  }
+  
+  try {
+    showLoading(true);
+    showToast('Importing products from CJ Dropshipping...', 'info');
+    
+    const result = await importCjProductsToFirebase();
+    
+    if (result.success) {
+      showToast(result.message, 'success');
+      // Refresh inventory table
+      const products = await getInventory();
+      window.adminData.products = products;
+      populateInventoryTable(products);
+    }
+  } catch (error) {
+    showToast('Failed to import CJ products: ' + error.message, 'error');
   } finally {
     showLoading(false);
   }
