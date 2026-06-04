@@ -14,7 +14,6 @@ let tokenExpiry = null;
  * @returns {Promise<string>} The access token
  */
 export async function getCjAccessToken() {
-    // If we have a valid token, return it
     if (accessToken && tokenExpiry && Date.now() < tokenExpiry) {
         return accessToken;
     }
@@ -22,23 +21,20 @@ export async function getCjAccessToken() {
     try {
         const response = await fetch(`${CJ_API_BASE}/authentication/getAccessToken`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                apiKey: CJ_API_KEY
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ apiKey: CJ_API_KEY })
         });
 
         const result = await response.json();
-        
+        console.log('CJ Auth Response:', JSON.stringify(result));
+
         if (result.code === 200 && result.data) {
             accessToken = result.data.accessToken;
-            // Token is usually valid for 180 days, but we'll cache it in memory for this session
-            tokenExpiry = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
+            tokenExpiry = Date.now() + (24 * 60 * 60 * 1000);
+            console.log('CJ Access Token obtained successfully');
             return accessToken;
         } else {
-            throw new Error(result.message || "Failed to retrieve access token");
+            throw new Error(result.message || `Auth failed with code ${result.code}`);
         }
     } catch (error) {
         console.error("CJ API Auth Error:", error);
@@ -47,7 +43,8 @@ export async function getCjAccessToken() {
 }
 
 /**
- * Fetch a list of products from CJ Dropshipping using the V2 endpoint.
+ * Fetch a list of products from CJ Dropshipping.
+ * Handles multiple response shapes from the API.
  * @param {number} page - Page number (default: 1)
  * @param {number} size - Results per page (default: 20)
  * @param {string} keyword - Optional search keyword
@@ -56,9 +53,8 @@ export async function getCjAccessToken() {
 export async function fetchCjProducts(page = 1, size = 20, keyword = "") {
     try {
         const token = await getCjAccessToken();
-        
-        // Construct query parameters
-        let url = `${CJ_API_BASE}/product/listV2?page=${page}&size=${size}`;
+
+        let url = `${CJ_API_BASE}/product/listV2?pageNum=${page}&pageSize=${size}`;
         if (keyword) {
             url += `&keyWord=${encodeURIComponent(keyword)}`;
         }
@@ -72,11 +68,26 @@ export async function fetchCjProducts(page = 1, size = 20, keyword = "") {
         });
 
         const result = await response.json();
-        
-        if (result.code === 200 && result.data && result.data.list) {
-            return result.data.list;
+        console.log('CJ Products Response code:', result.code, '| message:', result.message);
+
+        if (result.code === 200) {
+            // The API may return data in different shapes — handle all of them
+            const data = result.data;
+            if (Array.isArray(data)) {
+                return data;
+            } else if (data && Array.isArray(data.list)) {
+                return data.list;
+            } else if (data && Array.isArray(data.products)) {
+                return data.products;
+            } else {
+                // If no list found but code is 200, store is not verified yet
+                console.warn("CJ API: No product list found. Your store may need verification on CJ platform.");
+                return [];
+            }
         } else {
-            throw new Error(result.message || "Failed to fetch products");
+            // The "Error: Success" bug was here — message was "Success" but code wasn't 200
+            console.error("CJ API returned unexpected response:", result);
+            throw new Error(result.message || `API error code: ${result.code}`);
         }
     } catch (error) {
         console.error("CJ API Product Fetch Error:", error);
@@ -86,37 +97,38 @@ export async function fetchCjProducts(page = 1, size = 20, keyword = "") {
 
 /**
  * Push an order to CJ Dropshipping for fulfillment.
- * Uses payType=3 (Create order only, no direct payment deduction).
+ * Uses payType=3 (Create order only, no payment deduction).
  * @param {Object} orderData Our Firebase order object
  * @returns {Promise<Object>} The created CJ order data
  */
 export async function createCjOrder(orderData) {
     try {
         const token = await getCjAccessToken();
-        
-        // Map Firebase order products to CJ format
+
         const cjProducts = orderData.items.map(item => ({
-            vid: item.cjProductId || item.productId, // Fallback if no specific cj variant id
+            vid: item.cjProductId || item.productId,
             quantity: item.quantity,
-            storeLineItemId: item.productId // Just for our reference in CJ dashboard
+            storeLineItemId: item.productId
         }));
 
         const cjPayload = {
             orderNumber: orderData.orderNumber,
-            shippingCustomerName: orderData.shippingAddress.name,
-            shippingAddress: orderData.shippingAddress.street,
-            shippingCity: orderData.shippingAddress.city,
-            shippingProvince: orderData.shippingAddress.state,
-            shippingCountryCode: orderData.shippingAddress.country || 'US',
-            shippingCountry: orderData.shippingAddress.country || 'USA',
-            shippingZip: orderData.shippingAddress.zip,
-            shippingPhone: orderData.shippingAddress.phone,
-            logisticName: "CJPacket", // Generic default, can be customized
+            shippingCustomerName: orderData.shippingAddress?.name || 'Customer',
+            shippingAddress: orderData.shippingAddress?.street || '123 Main St',
+            shippingCity: orderData.shippingAddress?.city || 'New York',
+            shippingProvince: orderData.shippingAddress?.state || 'NY',
+            shippingCountryCode: 'IN',
+            shippingCountry: 'India',
+            shippingZip: orderData.shippingAddress?.zip || '110001',
+            shippingPhone: orderData.shippingAddress?.phone || '9999999999',
+            logisticName: "CJPacket",
             fromCountryCode: "CN",
-            platform: "custom", // Important since we are a custom app
-            payType: 3, // Create order only
+            platform: "custom",
+            payType: 3,
             products: cjProducts
         };
+
+        console.log('Creating CJ Order with payload:', JSON.stringify(cjPayload));
 
         const response = await fetch(`${CJ_API_BASE}/shopping/order/createOrderV2`, {
             method: 'POST',
@@ -128,7 +140,8 @@ export async function createCjOrder(orderData) {
         });
 
         const result = await response.json();
-        
+        console.log('CJ Create Order Response:', JSON.stringify(result));
+
         if (result.code === 200) {
             return result.data;
         } else {

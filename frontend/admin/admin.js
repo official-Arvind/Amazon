@@ -38,6 +38,7 @@ import { createCjOrder } from '../../backend/js/cj_api.js';
 
 const pageTitle = document.getElementById('pageTitle');
 const userEmail = document.getElementById('userEmail');
+const userAvatar = document.getElementById('userAvatar');
 const logoutBtn = document.getElementById('logoutBtn');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const toast = document.getElementById('toast');
@@ -53,6 +54,12 @@ const editProductModal = document.getElementById('editProductModal');
 const closeEditModal = document.getElementById('closeEditModal');
 const cancelEditBtn = document.getElementById('cancelEditBtn');
 const importCjBtn = document.getElementById('importCjBtn');
+
+// CJ Modal elements
+const cjImportModal = document.getElementById('cjImportModal');
+const closeCjModal = document.getElementById('closeCjModal');
+const confirmImportCj = document.getElementById('confirmImportCj');
+const cjKeywordInput = document.getElementById('cjKeyword');
 
 // Store data globally for editing
 window.adminData = {
@@ -92,6 +99,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Update UI with user info
     userEmail.textContent = user.email;
+    if (userAvatar) {
+      userAvatar.textContent = user.email.charAt(0).toUpperCase();
+    }
     
     // Initialize event listeners
     initializeEventListeners();
@@ -123,9 +133,26 @@ function initializeEventListeners() {
   // Logout
   logoutBtn.addEventListener('click', handleLogout);
 
-  // Import CJ Products
+  // Import CJ Products button — opens keyword modal
   if (importCjBtn) {
-    importCjBtn.addEventListener('click', handleImportCjProducts);
+    importCjBtn.addEventListener('click', () => {
+      cjImportModal.classList.add('show');
+    });
+  }
+
+  // Close CJ modal
+  if (closeCjModal) {
+    closeCjModal.addEventListener('click', () => cjImportModal.classList.remove('show'));
+  }
+  if (cjImportModal) {
+    cjImportModal.addEventListener('click', (e) => {
+      if (e.target === cjImportModal) cjImportModal.classList.remove('show');
+    });
+  }
+
+  // Confirm CJ import
+  if (confirmImportCj) {
+    confirmImportCj.addEventListener('click', handleImportCjProducts);
   }
 }
 
@@ -240,15 +267,14 @@ async function handleAddProduct(e) {
  * Handle CJ Products import
  */
 async function handleImportCjProducts() {
-  if (!confirm('This will fetch products from CJ Dropshipping and import them into the store. Continue?')) {
-    return;
-  }
+  const keyword = (cjKeywordInput ? cjKeywordInput.value.trim() : '') || 'tech';
   
   try {
+    if (cjImportModal) cjImportModal.classList.remove('show');
     showLoading(true);
-    showToast('Importing products from CJ Dropshipping...', 'info');
+    showToast(`Importing "${keyword}" products from CJ Dropshipping...`, 'info');
     
-    const result = await importCjProductsToFirebase();
+    const result = await importCjProductsToFirebase(keyword);
     
     if (result.success) {
       showToast(result.message, 'success');
@@ -256,9 +282,11 @@ async function handleImportCjProducts() {
       const products = await getInventory();
       window.adminData.products = products;
       populateInventoryTable(products);
+      const countEl = document.getElementById('inventoryCount');
+      if (countEl) countEl.textContent = `${products.length} products`;
     }
   } catch (error) {
-    showToast('Failed to import CJ products: ' + error.message, 'error');
+    showToast('CJ Import failed: ' + error.message, 'error');
   } finally {
     showLoading(false);
   }
@@ -391,10 +419,14 @@ function populateRecentOrdersTable(orders) {
  * Populate inventory table
  */
 function populateInventoryTable(products) {
+  const countEl = document.getElementById('inventoryCount');
   if (products.length === 0) {
-    inventoryBody.innerHTML = '<tr><td colspan="5" class="empty-state">No products yet</td></tr>';
+    inventoryBody.innerHTML = '<tr><td colspan="6" class="empty-state">No products yet. Add one above or import from CJ!</td></tr>';
+    if (countEl) countEl.textContent = '0 products';
     return;
   }
+
+  if (countEl) countEl.textContent = `${products.length} products`;
 
   inventoryBody.innerHTML = products.map(product => {
     let stockStatus = 'in-stock';
@@ -406,18 +438,14 @@ function populateInventoryTable(products) {
 
     return `
       <tr>
-        <td>${product.name}</td>
+        <td><strong>${product.name}</strong>${product.source === 'cj_dropshipping' ? ' <span style="font-size:0.7rem;color:#f59e0b;font-weight:600;">CJ</span>' : ''}</td>
         <td>${formatCurrency(product.price)}</td>
         <td>${product.stock}</td>
         <td>${product.category || 'Uncategorized'}</td>
-        <td>
-          <span class="status-badge ${stockStatus}">
-            ${stockStatus.replace('-', ' ')}
-          </span>
-        </td>
-        <td>
-          <button class="btn-small btn-edit" onclick="window.openEditModal('${product.id}')">Edit</button>
-          <button class="btn-small btn-delete" onclick="window.handleDeleteProduct('${product.id}')" style="background-color: var(--color-accent-danger); color: white; border: none;">Delete</button>
+        <td><span class="status-badge ${stockStatus}">${stockStatus.replace(/-/g, ' ')}</span></td>
+        <td class="actions-cell">
+          <button class="btn btn-secondary btn-sm" onclick="window.openEditModal('${product.id}')">Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="window.handleDeleteProduct('${product.id}')">Delete</button>
         </td>
       </tr>
     `;
@@ -429,7 +457,7 @@ function populateInventoryTable(products) {
  */
 function populateAllOrdersTable(orders) {
   if (orders.length === 0) {
-    allOrdersBody.innerHTML = '<tr><td colspan="6" class="empty-state">No orders found</td></tr>';
+    allOrdersBody.innerHTML = '<tr><td colspan="7" class="empty-state">No orders found</td></tr>';
     return;
   }
 
@@ -437,24 +465,22 @@ function populateAllOrdersTable(orders) {
     const itemsCount = order.items ? order.items.length : 0;
     return `
       <tr>
-        <td>${order.id.substring(0, 8)}</td>
-        <td>${order.userEmail}</td>
-        <td>${formatCurrency(order.totalAmount)}</td>
+        <td><code style="font-size:0.8rem;background:#f3f4f6;padding:2px 6px;border-radius:3px;">${order.id.substring(0, 8)}</code></td>
+        <td>${order.userEmail || '—'}</td>
+        <td><strong>${formatCurrency(order.totalAmount)}</strong></td>
         <td>${itemsCount}</td>
-        <td>
-          <span class="status-badge ${getStatusClass(order.status)}">
-            ${order.status || 'pending'}
-          </span>
-        </td>
+        <td><span class="status-badge ${getStatusClass(order.status)}">${order.status || 'pending'}</span></td>
         <td>${formatTimestamp(order.createdAt)}</td>
-        <td>
+        <td class="actions-cell">
           <select class="status-select" data-id="${order.id}" onchange="window.handleStatusChange(this)">
             <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
             <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
             <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
             <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
           </select>
-          <button class="btn-small" onclick="window.handleCjFulfillment('${order.id}')" style="background-color: #ffd814; color: #000; border: none; margin-top: 5px;">Fulfill via CJ</button>
+          <button class="btn btn-primary btn-sm" onclick="window.handleCjFulfillment('${order.id}')">
+            🚀 Fulfill via CJ
+          </button>
         </td>
       </tr>
     `;
@@ -472,12 +498,12 @@ function populateUsersTable(users) {
 
   usersBody.innerHTML = users.map(user => `
     <tr>
-      <td>${user.id.substring(0, 8)}</td>
+      <td><code style="font-size:0.8rem;background:#f3f4f6;padding:2px 6px;border-radius:3px;">${user.id.substring(0, 8)}</code></td>
       <td>${user.email}</td>
       <td>${user.displayName || 'N/A'}</td>
       <td>${formatTimestamp(user.createdAt)}</td>
-      <td>
-        <button class="btn-small btn-delete" onclick="window.handleDeleteUser('${user.id}')" style="background-color: var(--color-accent-danger); color: white; border: none;">Delete</button>
+      <td class="actions-cell">
+        <button class="btn btn-danger btn-sm" onclick="window.handleDeleteUser('${user.id}')">Delete</button>
       </td>
     </tr>
   `).join('');
