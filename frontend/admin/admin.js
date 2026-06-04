@@ -20,6 +20,10 @@ import {
   getAllUsers,
   getAdminStats,
   getRecentOrders,
+  updateProduct,
+  deleteProduct,
+  updateOrderStatus,
+  deleteUser,
   formatTimestamp,
   formatCurrency,
   getStatusClass
@@ -42,6 +46,17 @@ const navLinks = document.querySelectorAll('.nav-link');
 
 // Forms
 const addProductForm = document.getElementById('addProductForm');
+const editProductForm = document.getElementById('editProductForm');
+const editProductModal = document.getElementById('editProductModal');
+const closeEditModal = document.getElementById('closeEditModal');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+// Store data globally for editing
+window.adminData = {
+  products: [],
+  orders: [],
+  users: []
+};
 
 // Sections
 const sections = document.querySelectorAll('.section');
@@ -251,6 +266,7 @@ async function loadInventoryData() {
     showLoading(true);
 
     const products = await getInventory();
+    window.adminData.products = products;
     populateInventoryTable(products);
 
     showLoading(false);
@@ -269,6 +285,7 @@ async function loadAllOrdersData() {
     showLoading(true);
 
     const orders = await getAllOrders();
+    window.adminData.orders = orders;
     populateAllOrdersTable(orders);
 
     showLoading(false);
@@ -287,6 +304,7 @@ async function loadUsersData() {
     showLoading(true);
 
     const users = await getAllUsers();
+    window.adminData.users = users;
     populateUsersTable(users);
 
     showLoading(false);
@@ -321,6 +339,14 @@ function populateRecentOrdersTable(orders) {
         </span>
       </td>
       <td>${formatTimestamp(order.createdAt)}</td>
+      <td>
+        <select class="status-select" data-id="${order.id}" onchange="window.handleStatusChange(this)">
+          <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+          <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+          <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+          <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+        </select>
+      </td>
     </tr>
   `).join('');
 }
@@ -353,6 +379,10 @@ function populateInventoryTable(products) {
             ${stockStatus.replace('-', ' ')}
           </span>
         </td>
+        <td>
+          <button class="btn-small btn-edit" onclick="window.openEditModal('${product.id}')">Edit</button>
+          <button class="btn-small btn-delete" onclick="window.handleDeleteProduct('${product.id}')" style="background-color: var(--color-accent-danger); color: white; border: none;">Delete</button>
+        </td>
       </tr>
     `;
   }).join('');
@@ -381,6 +411,14 @@ function populateAllOrdersTable(orders) {
           </span>
         </td>
         <td>${formatTimestamp(order.createdAt)}</td>
+        <td>
+          <select class="status-select" data-id="${order.id}" onchange="window.handleStatusChange(this)">
+            <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+            <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+            <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+          </select>
+        </td>
       </tr>
     `;
   }).join('');
@@ -402,7 +440,7 @@ function populateUsersTable(users) {
       <td>${user.displayName || 'N/A'}</td>
       <td>${formatTimestamp(user.createdAt)}</td>
       <td>
-        <button class="btn-small" title="View Details">Details</button>
+        <button class="btn-small btn-delete" onclick="window.handleDeleteUser('${user.id}')" style="background-color: var(--color-accent-danger); color: white; border: none;">Delete</button>
       </td>
     </tr>
   `).join('');
@@ -434,3 +472,115 @@ function showToast(message, type = 'info') {
     toast.classList.remove('show');
   }, 3000);
 }
+
+// =============================================
+// GLOBAL HANDLERS FOR INLINE EVENTS
+// =============================================
+
+window.handleStatusChange = async function(selectElement) {
+  const orderId = selectElement.getAttribute('data-id');
+  const newStatus = selectElement.value;
+  try {
+    showLoading(true);
+    await updateOrderStatus(orderId, newStatus);
+    showToast(`Order status updated to ${newStatus}`, 'success');
+  } catch (error) {
+    showToast('Failed to update status: ' + error.message, 'error');
+  } finally {
+    showLoading(false);
+  }
+};
+
+window.openEditModal = function(productId) {
+  const product = window.adminData.products.find(p => p.id === productId);
+  if (!product) return;
+  
+  document.getElementById('editProductId').value = product.id;
+  document.getElementById('editProductName').value = product.name;
+  document.getElementById('editProductPrice').value = product.price;
+  document.getElementById('editProductStock').value = product.stock;
+  document.getElementById('editProductCategory').value = product.category || '';
+  document.getElementById('editProductImage').value = product.image;
+  document.getElementById('editProductDescription').value = product.description;
+  
+  editProductModal.classList.add('show');
+};
+
+window.closeEditModalFn = function() {
+  editProductModal.classList.remove('show');
+};
+if (closeEditModal) closeEditModal.addEventListener('click', window.closeEditModalFn);
+if (cancelEditBtn) cancelEditBtn.addEventListener('click', window.closeEditModalFn);
+
+if (editProductForm) {
+  editProductForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const productId = document.getElementById('editProductId').value;
+    const updates = {
+      name: document.getElementById('editProductName').value,
+      price: parseFloat(document.getElementById('editProductPrice').value),
+      stock: parseInt(document.getElementById('editProductStock').value),
+      category: document.getElementById('editProductCategory').value,
+      image: document.getElementById('editProductImage').value,
+      description: document.getElementById('editProductDescription').value
+    };
+    
+    try {
+      showLoading(true);
+      await updateProduct(productId, updates);
+      showToast('Product updated successfully', 'success');
+      window.closeEditModalFn();
+      const loadInventoryDataFn = async function() {
+        const products = await getInventory();
+        window.adminData.products = products;
+        populateInventoryTable(products);
+      };
+      await loadInventoryDataFn();
+    } catch (error) {
+      showToast('Error updating product: ' + error.message, 'error');
+    } finally {
+      showLoading(false);
+    }
+  });
+}
+
+window.handleDeleteProduct = async function(productId) {
+  if (confirm('Are you sure you want to delete this product?')) {
+    try {
+      showLoading(true);
+      await deleteProduct(productId);
+      showToast('Product deleted', 'success');
+      const loadInventoryDataFn = async function() {
+        const products = await getInventory();
+        window.adminData.products = products;
+        populateInventoryTable(products);
+      };
+      await loadInventoryDataFn();
+    } catch (error) {
+      showToast('Failed to delete product', 'error');
+    } finally {
+      showLoading(false);
+    }
+  }
+};
+
+window.handleDeleteUser = async function(userId) {
+  if (confirm('Are you sure you want to delete this user?')) {
+    try {
+      showLoading(true);
+      await deleteUser(userId);
+      showToast('User deleted', 'success');
+      const loadUsersDataFn = async function() {
+        const users = await getAllUsers();
+        window.adminData.users = users;
+        populateUsersTable(users);
+      };
+      await loadUsersDataFn();
+    } catch (error) {
+      showToast('Failed to delete user', 'error');
+    } finally {
+      showLoading(false);
+    }
+  }
+};
+

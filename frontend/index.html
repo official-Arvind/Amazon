@@ -14,35 +14,53 @@
             <div class="navbar-logo">
                 <a href="./" class="logo-text">ZONIX</a>
             </div>
-            <div class="navbar-menu">
-                <a href="./" class="nav-link active">Home</a>
-                <a href="shop/" class="nav-link">Shop</a>
-                <a href="about/" class="nav-link">About</a>
-                <a href="contact/" class="nav-link">Contact</a>
+            
+            <div class="navbar-deliver">
+                <span class="deliver-to">Deliver to</span>
+                <span class="deliver-location">India</span>
             </div>
-            <div class="navbar-icons">
-                <button class="icon-btn" aria-label="Search">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+
+            <div class="navbar-search">
+                <select class="search-category">
+                    <option>All</option>
+                </select>
+                <input type="text" class="search-input" placeholder="Search Zonix">
+                <button class="search-btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
                     </svg>
                 </button>
-                <a href="cart/" class="icon-btn" aria-label="Cart">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            </div>
+
+            <div class="navbar-icons">
+                <a href="login/" class="nav-link-custom">
+                    <span class="nav-small">Hello, sign in</span>
+                    <span class="nav-bold">Account & Lists</span>
+                </a>
+                
+                <a href="shop/" class="nav-link-custom">
+                    <span class="nav-small">Returns</span>
+                    <span class="nav-bold">& Orders</span>
+                </a>
+
+                <a href="cart/" class="nav-link-custom cart-link">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
-                    
-                <a href="login/" class="icon-btn" aria-label="Account">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+                    <span class="nav-bold cart-text">Cart</span>
                 </a>
             </div>
         </div>
     </nav>
+    <div class="sub-navbar">
+        <a href="./" class="sub-nav-link">All</a>
+        <a href="shop/" class="sub-nav-link">Shop</a>
+        <a href="about/" class="sub-nav-link">About Zonix</a>
+        <a href="contact/" class="sub-nav-link">Customer Service</a>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero" id="home">

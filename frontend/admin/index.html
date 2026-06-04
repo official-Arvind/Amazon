@@ -148,6 +148,7 @@
                                         <th>Amount</th>
                                         <th>Status</th>
                                         <th>Date</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="recentOrdersBody">
@@ -254,6 +255,7 @@
                                         <th>Stock</th>
                                         <th>Category</th>
                                         <th>Status</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="inventoryBody">
@@ -278,6 +280,7 @@
                                     <th>Items Count</th>
                                     <th>Status</th>
                                     <th>Date</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="allOrdersBody">
@@ -312,6 +315,51 @@
                 </section>
             </div>
         </main>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div class="modal" id="editProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Product</h2>
+                <button class="close-modal" id="closeEditModal">&times;</button>
+            </div>
+            <form id="editProductForm" class="product-form">
+                <input type="hidden" id="editProductId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editProductName">Product Name *</label>
+                        <input type="text" id="editProductName" name="name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductPrice">Price (₹) *</label>
+                        <input type="number" id="editProductPrice" name="price" min="0" step="0.01" required />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editProductStock">Stock Quantity *</label>
+                        <input type="number" id="editProductStock" name="stock" min="0" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="editProductCategory">Category</label>
+                        <input type="text" id="editProductCategory" name="category" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editProductImage">Image URL *</label>
+                    <input type="url" id="editProductImage" name="image" required />
+                </div>
+                <div class="form-group">
+                    <label for="editProductDescription">Description *</label>
+                    <textarea id="editProductDescription" name="description" rows="4" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                    <button type="button" class="btn-secondary" id="cancelEditBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <div class="loading-overlay" id="loadingOverlay">

@@ -30,6 +30,7 @@ import {
   setDoc,
   addDoc,
   updateDoc,
+  deleteDoc,
   query,
   where,
   orderBy,
@@ -192,6 +193,33 @@ export async function getInventory() {
 }
 
 // =============================================
+
+export async function updateProduct(productId, updates) {
+  try {
+    const productRef = doc(db, 'products', productId);
+    await updateDoc(productRef, {
+      ...updates,
+      updatedAt: serverTimestamp()
+    });
+    console.log(`✓ Product ${productId} updated`);
+  } catch (error) {
+    console.error(`✗ Error updating product ${productId}:`, error.message);
+    throw error;
+  }
+}
+
+export async function deleteProduct(productId) {
+  try {
+    const productRef = doc(db, 'products', productId);
+    await deleteDoc(productRef);
+    console.log(`✓ Product ${productId} deleted`);
+  } catch (error) {
+    console.error(`✗ Error deleting product ${productId}:`, error.message);
+    throw error;
+  }
+}
+
+// =============================================
 // ORDER FUNCTIONS
 // =============================================
 
@@ -269,6 +297,22 @@ export async function getRecentOrders(limitCount = 5) {
 }
 
 // =============================================
+
+export async function updateOrderStatus(orderId, newStatus) {
+  try {
+    const orderRef = doc(db, 'orders', orderId);
+    await updateDoc(orderRef, {
+      status: newStatus,
+      updatedAt: serverTimestamp()
+    });
+    console.log(`✓ Order ${orderId} status updated to ${newStatus}`);
+  } catch (error) {
+    console.error(`✗ Error updating order ${orderId} status:`, error.message);
+    throw error;
+  }
+}
+
+// =============================================
 // USER FUNCTIONS
 // =============================================
 
@@ -303,6 +347,19 @@ export async function getAllUsers() {
     return users;
   } catch (error) {
     console.error('✗ Error fetching users:', error.message);
+    throw error;
+  }
+}
+
+// =============================================
+
+export async function deleteUser(userId) {
+  try {
+    const userRef = doc(db, 'users', userId);
+    await deleteDoc(userRef);
+    console.log(`✓ User ${userId} deleted from collection`);
+  } catch (error) {
+    console.error(`✗ Error deleting user ${userId}:`, error.message);
     throw error;
   }
 }
