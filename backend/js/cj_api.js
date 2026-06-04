@@ -71,22 +71,33 @@ export async function fetchCjProducts(page = 1, size = 20, keyword = "") {
         console.log('CJ Products Response code:', result.code, '| message:', result.message);
 
         if (result.code === 200) {
-            // The API may return data in different shapes — handle all of them
             const data = result.data;
-            if (Array.isArray(data)) {
+            console.log('CJ Products data type:', typeof data, '| keys:', data ? Object.keys(data) : 'null');
+            
+            // CJ API v2 returns products in data.result (documented format)
+            if (data && Array.isArray(data.result)) {
+                console.log(`✓ Found ${data.result.length} products in data.result`);
+                return data.result;
+            } else if (Array.isArray(data)) {
+                console.log(`✓ Found ${data.length} products in data[]`);
                 return data;
             } else if (data && Array.isArray(data.list)) {
+                console.log(`✓ Found ${data.list.length} products in data.list`);
                 return data.list;
             } else if (data && Array.isArray(data.products)) {
+                console.log(`✓ Found ${data.products.length} products in data.products`);
                 return data.products;
+            } else if (data && data.total === 0) {
+                console.warn("CJ API: Search returned 0 products for this keyword.");
+                return [];
             } else {
-                // If no list found but code is 200, store is not verified yet
-                console.warn("CJ API: No product list found. Your store may need verification on CJ platform.");
+                // Log entire data for future debugging
+                console.warn("CJ API: Unexpected data shape:", JSON.stringify(data));
+                console.warn("Your CJ store may need verification. Visit: https://cjdropshipping.com → My CJ → API Management");
                 return [];
             }
         } else {
-            // The "Error: Success" bug was here — message was "Success" but code wasn't 200
-            console.error("CJ API returned unexpected response:", result);
+            console.error("CJ API returned error code:", result.code, result.message);
             throw new Error(result.message || `API error code: ${result.code}`);
         }
     } catch (error) {

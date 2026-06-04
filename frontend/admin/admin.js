@@ -276,15 +276,19 @@ async function handleImportCjProducts() {
     
     const result = await importCjProductsToFirebase(keyword);
     
-    if (result.success) {
+    if (result.success && result.imported > 0) {
       showToast(result.message, 'success');
-      // Refresh inventory table
-      const products = await getInventory();
-      window.adminData.products = products;
-      populateInventoryTable(products);
-      const countEl = document.getElementById('inventoryCount');
-      if (countEl) countEl.textContent = `${products.length} products`;
+    } else if (result.success && result.imported === 0) {
+      showToast('⚠️ No products returned from CJ. Your store may need verification on the CJ Dropshipping platform (My CJ → API Management). Try a different keyword or contact CJ support.', 'warning');
     }
+    
+    // Always refresh inventory
+    const products = await getInventory();
+    window.adminData.products = products;
+    populateInventoryTable(products);
+    const countEl = document.getElementById('inventoryCount');
+    if (countEl) countEl.textContent = `${products.length} products`;
+    
   } catch (error) {
     showToast('CJ Import failed: ' + error.message, 'error');
   } finally {
