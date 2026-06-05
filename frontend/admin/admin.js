@@ -26,7 +26,12 @@ import {
   deleteUser,
   formatTimestamp,
   formatCurrency,
-  getStatusClass
+  getStatusClass,
+  getAdminAccounts,
+  createAdminAccount,
+  updateAdminRole,
+  deleteAdminAccount,
+  getGuestOrders
 } from '../../backend/js/admin.js';
 import { logoutUser } from '../../backend/js/auth.js';
 
@@ -57,7 +62,9 @@ const cancelEditBtn = document.getElementById('cancelEditBtn');
 window.adminData = {
   products: [],
   orders: [],
-  users: []
+  users: [],
+  admins: [],
+  currentAdmin: null
 };
 
 // Sections
@@ -93,6 +100,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     userEmail.textContent = user.email;
     if (userAvatar) {
       userAvatar.textContent = user.email.charAt(0).toUpperCase();
+    }
+
+    // Store admin info including role and permissions
+    window.adminData.currentAdmin = user;
+
+    // Show/hide admin management nav based on permissions
+    const adminsNavLink = document.querySelector('[data-section="admins"]');
+    if (adminsNavLink) {
+      adminsNavLink.style.display = user.permissions?.manageAdmins ? 'flex' : 'none';
+    }
+
+    // Show role badge
+    const roleBadge = document.getElementById('adminRoleBadge');
+    if (roleBadge) {
+      const roleLabels = { super_admin: 'Super Admin', admin: 'Admin', moderator: 'Moderator' };
+      roleBadge.textContent = roleLabels[user.role] || user.role;
     }
     
     // Initialize event listeners
@@ -153,7 +176,8 @@ function handleNavigation(e) {
     'dashboard': 'Dashboard',
     'products': 'Manage Products',
     'orders': 'View Orders',
-    'users': 'User Management'
+    'users': 'User Management',
+    'admins': 'Admin Management'
   };
   pageTitle.textContent = titleMap[sectionName] || 'Dashboard';
 
@@ -164,6 +188,8 @@ function handleNavigation(e) {
     loadAllOrdersData();
   } else if (sectionName === 'users') {
     loadUsersData();
+  } else if (sectionName === 'admins') {
+    loadAdminsData();
   }
 }
 
@@ -606,3 +632,160 @@ window.handleDeleteUser = async function(userId) {
   }
 };
 
+// =============================================
+// ADMIN MANAGEMENT
+// =============================================
+
+async function loadAdminsData() {
+  try {
+    showLoading(true);
+    const admins = await getAdminAccounts();
+    window.adminData.admins = admins;
+    populateAdminsSection(admins);
+  } catch (error) {
+    showToast('Failed to load admins', 'error');
+  } finally {
+    showLoading(false);
+  }
+}
+
+function populateAdminsSection(admins) {
+  const container = document.getElementById('adminsContent');
+  if (!container) return;
+
+  const roleLabels = { super_admin: 'Super Admin', admin: 'Admin', moderator: 'Moderator' };
+  const roleBadgeColors = { super_admin: '#dc2626', admin: '#2563eb', moderator: '#16a34a' };
+
+  container.innerHTML = `
+    <div style="margin-bottom:2rem;">
+      <h3 style="margin-bottom:1rem;color:#e2e8f0;">Create New Admin</h3>
+      <form id="createAdminForm" style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:end;">
+        <div style="flex:1;min-width:200px;">
+          <label style="display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:0.3rem;">Email Address</label>
+          <input type="email" id="newAdminEmail" placeholder="user@example.com" required
+            style="width:100%;padding:0.6rem;background:#1e293b;border:1px solid #334155;border-radius:6px;color:#e2e8f0;box-sizing:border-box;">
+        </div>
+        <div style="min-width:150px;">
+          <label style="display:block;font-size:0.8rem;color:#94a3b8;margin-bottom:0.3rem;">Role</label>
+          <select id="newAdminRole" style="width:100%;padding:0.6rem;background:#1e293b;border:1px solid #334155;border-radius:6px;color:#e2e8f0;">
+            <option value="admin">Admin</option>
+            <option value="moderator">Moderator</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="padding:0.6rem 1.5rem;">
+          + Add Admin
+        </button>
+      </form>
+    </div>
+
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${admins.length === 0 ? '<tr><td colspan="5" class="empty-state">No admin accounts found</td></tr>' : 
+            admins.map(admin => `
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <div style="width:32px;height:32px;border-radius:50%;background:${roleBadgeColors[admin.role] || '#6b7280'};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;">
+                      ${(admin.email || '?').charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <strong>${admin.email}</strong>
+                      ${admin.createdBy ? `<br><small style="color:#94a3b8;">Added by ${admin.createdBy}</small>` : ''}
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span style="background:${roleBadgeColors[admin.role] || '#6b7280'}22;color:${roleBadgeColors[admin.role] || '#6b7280'};padding:0.25rem 0.75rem;border-radius:12px;font-size:0.8rem;font-weight:600;">
+                    ${roleLabels[admin.role] || admin.role}
+                  </span>
+                </td>
+                <td style="color:#94a3b8;font-size:0.85rem;">${admin.createdAt ? formatTimestamp(admin.createdAt) : 'N/A'}</td>
+                <td><span style="color:#16a34a;font-weight:600;">${admin.status || 'Active'}</span></td>
+                <td>
+                  ${admin.role === 'super_admin' ? '<span style="color:#94a3b8;font-size:0.8rem;">Protected</span>' : `
+                    <select onchange="window.handleAdminRoleChange('${admin.id}', this.value)" style="padding:0.3rem;background:#1e293b;border:1px solid #334155;border-radius:4px;color:#e2e8f0;font-size:0.8rem;margin-right:0.5rem;">
+                      <option value="admin" ${admin.role === 'admin' ? 'selected' : ''}>Admin</option>
+                      <option value="moderator" ${admin.role === 'moderator' ? 'selected' : ''}>Moderator</option>
+                    </select>
+                    <button onclick="window.handleDeleteAdmin('${admin.id}', '${admin.email}')" class="btn btn-sm" style="background:#dc262622;color:#dc2626;border:1px solid #dc262644;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.8rem;">
+                      Delete
+                    </button>
+                  `}
+                </td>
+              </tr>
+            `).join('')
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:1.5rem;background:#1e293b;border-radius:8px;padding:1.5rem;">
+      <h4 style="color:#e2e8f0;margin-bottom:0.75rem;">Permission Levels</h4>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr style="color:#94a3b8;font-size:0.8rem;"><th style="text-align:left;padding:0.5rem;">Role</th><th>Products</th><th>Orders</th><th>Users</th><th>Admins</th></tr>
+        <tr style="font-size:0.85rem;"><td style="padding:0.5rem;color:#e2e8f0;font-weight:600;">Super Admin</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td></tr>
+        <tr style="font-size:0.85rem;"><td style="padding:0.5rem;color:#e2e8f0;font-weight:600;">Admin</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">✅</td><td style="text-align:center;">❌</td></tr>
+        <tr style="font-size:0.85rem;"><td style="padding:0.5rem;color:#e2e8f0;font-weight:600;">Moderator</td><td style="text-align:center;">❌</td><td style="text-align:center;">✅ (view)</td><td style="text-align:center;">✅ (view)</td><td style="text-align:center;">❌</td></tr>
+      </table>
+    </div>
+  `;
+
+  // Attach create admin form listener
+  document.getElementById('createAdminForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('newAdminEmail').value.trim();
+    const role = document.getElementById('newAdminRole').value;
+    
+    if (!email) { showToast('Email is required', 'error'); return; }
+    
+    try {
+      showLoading(true);
+      await createAdminAccount(email, role, window.adminData.currentAdmin?.email);
+      showToast(`Admin account created for ${email}`, 'success');
+      document.getElementById('newAdminEmail').value = '';
+      await loadAdminsData();
+    } catch (error) {
+      showToast('Error: ' + error.message, 'error');
+    } finally {
+      showLoading(false);
+    }
+  });
+}
+
+window.handleAdminRoleChange = async function(adminId, newRole) {
+  try {
+    showLoading(true);
+    await updateAdminRole(adminId, newRole);
+    showToast('Role updated', 'success');
+    await loadAdminsData();
+  } catch (error) {
+    showToast('Error: ' + error.message, 'error');
+  } finally {
+    showLoading(false);
+  }
+};
+
+window.handleDeleteAdmin = async function(adminId, email) {
+  if (confirm(`Remove admin access for ${email}?`)) {
+    try {
+      showLoading(true);
+      await deleteAdminAccount(adminId);
+      showToast('Admin removed', 'success');
+      await loadAdminsData();
+    } catch (error) {
+      showToast('Error: ' + error.message, 'error');
+    } finally {
+      showLoading(false);
+    }
+  }
+};

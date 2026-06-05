@@ -352,13 +352,8 @@ async function handleAdminLoginSubmit(e) {
     const email = document.getElementById('adminEmail').value.trim();
     const password = document.getElementById('adminPassword').value;
     
-    // Check if email matches admin email
-    if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-        document.getElementById('adminError').textContent = `Only authorized admin accounts can login here. Expected: ${ADMIN_EMAIL}`;
-        document.getElementById('adminError').classList.add('show');
-        showToast('Admin email not recognized', 'error');
-        return;
-    }
+    // No longer checking against a hardcoded email — the admin page
+    // checks the Firestore 'admins' collection directly
     
     try {
         showLoading(true);
@@ -366,11 +361,8 @@ async function handleAdminLoginSubmit(e) {
         const user = await loginWithEmail(email, password);
         console.log('✓ Admin login successful:', user.email);
         
-        // Verify admin email
-        if (user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-            await logoutUser();
-            throw new Error('Unauthorized admin access attempted');
-        }
+        // Admin verification now handled by the admin page's checkAdminAuth()
+        // which checks the Firestore 'admins' collection
         
         showToast('Admin login successful! Redirecting to dashboard...', 'success');
         setTimeout(() => {

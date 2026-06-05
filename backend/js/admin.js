@@ -44,7 +44,8 @@ import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.0/fi
 // CONFIGURATION
 // =============================================
 
-const ADMIN_EMAIL = 'admin@zonix.com'; // Must match login page ADMIN_EMAIL
+const SUPER_ADMIN_EMAIL = 'admin@zonix.com';
+const ADMIN_ROLES = { SUPER_ADMIN: 'super_admin', ADMIN: 'admin', MODERATOR: 'moderator' };
 
 // =============================================
 // AUTH GUARD
@@ -68,21 +69,66 @@ export async function checkAdminAuth() {
         return;
       }
 
-      if (user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-        console.warn('✗ Unauthorized admin access attempt:', user.email);
+      // Check if user is in the admins collection
+      try {
+        const adminRef = doc(db, 'admins', user.uid);
+        const adminSnap = await getDoc(adminRef);
+
+        if (adminSnap.exists()) {
+          const adminData = adminSnap.data();
+          console.log('✓ Admin authorized:', user.email, 'Role:', adminData.role);
+          resolve({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName || 'Admin',
+            role: adminData.role,
+            permissions: getPermissions(adminData.role)
+          });
+          return;
+        }
+
+        // Auto-bootstrap super admin
+        if (user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
+          await setDoc(doc(db, 'admins', user.uid), {
+            email: user.email,
+            role: ADMIN_ROLES.SUPER_ADMIN,
+            displayName: user.displayName || 'Super Admin',
+            createdAt: serverTimestamp(),
+            createdBy: 'system'
+          });
+          console.log('✓ Super admin bootstrapped:', user.email);
+          resolve({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName || 'Super Admin',
+            role: ADMIN_ROLES.SUPER_ADMIN,
+            permissions: getPermissions(ADMIN_ROLES.SUPER_ADMIN)
+          });
+          return;
+        }
+
+        console.warn('✗ Not an admin:', user.email);
         window.location.href = '../login/';
         reject(new Error('Unauthorized admin access'));
-        return;
+      } catch (error) {
+        console.error('✗ Admin auth check failed:', error);
+        reject(error);
       }
-
-      console.log('✓ Admin authorized:', user.email);
-      resolve({
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName || 'Admin'
-      });
     });
   });
+}
+
+function getPermissions(role) {
+  switch (role) {
+    case ADMIN_ROLES.SUPER_ADMIN:
+      return { manageProducts: true, manageOrders: true, manageUsers: true, manageAdmins: true, viewStats: true };
+    case ADMIN_ROLES.ADMIN:
+      return { manageProducts: true, manageOrders: true, manageUsers: true, manageAdmins: false, viewStats: true };
+    case ADMIN_ROLES.MODERATOR:
+      return { manageProducts: false, manageOrders: true, manageUsers: true, manageAdmins: false, viewStats: true };
+    default:
+      return { manageProducts: false, manageOrders: false, manageUsers: false, manageAdmins: false, viewStats: false };
+  }
 }
 
 // =============================================
@@ -465,9 +511,124 @@ export function getStatusClass(status) {
     'pending': 'pending',
     'confirmed': 'confirmed',
     'shipped': 'shipped',
+    'delivered': 'delivered',
     'in-stock': 'in-stock',
     'low-stock': 'low-stock',
     'out-of-stock': 'out-of-stock'
   };
   return statusMap[status] || 'pending';
+}
+
+// =============================================
+// ADMIN MANAGEMENT (Super Admin Only)
+// =============================================
+
+/**
+ * Get all admin accounts
+ */
+export async function getAdminAccounts() {
+  try {
+    const adminsRef = collection(db, 'admins');
+    const snapshot = await getDocs(adminsRef);
+    const admins = [];
+    snapshot.forEach((doc) => {
+      admins.push({ id: doc.id, ...doc.data() });
+    });
+    console.log(`✓ Fetched ${admins.length} admin accounts`);
+    return admins;
+  } catch (error) {
+    console.error('✗ Error fetching admins:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Create a new admin account (adds to admins collection)
+ * Note: The user must already exist in Firebase Auth (they sign up normally first)
+ */
+export async function createAdminAccount(email, role, createdByEmail) {
+  try {
+    if (!email || !role) throw new Error('Email and role are required');
+    if (!Object.values(ADMIN_ROLES).includes(role)) throw new Error('Invalid role');
+    if (role === ADMIN_ROLES.SUPER_ADMIN) throw new Error('Cannot create another super admin');
+
+    // Check if admin already exists by email
+    const adminsRef = collection(db, 'admins');
+    const q = query(adminsRef, where('email', '==', email.toLowerCase()));
+    const existing = await getDocs(q);
+    if (!existing.empty) throw new Error('Admin with this email already exists');
+
+    // Store with a generated ID (will be linked when user logs in)
+    const adminDoc = await addDoc(adminsRef, {
+      email: email.toLowerCase(),
+      role: role,
+      displayName: email.split('@')[0],
+      createdAt: serverTimestamp(),
+      createdBy: createdByEmail || 'super_admin',
+      status: 'active'
+    });
+
+    console.log('✓ Admin account created:', email, 'Role:', role);
+    return { id: adminDoc.id, email, role };
+  } catch (error) {
+    console.error('✗ Error creating admin:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Update admin role
+ */
+export async function updateAdminRole(adminId, newRole) {
+  try {
+    if (!Object.values(ADMIN_ROLES).includes(newRole)) throw new Error('Invalid role');
+    const adminRef = doc(db, 'admins', adminId);
+    const adminSnap = await getDoc(adminRef);
+    if (!adminSnap.exists()) throw new Error('Admin not found');
+    if (adminSnap.data().role === ADMIN_ROLES.SUPER_ADMIN) throw new Error('Cannot change super admin role');
+
+    await updateDoc(adminRef, { role: newRole, updatedAt: serverTimestamp() });
+    console.log('✓ Admin role updated:', adminId, '->', newRole);
+  } catch (error) {
+    console.error('✗ Error updating admin role:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Delete admin account
+ */
+export async function deleteAdminAccount(adminId) {
+  try {
+    const adminRef = doc(db, 'admins', adminId);
+    const adminSnap = await getDoc(adminRef);
+    if (!adminSnap.exists()) throw new Error('Admin not found');
+    if (adminSnap.data().role === ADMIN_ROLES.SUPER_ADMIN) throw new Error('Cannot delete super admin');
+
+    await deleteDoc(adminRef);
+    console.log('✓ Admin account deleted:', adminId);
+  } catch (error) {
+    console.error('✗ Error deleting admin:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Get all guest orders
+ */
+export async function getGuestOrders() {
+  try {
+    const ordersRef = collection(db, 'guestOrders');
+    const q = query(ordersRef, orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+    const orders = [];
+    snapshot.forEach((doc) => {
+      orders.push({ id: doc.id, ...doc.data(), createdAt: doc.data().createdAt?.toDate(), isGuest: true });
+    });
+    console.log(`✓ Fetched ${orders.length} guest orders`);
+    return orders;
+  } catch (error) {
+    console.error('✗ Error fetching guest orders:', error.message);
+    return [];
+  }
 }

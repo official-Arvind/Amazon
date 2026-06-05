@@ -843,6 +843,13 @@
                     </svg>
                     <span>Users</span>
                 </button>
+
+                <button class="nav-link" data-section="admins" style="display:none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span>Admins</span>
+                </button>
             </nav>
 
             <div class="sidebar-footer">
@@ -861,8 +868,12 @@
         <main class="main-content">
             <!-- HEADER -->
             <header class="header">
-                <h1 id="pageTitle">Dashboard</h1>
-                <div class="header-right">
+                <div class="header-info">
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <p>Welcome back, Admin</p>
+                </div>
+                <div class="header-actions" style="display:flex;align-items:center;gap:12px;">
+                    <span id="adminRoleBadge" style="background:#ffd81422;color:#ffd814;padding:4px 12px;border-radius:12px;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;"></span>
                     <a href="../" class="store-link" target="_blank">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -1106,6 +1117,21 @@
                                     <tr><td colspan="5" class="empty-state">No users found</td></tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ADMIN MANAGEMENT SECTION -->
+                <section class="section" id="admins" data-section="admins">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Admin Management</h2>
+                            <p class="section-subtitle">Manage admin accounts, roles, and permissions.</p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div id="adminsContent">
+                            <p style="color:#94a3b8;text-align:center;padding:2rem;">Loading admin accounts...</p>
                         </div>
                     </div>
                 </section>
