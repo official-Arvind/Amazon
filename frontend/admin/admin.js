@@ -34,6 +34,7 @@ import {
   getGuestOrders
 } from '../../backend/js/admin.js';
 import { logoutUser } from '../../backend/js/auth.js';
+import { resetAndSeed, seedProducts } from '../../backend/js/seed_products.js';
 
 // =============================================
 // DOM ELEMENTS
@@ -151,7 +152,43 @@ function initializeEventListeners() {
   // Logout
   logoutBtn.addEventListener('click', handleLogout);
 
+  // Seed Products
+  const seedBtn = document.getElementById('seedProductsBtn');
+  const resetSeedBtn = document.getElementById('resetSeedBtn');
+  
+  if (seedBtn) {
+    seedBtn.addEventListener('click', async () => {
+      if (confirm('Add 20 curated products to your catalog?')) {
+        try {
+          showLoading(true);
+          const count = await seedProducts();
+          showToast(`✓ Seeded ${count} products!`, 'success');
+          await loadInventoryData();
+        } catch (e) {
+          showToast('Seeding failed: ' + e.message, 'error');
+        } finally {
+          showLoading(false);
+        }
+      }
+    });
+  }
 
+  if (resetSeedBtn) {
+    resetSeedBtn.addEventListener('click', async () => {
+      if (confirm('⚠️ This will DELETE all existing products and add 20 fresh ones. Continue?')) {
+        try {
+          showLoading(true);
+          const count = await resetAndSeed();
+          showToast(`✓ Reset & seeded ${count} products!`, 'success');
+          await loadInventoryData();
+        } catch (e) {
+          showToast('Reset failed: ' + e.message, 'error');
+        } finally {
+          showLoading(false);
+        }
+      }
+    });
+  }
 }
 
 /**

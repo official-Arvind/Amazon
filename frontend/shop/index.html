@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Shop our curated collection of premium products at ZONIX.">
+    <meta name="description" content="Shop our curated collection of premium products at ZONIX. Electronics, Fashion, Home & more.">
     <title>Shop - ZONIX</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
@@ -13,132 +13,166 @@
             <div class="navbar-logo">
                 <a href="../" class="logo-text">ZONIX</a>
             </div>
-            <div class="navbar-menu">
-                <a href="../" class="nav-link">Home</a>
-                <a href="./" class="nav-link active">Shop</a>
-                <a href="../about/" class="nav-link">About</a>
-                <a href="../contact/" class="nav-link">Contact</a>
+            <div class="navbar-deliver">
+                <span class="deliver-to">Deliver to</span>
+                <span class="deliver-location">📍 India</span>
             </div>
-            <div class="navbar-icons">
-                <button class="icon-btn" aria-label="Search">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <div class="navbar-search">
+                <select class="search-category">
+                    <option>All Categories</option>
+                    <option>Electronics</option>
+                    <option>Fashion</option>
+                    <option>Home & Living</option>
+                    <option>Gaming</option>
+                    <option>Audio</option>
+                </select>
+                <input type="text" class="search-input" placeholder="Search ZONIX for products, brands and more">
+                <button class="search-btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
                     </svg>
                 </button>
-                <a href="../cart/" class="icon-btn" aria-label="Cart">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            </div>
+            <div class="navbar-icons">
+                <a href="../login/" class="nav-link-custom" id="authNavLink">
+                    <span class="nav-small">Hello, sign in</span>
+                    <span class="nav-bold">Account & Lists</span>
+                </a>
+                <a href="../profile/" class="nav-link-custom">
+                    <span class="nav-small">Returns</span>
+                    <span class="nav-bold">& Orders</span>
+                </a>
+                <a href="../cart/" class="nav-link-custom cart-link">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
-                </a>
-                <a href="../profile/" class="icon-btn" aria-label="Account">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
+                    <span class="cart-count" id="cartBadge" style="display:none;">0</span>
+                    <span class="nav-bold cart-text">Cart</span>
                 </a>
             </div>
         </div>
     </nav>
+    <div class="sub-navbar">
+        <a href="../" class="sub-nav-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            All
+        </a>
+        <a href="./" class="sub-nav-link" style="color:#ffd814;">Today's Deals</a>
+        <a href="./?q=electronics" class="sub-nav-link">Electronics</a>
+        <a href="./?q=fashion" class="sub-nav-link">Fashion</a>
+        <a href="./?q=home" class="sub-nav-link">Home & Kitchen</a>
+        <a href="./?q=gaming" class="sub-nav-link">Gaming</a>
+        <a href="../contact/" class="sub-nav-link">Customer Service</a>
+    </div>
 
-    <section class="shop-hero">
-        <div class="shop-hero-content">
-            <h1 class="hero-title">Our Collection</h1>
-            <p class="hero-subtitle">Discover premium curated products for the modern lifestyle</p>
-        </div>
-    </section>
+    <!-- Breadcrumb -->
+    <div style="max-width:1300px;margin:0 auto;padding:12px 1rem 0;">
+        <span style="font-size:0.8rem;color:#565959;">
+            <a href="../" style="color:#007185;">Home</a> › <strong>Shop</strong>
+        </span>
+    </div>
 
-    <section class="shop-section">
-        <div class="shop-container">
+    <!-- Results Header -->
+    <div style="max-width:1300px;margin:0 auto;padding:0.5rem 1rem;">
+        <h2 class="products-count" style="font-size:1.1rem;font-weight:700;color:#0f1111;">Showing Products</h2>
+    </div>
+
+    <section class="shop-section" style="background:#fff;">
+        <div class="shop-container" style="max-width:1300px;margin:0 auto;padding:0 1rem 2rem;">
             <aside class="shop-sidebar">
                 <div class="filter-group">
-                    <h3 class="filter-title">Categories</h3>
+                    <h3 class="filter-title">Department</h3>
                     <div class="filter-options">
-                        <label class="filter-label">
-                            <input type="checkbox" name="category"> All Products
-                        </label>
-                        <label class="filter-label">
-                            <input type="checkbox" name="category"> Audio
-                        </label>
-                        <label class="filter-label">
-                            <input type="checkbox" name="category"> Tech
-                        </label>
-                        <label class="filter-label">
-                            <input type="checkbox" name="category"> Accessories
-                        </label>
+                        <label class="filter-label"><input type="checkbox" name="category"> All Products</label>
+                        <label class="filter-label"><input type="checkbox" name="category"> Electronics</label>
+                        <label class="filter-label"><input type="checkbox" name="category"> Audio</label>
+                        <label class="filter-label"><input type="checkbox" name="category"> Laptops</label>
+                        <label class="filter-label"><input type="checkbox" name="category"> Smartphones</label>
+                        <label class="filter-label"><input type="checkbox" name="category"> Fashion</label>
+                        <label class="filter-label"><input type="checkbox" name="category"> Gaming</label>
+                        <label class="filter-label"><input type="checkbox" name="category"> Home & Kitchen</label>
+                        <label class="filter-label"><input type="checkbox" name="category"> Wearables</label>
                     </div>
                 </div>
 
                 <div class="filter-group">
-                    <h3 class="filter-title">Price Range</h3>
-                    <div class="price-range">
-                        <input type="range" min="0" max="150000" value="150000" class="price-slider">
-                        <p>₹0 - ₹150,000+</p>
+                    <h3 class="filter-title">Customer Review</h3>
+                    <div class="filter-options">
+                        <label class="filter-label" style="color:#f59e0b;">★★★★☆ & Up</label>
+                        <label class="filter-label" style="color:#f59e0b;">★★★☆☆ & Up</label>
+                        <label class="filter-label" style="color:#f59e0b;">★★☆☆☆ & Up</label>
                     </div>
                 </div>
 
                 <div class="filter-group">
-                    <h3 class="filter-title">Sort By</h3>
-                    <select class="sort-select">
-                        <option value="featured">Featured</option>
-                        <option value="newest">Newest</option>
-                        <option value="price-low">Price: Low to High</option>
-                        <option value="price-high">Price: High to Low</option>
-                        <option value="popular">Most Popular</option>
-                    </select>
+                    <h3 class="filter-title">Price</h3>
+                    <div class="filter-options">
+                        <label class="filter-label"><a href="./" style="color:#007185;">Under ₹1,000</a></label>
+                        <label class="filter-label"><a href="./" style="color:#007185;">₹1,000 - ₹5,000</a></label>
+                        <label class="filter-label"><a href="./" style="color:#007185;">₹5,000 - ₹20,000</a></label>
+                        <label class="filter-label"><a href="./" style="color:#007185;">₹20,000 - ₹50,000</a></label>
+                        <label class="filter-label"><a href="./" style="color:#007185;">Over ₹50,000</a></label>
+                    </div>
                 </div>
 
-                <button class="filter-reset">Reset Filters</button>
+                <div class="filter-group">
+                    <h3 class="filter-title">Discount</h3>
+                    <div class="filter-options">
+                        <label class="filter-label"><input type="checkbox" name="discount"> 10% Off or more</label>
+                        <label class="filter-label"><input type="checkbox" name="discount"> 25% Off or more</label>
+                        <label class="filter-label"><input type="checkbox" name="discount"> 50% Off or more</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h3 class="filter-title">Availability</h3>
+                    <div class="filter-options">
+                        <label class="filter-label"><input type="checkbox" name="availability" checked> Include Out of Stock</label>
+                    </div>
+                </div>
             </aside>
 
             <div class="shop-products">
-                <h2 class="products-count">Showing 8 Products</h2>
-                
                 <div class="products-grid" id="shopProductsGrid">
-                    <!-- Products will be dynamically loaded from Firebase here -->
                     <div class="loading-state">Loading products...</div>
-                </div>
-
-                <div class="pagination">
-                    <button class="pagination-btn active">1</button>
-                    <button class="pagination-btn">2</button>
-                    <button class="pagination-btn">3</button>
-                    <button class="pagination-btn">Next</button>
                 </div>
             </div>
         </div>
     </section>
 
+    <div class="footer-back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h4>Explore</h4>
+                <h4>Get to Know Us</h4>
                 <ul>
-                    <li><a href="./">Shop All</a></li>
                     <li><a href="../about/">About ZONIX</a></li>
                     <li><a href="../info/?page=collections">Collections</a></li>
+                    <li><a href="../contact/">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>Support</h4>
+                <h4>Let Us Help You</h4>
                 <ul>
                     <li><a href="../info/?page=help">Help Center</a></li>
-                    <li><a href="../contact/">Contact Us</a></li>
+                    <li><a href="../info/?page=returns">Returns & Refunds</a></li>
                     <li><a href="../info/?page=shipping">Shipping Info</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>Legal</h4>
+                <h4>Policies</h4>
                 <ul>
-                    <li><a href="../info/?page=privacy">Privacy Policy</a></li>
                     <li><a href="../info/?page=terms">Terms of Service</a></li>
-                    <li><a href="../info/?page=returns">Returns</a></li>
+                    <li><a href="../info/?page=privacy">Privacy Policy</a></li>
+                    <li><a href="../info/?page=returns">Return Policy</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
+            <div class="footer-logo">ZONIX</div>
             <p>&copy; 2026 ZONIX. The Marketplace, Redefined.</p>
         </div>
     </footer>

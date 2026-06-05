@@ -85,7 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (path.includes('/info/') || path.endsWith('info/index.html')) {
     loadInfoPage();
   } else if (path === '/' || path.endsWith('/index.html') || path.endsWith('/frontend/')) {
-    loadShopProducts('featuredProductsGrid', 4);
+    loadShopProducts('featuredProductsGrid', 8);
+    initHeroCarousel();
   }
 
   // 3. Initialize Products (Add to Cart buttons) everywhere
@@ -355,10 +356,16 @@ async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) 
     
     const displayProducts = maxItems > 0 ? filteredProducts.slice(0, maxItems) : filteredProducts;
     
-    container.innerHTML = displayProducts.map(product => `
+    container.innerHTML = displayProducts.map(product => {
+      const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
+      const ratingStars = product.rating ? '★'.repeat(Math.floor(product.rating)) + (product.rating % 1 >= 0.5 ? '½' : '') : '';
+      const ratingColor = product.rating >= 4 ? '#16a34a' : product.rating >= 3 ? '#ea8c2b' : '#dc2626';
+      
+      return `
       <article class="product-card" data-product-id="${product.id}">
           <div class="product-image-container">
-              <img src="${product.image || '../assets/images/placeholder.jpg'}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/400x400?text=Image+Not+Found'"/>
+              ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
+              <img src="${product.image || '../assets/images/placeholder.jpg'}" alt="${product.name}" class="product-image" loading="lazy" onerror="this.src='https://via.placeholder.com/400x400?text=Image+Not+Found'"/>
               <button class="wishlist-btn" aria-label="Add to wishlist">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -366,15 +373,24 @@ async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) 
               </button>
           </div>
           <div class="product-info">
-              <h3 class="product-name">${product.name}</h3>
               <p class="product-category">${product.category || 'General'}</p>
-              <div class="product-footer">
-                  <span class="product-price">₹${product.price}</span>
-                  <button class="add-to-cart-btn">Add to Cart</button>
+              <h3 class="product-name">${product.name}</h3>
+              ${product.rating ? `
+              <div class="product-rating">
+                  <span class="rating-badge" style="background:${ratingColor}">${product.rating} ★</span>
+                  <span class="rating-count">(${(product.reviews || 0).toLocaleString()})</span>
+              </div>` : ''}
+              <div class="product-pricing">
+                  <span class="product-price">₹${product.price.toLocaleString()}</span>
+                  ${product.originalPrice ? `
+                  <span class="product-original-price">₹${product.originalPrice.toLocaleString()}</span>
+                  <span class="product-discount">${discount}% off</span>` : ''}
               </div>
+              ${product.price > 499 ? '<p class="product-delivery">FREE delivery by ZONIX</p>' : ''}
+              <button class="add-to-cart-btn">Add to Cart</button>
           </div>
       </article>
-    `).join('');
+    `}).join('');
     
     // Update products count
     const countEl = document.querySelector('.products-count');
@@ -1029,6 +1045,30 @@ function loadInfoPage() {
   const pageData = contentMap[page] || contentMap['help'];
   titleEl.textContent = pageData.title;
   contentEl.innerHTML = pageData.content;
+}
+
+// =============================================
+// HERO CAROUSEL
+// =============================================
+function initHeroCarousel() {
+  const slides = document.querySelectorAll('.hero-slide');
+  const prevBtn = document.querySelector('.hero-prev');
+  const nextBtn = document.querySelector('.hero-next');
+  if (slides.length === 0) return;
+
+  let current = 0;
+  
+  function showSlide(n) {
+    slides[current].classList.remove('active');
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', () => showSlide(current - 1));
+  if (nextBtn) nextBtn.addEventListener('click', () => showSlide(current + 1));
+
+  // Auto-rotate every 5 seconds
+  setInterval(() => showSlide(current + 1), 5000);
 }
 
 // =============================================

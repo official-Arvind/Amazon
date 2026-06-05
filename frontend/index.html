@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!--- Navigation Bar --->
+    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-logo">
@@ -17,16 +17,21 @@
             
             <div class="navbar-deliver">
                 <span class="deliver-to">Deliver to</span>
-                <span class="deliver-location">India</span>
+                <span class="deliver-location">📍 India</span>
             </div>
 
             <div class="navbar-search">
                 <select class="search-category">
-                    <option>All</option>
+                    <option>All Categories</option>
+                    <option>Electronics</option>
+                    <option>Fashion</option>
+                    <option>Home & Living</option>
+                    <option>Gaming</option>
+                    <option>Audio</option>
                 </select>
-                <input type="text" class="search-input" placeholder="Search Zonix">
+                <input type="text" class="search-input" placeholder="Search ZONIX for products, brands and more">
                 <button class="search-btn" aria-label="Search">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
                     </svg>
@@ -34,94 +39,199 @@
             </div>
 
             <div class="navbar-icons">
-                <a href="login/" class="nav-link-custom">
+                <a href="login/" class="nav-link-custom" id="authNavLink">
                     <span class="nav-small">Hello, sign in</span>
                     <span class="nav-bold">Account & Lists</span>
                 </a>
                 
-                <a href="shop/" class="nav-link-custom">
+                <a href="profile/" class="nav-link-custom">
                     <span class="nav-small">Returns</span>
                     <span class="nav-bold">& Orders</span>
                 </a>
 
                 <a href="cart/" class="nav-link-custom cart-link">
-                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
+                    <span class="cart-count" id="cartBadge" style="display:none;">0</span>
                     <span class="nav-bold cart-text">Cart</span>
                 </a>
             </div>
         </div>
     </nav>
+
+    <!-- Sub Navbar -->
     <div class="sub-navbar">
-        <a href="./" class="sub-nav-link">All</a>
-        <a href="shop/" class="sub-nav-link">Shop</a>
-        <a href="about/" class="sub-nav-link">About Zonix</a>
+        <a href="./" class="sub-nav-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            All
+        </a>
+        <a href="shop/" class="sub-nav-link">Today's Deals</a>
+        <a href="shop/" class="sub-nav-link">Electronics</a>
+        <a href="shop/" class="sub-nav-link">Fashion</a>
+        <a href="shop/" class="sub-nav-link">Home & Kitchen</a>
+        <a href="shop/" class="sub-nav-link">Best Sellers</a>
         <a href="contact/" class="sub-nav-link">Customer Service</a>
+        <a href="info/?page=help" class="sub-nav-link">Help</a>
     </div>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-wrapper">
-            <div class="hero-content">
-                <h1 class="hero-title">The Marketplace, Redefined</h1>
-                <p class="hero-subtitle">Discover premium, curated products for the modern lifestyle.</p>
-                <a href="shop/" class="cta-button">Explore Collections</a>
+    <!-- Hero Banner Carousel -->
+    <section class="hero-carousel" id="heroCarousel">
+        <div class="hero-slide active" style="background: linear-gradient(135deg, #232f3e 0%, #37475a 100%);">
+            <div class="hero-slide-content">
+                <div class="hero-text">
+                    <span class="hero-tag">New Arrivals</span>
+                    <h1>The Marketplace, Redefined</h1>
+                    <p>Discover premium, curated products for the modern lifestyle. From tech to fashion — we've got it all.</p>
+                    <a href="shop/" class="hero-cta">Shop Now →</a>
+                </div>
+                <div class="hero-visual">
+                    <img src="assets/images/keyboard.jpg" alt="Premium Products" onerror="this.style.display='none'" />
+                </div>
             </div>
-            <div class="hero-image">
-                <img src="assets/images/keyboard.jpg" alt="High-end RGB Mechanical Keyboard" />
+        </div>
+        <div class="hero-slide" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
+            <div class="hero-slide-content">
+                <div class="hero-text">
+                    <span class="hero-tag" style="background:#e74c3c;">Hot Deals</span>
+                    <h1>Up to 70% Off</h1>
+                    <p>Massive savings on electronics, fashion, and home essentials. Limited time offers you can't miss.</p>
+                    <a href="shop/" class="hero-cta" style="background:#e74c3c;border-color:#e74c3c;">Grab Deals →</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-controls">
+            <button class="hero-prev" aria-label="Previous">‹</button>
+            <button class="hero-next" aria-label="Next">›</button>
+        </div>
+    </section>
+
+    <!-- Category Cards (Amazon-style 4-grid) -->
+    <section class="category-grid-section">
+        <div class="category-grid">
+            <div class="category-card">
+                <h3>Smartphones & Tablets</h3>
+                <div class="category-card-grid">
+                    <a href="shop/?q=smartphone"><div class="cat-item"><div class="cat-img" style="background:#e8f4fd;">📱</div><span>Phones</span></div></a>
+                    <a href="shop/?q=tablet"><div class="cat-item"><div class="cat-img" style="background:#fef3e2;">📟</div><span>Tablets</span></div></a>
+                    <a href="shop/?q=accessories"><div class="cat-item"><div class="cat-img" style="background:#e8f8e8;">🔌</div><span>Chargers</span></div></a>
+                    <a href="shop/?q=wearable"><div class="cat-item"><div class="cat-img" style="background:#f3e8fd;">⌚</div><span>Wearables</span></div></a>
+                </div>
+                <a href="shop/?q=electronics" class="cat-see-all">See all deals</a>
+            </div>
+            <div class="category-card">
+                <h3>Audio & Entertainment</h3>
+                <div class="category-card-grid">
+                    <a href="shop/?q=headphone"><div class="cat-item"><div class="cat-img" style="background:#fde8e8;">🎧</div><span>Headphones</span></div></a>
+                    <a href="shop/?q=speaker"><div class="cat-item"><div class="cat-img" style="background:#e8eafd;">🔊</div><span>Speakers</span></div></a>
+                    <a href="shop/?q=gaming"><div class="cat-item"><div class="cat-img" style="background:#e8f8e8;">🎮</div><span>Gaming</span></div></a>
+                    <a href="shop/?q=tv"><div class="cat-item"><div class="cat-img" style="background:#fef3e2;">📺</div><span>TVs</span></div></a>
+                </div>
+                <a href="shop/?q=audio" class="cat-see-all">See all deals</a>
+            </div>
+            <div class="category-card">
+                <h3>Fashion & Lifestyle</h3>
+                <div class="category-card-grid">
+                    <a href="shop/?q=fashion"><div class="cat-item"><div class="cat-img" style="background:#fef3e2;">👕</div><span>Clothing</span></div></a>
+                    <a href="shop/?q=footwear"><div class="cat-item"><div class="cat-img" style="background:#e8f4fd;">👟</div><span>Shoes</span></div></a>
+                    <a href="shop/?q=sunglasses"><div class="cat-item"><div class="cat-img" style="background:#f3e8fd;">🕶️</div><span>Eyewear</span></div></a>
+                    <a href="shop/?q=watch"><div class="cat-item"><div class="cat-img" style="background:#e8f8e8;">⌚</div><span>Watches</span></div></a>
+                </div>
+                <a href="shop/?q=fashion" class="cat-see-all">Explore fashion</a>
+            </div>
+            <div class="category-card">
+                <h3>Home & Kitchen</h3>
+                <div class="category-card-grid">
+                    <a href="shop/?q=home"><div class="cat-item"><div class="cat-img" style="background:#e8f8e8;">🏠</div><span>Smart Home</span></div></a>
+                    <a href="shop/?q=kitchen"><div class="cat-item"><div class="cat-img" style="background:#fde8e8;">🍳</div><span>Kitchen</span></div></a>
+                    <a href="shop/?q=vacuum"><div class="cat-item"><div class="cat-img" style="background:#e8f4fd;">🧹</div><span>Cleaning</span></div></a>
+                    <a href="shop/?q=camera"><div class="cat-item"><div class="cat-img" style="background:#fef3e2;">📷</div><span>Cameras</span></div></a>
+                </div>
+                <a href="shop/?q=home" class="cat-see-all">Explore home</a>
             </div>
         </div>
     </section>
 
-    <!-- Products Section -->
+    <!-- Featured Products -->
     <section class="products-section" id="products">
         <div class="products-container">
-            <h2 class="section-title">Featured Products</h2>
+            <div class="section-header-row">
+                <h2 class="section-title">Today's Featured Products</h2>
+                <a href="shop/" class="see-all-link">See all products →</a>
+            </div>
             <div class="products-grid" id="featuredProductsGrid">
-                <!-- Products dynamically loaded from Firebase -->
                 <div class="loading-state">Loading products...</div>
             </div>
         </div>
     </section>
 
+    <!-- Trust Banner -->
+    <section class="trust-banner">
+        <div class="trust-items">
+            <div class="trust-item">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#232f3e" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="2"></rect><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                <div><strong>Free Delivery</strong><br><span>On orders over ₹5,000</span></div>
+            </div>
+            <div class="trust-item">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#232f3e" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <div><strong>Secure Payments</strong><br><span>256-bit SSL encryption</span></div>
+            </div>
+            <div class="trust-item">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#232f3e" stroke-width="1.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                <div><strong>30-Day Returns</strong><br><span>Hassle-free returns</span></div>
+            </div>
+            <div class="trust-item">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#232f3e" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <div><strong>Genuine Products</strong><br><span>100% authentic brands</span></div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
+    <div class="footer-back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h4>Explore</h4>
+                <h4>Get to Know Us</h4>
                 <ul>
-                    <li><a href="shop/">Shop All</a></li>
                     <li><a href="about/">About ZONIX</a></li>
                     <li><a href="info/?page=collections">Collections</a></li>
+                    <li><a href="contact/">Careers</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>Support</h4>
+                <h4>Make Money with Us</h4>
+                <ul>
+                    <li><a href="contact/">Sell on ZONIX</a></li>
+                    <li><a href="contact/">Become an Affiliate</a></li>
+                    <li><a href="contact/">Advertise Products</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Let Us Help You</h4>
                 <ul>
                     <li><a href="info/?page=help">Help Center</a></li>
-                    <li><a href="contact/">Contact Us</a></li>
+                    <li><a href="info/?page=returns">Returns & Refunds</a></li>
                     <li><a href="info/?page=shipping">Shipping Info</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>Legal</h4>
+                <h4>Policies</h4>
                 <ul>
-                    <li><a href="info/?page=privacy">Privacy Policy</a></li>
                     <li><a href="info/?page=terms">Terms of Service</a></li>
-                    <li><a href="info/?page=returns">Returns</a></li>
+                    <li><a href="info/?page=privacy">Privacy Policy</a></li>
+                    <li><a href="info/?page=returns">Return Policy</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 ZONIX. The Marketplace, Redefined.</p>
+            <div class="footer-logo">ZONIX</div>
+            <p>&copy; 2026 ZONIX. The Marketplace, Redefined. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script type="module" src="js/main.js"></script>
 </body>
 </html>
-
