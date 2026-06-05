@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Check if the user is an admin by checking if their UID exists in the 'admins' collection
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    
+    // Check if the user is the hardcoded super admin
+    function isSuperAdmin() {
+      return request.auth != null && request.auth.token.email == 'admin@zonix.com';
+    }
+    
+    // 1. PRODUCTS (Public Read, Admin Write)
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin() || isSuperAdmin();
+    }
+    
+    // 2. USERS (Users read/write their own profile; Admins read all profiles)
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, update, delete: if isAdmin() || isSuperAdmin();
+      
+      // Cart subcollection
+      match /cart/{cartItemId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+        allow read, update, delete: if isAdmin() || isSuperAdmin();
+      }
+      
+      // Addresses subcollection
+      match /addresses/{addressId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+        allow read, update, delete: if isAdmin() || isSuperAdmin();
+      }
+    }
+    
+    // 3. ORDERS (Users can create/read their own, Admins can read/update all)
+    match /orders/{orderId} {
+      // Users can only create an order that is assigned to their own user ID
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      // Users can only read their own orders; Admins can read all
+      allow read: if request.auth != null && (resource.data.userId == request.auth.uid || isAdmin() || isSuperAdmin());
+      // Only admins can modify an order (e.g., updating its status)
+      allow update, delete: if isAdmin() || isSuperAdmin();
+    }
+    
+    // 4. ADMINS
+    match /admins/{adminId} {
+      // Anyone can read their own admin document (needed for logging in), Super admin can read all
+      allow read: if request.auth != null && (request.auth.uid == adminId || isSuperAdmin());
+      // Only Super admin can manage (add/delete/modify) other admins
+      allow write: if isSuperAdmin();
+    }
+  }
+}
