@@ -54,6 +54,11 @@
         .admin-container {
             display: flex;
             min-height: 100vh;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .admin-container.authenticated {
+            opacity: 1;
         }
 
         /* =============================================
@@ -403,38 +408,6 @@
             color: var(--text-primary);
         }
 
-        /* =============================================
-           CJ IMPORT BANNER
-           ============================================= */
-        .cj-banner {
-            background: linear-gradient(135deg, #131921 0%, #232f3e 100%);
-            border-radius: var(--radius);
-            padding: 20px 24px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            border: 1px solid rgba(255,216,20,0.2);
-        }
-
-        .cj-banner-text h3 {
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .cj-banner-text p {
-            color: #9ca3af;
-            font-size: 0.82rem;
-        }
-
-        .cj-banner-actions {
-            display: flex;
-            gap: 10px;
-            flex-shrink: 0;
-        }
 
         /* =============================================
            BUTTONS
@@ -823,30 +796,7 @@
             margin-top: 24px;
         }
 
-        /* =============================================
-           CJ IMPORT MODAL
-           ============================================= */
-        .cj-keyword-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
 
-        .cj-keyword-group input {
-            flex: 1;
-            padding: 9px 14px;
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            font-size: 0.9rem;
-            transition: var(--transition);
-        }
-
-        .cj-keyword-group input:focus {
-            outline: none;
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 0 3px rgba(255,216,20,.15);
-        }
     </style>
 </head>
 <body>
@@ -1030,23 +980,6 @@
                         </div>
                     </div>
 
-                    <!-- CJ Dropshipping Banner -->
-                    <div class="cj-banner">
-                        <div class="cj-banner-text">
-                            <h3>🚀 CJ Dropshipping Integration</h3>
-                            <p>Import real products from CJ Dropshipping directly into your store inventory.</p>
-                        </div>
-                        <div class="cj-banner-actions">
-                            <button id="importCjBtn" class="btn btn-primary">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                    <polyline points="17 8 12 3 7 8"/>
-                                    <line x1="12" y1="3" x2="12" y2="15"/>
-                                </svg>
-                                Import from CJ
-                            </button>
-                        </div>
-                    </div>
 
                     <!-- Add Product Form -->
                     <div class="card">
@@ -1181,35 +1114,6 @@
         </main>
     </div>
 
-    <!-- CJ Import Keyword Modal -->
-    <div class="modal" id="cjImportModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Import from CJ Dropshipping</h2>
-                <button class="close-modal" id="closeCjModal">&times;</button>
-            </div>
-            <p style="color:var(--text-secondary);font-size:.9rem;margin-bottom:16px;">
-                Enter a keyword to search for products on CJ Dropshipping. These will be saved directly to your Firebase product inventory.
-            </p>
-            <div class="form-group">
-                <label for="cjKeyword">Search Keyword</label>
-                <div class="cj-keyword-group">
-                    <input type="text" id="cjKeyword" placeholder="e.g., electronics, clothing, gaming" value="tech">
-                    <button id="confirmImportCj" class="btn btn-primary">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="17 8 12 3 7 8"/>
-                            <line x1="12" y1="3" x2="12" y2="15"/>
-                        </svg>
-                        Import
-                    </button>
-                </div>
-            </div>
-            <p style="font-size:0.78rem;color:var(--text-muted);margin-top:12px;">
-                ⚠️ Your CJ store must be verified on the CJ Dropshipping platform for imports to work.
-            </p>
-        </div>
-    </div>
 
     <!-- Edit Product Modal -->
     <div class="modal" id="editProductModal">

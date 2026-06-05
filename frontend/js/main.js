@@ -51,7 +51,23 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // 2. Initialize Page-Specific Logic based on URL
   const path = window.location.pathname;
+
+  // Auth guard: redirect to login for protected pages
+  const protectedPaths = ['/cart/', '/checkout/', '/profile/'];
+  const isProtectedPage = protectedPaths.some(p => path.includes(p));
   
+  if (isProtectedPage && !appState.isAuthenticated) {
+    // Wait for auth state to resolve before redirecting
+    // The subscribeToAuthState callback in step 1 will set appState
+    // We use a timeout to allow Firebase auth to initialize
+    setTimeout(() => {
+      if (!appState.isAuthenticated) {
+        const inRoot = !path.includes('/frontend/') || path.endsWith('/frontend/') || path.endsWith('/frontend/index.html');
+        window.location.href = inRoot ? 'login/' : '../login/';
+      }
+    }, 2000);
+  }
+
   if (path.includes('/cart/')) {
     initCart();
   } else if (path.includes('/checkout/')) {
@@ -87,9 +103,11 @@ function initAuthListener() {
     } else {
       appState.cart = [];
       updateCartBadge();
-      // If on a protected page, redirect to login
-      if (window.location.pathname.includes('/profile/') || window.location.pathname.includes('/checkout/')) {
-        window.location.href = '../login/';
+      // Redirect away from protected pages if not logged in
+      const protectedPaths = ['/cart/', '/checkout/', '/profile/'];
+      if (protectedPaths.some(p => window.location.pathname.includes(p))) {
+        const inRoot = !window.location.pathname.includes('/frontend/') || window.location.pathname.endsWith('/frontend/');
+        window.location.href = inRoot ? 'login/' : '../login/';
       }
     }
   });

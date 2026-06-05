@@ -24,7 +24,9 @@ import {
   signOut,
   sendPasswordResetEmail,
   updateProfile,
-  onAuthStateChanged
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup
 } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 
 // =============================================
@@ -134,6 +136,34 @@ export async function loginWithEmail(email, password) {
       throw new Error('Invalid email format');
     } else if (error.code === 'auth/user-disabled') {
       throw new Error('This account has been disabled');
+    }
+    throw error;
+  }
+}
+
+/**
+ * Sign in with Google
+ */
+export async function signInWithGoogle() {
+  try {
+    console.log('Signing in with Google...');
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    console.log('✓ Google sign-in successful:', user.email);
+    return {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName || '',
+      photoURL: user.photoURL || '',
+      emailVerified: user.emailVerified
+    };
+  } catch (error) {
+    console.error('✗ Google sign-in error:', error.message);
+    if (error.code === 'auth/popup-closed-by-user') {
+      throw new Error('Sign-in popup was closed');
+    } else if (error.code === 'auth/popup-blocked') {
+      throw new Error('Popup was blocked. Please allow popups for this site.');
     }
     throw error;
   }
@@ -251,6 +281,7 @@ export function subscribeToAuthState(callback) {
 export default {
   signUpWithEmail,
   loginWithEmail,
+  signInWithGoogle,
   logoutUser,
   resetPassword,
   getCurrentUser,

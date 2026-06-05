@@ -29,8 +29,6 @@ import {
   getStatusClass
 } from '../../backend/js/admin.js';
 import { logoutUser } from '../../backend/js/auth.js';
-import { importCjProductsToFirebase } from '../../backend/js/cj_import.js';
-import { createCjOrder } from '../../backend/js/cj_api.js';
 
 // =============================================
 // DOM ELEMENTS
@@ -53,13 +51,7 @@ const editProductForm = document.getElementById('editProductForm');
 const editProductModal = document.getElementById('editProductModal');
 const closeEditModal = document.getElementById('closeEditModal');
 const cancelEditBtn = document.getElementById('cancelEditBtn');
-const importCjBtn = document.getElementById('importCjBtn');
 
-// CJ Modal elements
-const cjImportModal = document.getElementById('cjImportModal');
-const closeCjModal = document.getElementById('closeCjModal');
-const confirmImportCj = document.getElementById('confirmImportCj');
-const cjKeywordInput = document.getElementById('cjKeyword');
 
 // Store data globally for editing
 window.adminData = {
@@ -109,6 +101,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load initial data
     await loadDashboardData();
     
+    // Reveal the admin UI only after auth is confirmed
+    document.querySelector('.admin-container').classList.add('authenticated');
+
     showLoading(false);
     showToast('Welcome to Admin Panel', 'info');
   } catch (error) {
@@ -133,27 +128,7 @@ function initializeEventListeners() {
   // Logout
   logoutBtn.addEventListener('click', handleLogout);
 
-  // Import CJ Products button — opens keyword modal
-  if (importCjBtn) {
-    importCjBtn.addEventListener('click', () => {
-      cjImportModal.classList.add('show');
-    });
-  }
 
-  // Close CJ modal
-  if (closeCjModal) {
-    closeCjModal.addEventListener('click', () => cjImportModal.classList.remove('show'));
-  }
-  if (cjImportModal) {
-    cjImportModal.addEventListener('click', (e) => {
-      if (e.target === cjImportModal) cjImportModal.classList.remove('show');
-    });
-  }
-
-  // Confirm CJ import
-  if (confirmImportCj) {
-    confirmImportCj.addEventListener('click', handleImportCjProducts);
-  }
 }
 
 /**
@@ -263,38 +238,6 @@ async function handleAddProduct(e) {
   }
 }
 
-/**
- * Handle CJ Products import
- */
-async function handleImportCjProducts() {
-  const keyword = (cjKeywordInput ? cjKeywordInput.value.trim() : '') || 'tech';
-  
-  try {
-    if (cjImportModal) cjImportModal.classList.remove('show');
-    showLoading(true);
-    showToast(`Importing "${keyword}" products from CJ Dropshipping...`, 'info');
-    
-    const result = await importCjProductsToFirebase(keyword);
-    
-    if (result.success && result.imported > 0) {
-      showToast(result.message, 'success');
-    } else if (result.success && result.imported === 0) {
-      showToast('⚠️ No products returned from CJ. Your store may need verification on the CJ Dropshipping platform (My CJ → API Management). Try a different keyword or contact CJ support.', 'warning');
-    }
-    
-    // Always refresh inventory
-    const products = await getInventory();
-    window.adminData.products = products;
-    populateInventoryTable(products);
-    const countEl = document.getElementById('inventoryCount');
-    if (countEl) countEl.textContent = `${products.length} products`;
-    
-  } catch (error) {
-    showToast('CJ Import failed: ' + error.message, 'error');
-  } finally {
-    showLoading(false);
-  }
-}
 
 // =============================================
 // DATA LOADING
@@ -482,9 +425,8 @@ function populateAllOrdersTable(orders) {
             <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
             <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
           </select>
-          <button class="btn btn-primary btn-sm" onclick="window.handleCjFulfillment('${order.id}')">
-            🚀 Fulfill via CJ
-          </button>
+
+
         </td>
       </tr>
     `;
@@ -570,51 +512,6 @@ window.handleStatusChange = async (select) => {
   }
 };
 
-window.handleCjFulfillment = async (orderId) => {
-  const order = window.adminData.orders.find(o => o.id === orderId);
-  if (!order) return;
-  
-  if (!confirm(`Are you sure you want to push Order ${order.id.substring(0,8)} to CJ Dropshipping for fulfillment?`)) {
-    return;
-  }
-  
-  try {
-    showLoading(true);
-    showToast('Sending order to CJ Dropshipping...', 'info');
-    
-    // Ensure missing fields have defaults for CJ API
-    const orderData = {
-      ...order,
-      orderNumber: order.orderNumber || `ZONIX-${order.id}`,
-      shippingAddress: {
-        ...order.shippingAddress,
-        name: order.shippingAddress?.name || order.userEmail || 'Customer',
-        street: order.shippingAddress?.street || '123 Main St',
-        city: order.shippingAddress?.city || 'New York',
-        state: order.shippingAddress?.state || 'NY',
-        zip: order.shippingAddress?.zip || '10001',
-        phone: order.shippingAddress?.phone || '1234567890'
-      }
-    };
-
-    const cjResult = await createCjOrder(orderData);
-    
-    // Update status to confirmed if successfully pushed
-    await updateOrderStatus(orderId, 'confirmed');
-    
-    showToast(`Order pushed successfully to CJ! CJ Order ID: ${cjResult.orderId || 'Success'}`, 'success');
-    
-    // Refresh table
-    const orders = await getAllOrders();
-    window.adminData.orders = orders;
-    populateAllOrdersTable(orders);
-    
-  } catch (error) {
-    showToast('Failed to fulfill via CJ: ' + error.message, 'error');
-  } finally {
-    showLoading(false);
-  }
-};
 
 window.openEditModal = function(productId) {
   const product = window.adminData.products.find(p => p.id === productId);

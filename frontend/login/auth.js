@@ -8,7 +8,7 @@
 
 'use strict';
 
-import { loginWithEmail, signUpWithEmail, logoutUser } from '../../backend/js/auth.js';
+import { loginWithEmail, signUpWithEmail, logoutUser, signInWithGoogle } from '../../backend/js/auth.js';
 import { subscribeToAuthState } from '../../backend/js/auth.js';
 
 // =============================================
@@ -112,6 +112,12 @@ function initializeEventListeners() {
     document.getElementById('loginPassword').addEventListener('input', () => clearError('loginPassword'));
     document.getElementById('signupPassword').addEventListener('input', () => validatePasswordStrength('signupPassword'));
     document.getElementById('signupConfirmPassword').addEventListener('input', () => validatePasswordMatch());
+
+    // Google sign-in buttons
+    const googleLoginBtn = document.getElementById('googleLoginBtn');
+    const googleSignupBtn = document.getElementById('googleSignupBtn');
+    if (googleLoginBtn) googleLoginBtn.addEventListener('click', handleGoogleSignIn);
+    if (googleSignupBtn) googleSignupBtn.addEventListener('click', handleGoogleSignIn);
 }
 
 // =============================================
@@ -376,6 +382,32 @@ async function handleAdminLoginSubmit(e) {
         document.getElementById('adminError').textContent = error.message || 'Admin login failed. Please try again.';
         document.getElementById('adminError').classList.add('show');
         showToast(error.message || 'Admin login failed', 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+/**
+ * Handle Google Sign In
+ */
+async function handleGoogleSignIn() {
+    try {
+        showLoading(true);
+        const user = await signInWithGoogle();
+        console.log('✓ Google sign-in successful:', user.email);
+        
+        showToast('Signed in with Google! Redirecting...', 'success');
+        setTimeout(() => {
+            // Check if user is admin
+            if (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                window.location.href = '../admin/';
+            } else {
+                window.location.href = '../';
+            }
+        }, 1000);
+    } catch (error) {
+        console.error('✗ Google sign-in error:', error.message);
+        showToast(error.message || 'Google sign-in failed', 'error');
     } finally {
         showLoading(false);
     }
