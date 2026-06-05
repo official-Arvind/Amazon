@@ -833,6 +833,8 @@ async function loadProfileData() {
   if (document.getElementById('userEmail')) document.getElementById('userEmail').textContent = appState.currentUser.email;
   if (document.getElementById('settingsEmail')) document.getElementById('settingsEmail').value = appState.currentUser.email;
   if (document.getElementById('settingsName')) document.getElementById('settingsName').value = appState.currentUser.displayName || '';
+  if (document.getElementById('settingsEmailDisplay')) document.getElementById('settingsEmailDisplay').textContent = appState.currentUser.email;
+  if (document.getElementById('settingsNameDisplay')) document.getElementById('settingsNameDisplay').textContent = appState.currentUser.displayName || 'Guest User';
 
   try {
     const orders = await getOrders(appState.currentUser.uid);

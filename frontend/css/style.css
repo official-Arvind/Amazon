@@ -2339,3 +2339,101 @@ html, body {
         position: static !important;
     }
 }
+
+/* Amazon-style Buttons & Profile Tabs */
+.btn-amazon-primary {
+    display: block;
+    width: 100%;
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    color: #0f1111 !important; /* Ensure text color is dark */
+    background: #ffd814;
+    border: 1px solid #fcd200;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(213,217,217,.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: none !important; /* Override uppercase */
+    letter-spacing: normal;
+}
+
+.btn-amazon-primary:hover {
+    background: #f7ca00;
+    border-color: #f2c200;
+    color: #0f1111 !important;
+    text-decoration: none;
+    box-shadow: 0 2px 5px rgba(213,217,217,.5);
+    transform: none;
+}
+
+.btn-amazon-primary:active {
+    background: #f0b800;
+    border-color: #e0aa00;
+    transform: scale(0.98);
+}
+
+.btn-amazon-secondary {
+    display: block;
+    width: 100%;
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    color: #0f1111 !important;
+    background: #ffffff;
+    border: 1px solid #d5d9d9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(213,217,217,.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: none !important;
+    letter-spacing: normal;
+}
+
+.btn-amazon-secondary:hover {
+    background: #f7fafa;
+    border-color: #d5d9d9;
+    color: #0f1111 !important;
+    text-decoration: none;
+}
+
+.btn-amazon-secondary:active {
+    background: #f0f2f2;
+    border-color: #d5d9d9;
+}
+
+.profile-tab {
+    display: none;
+}
+
+.profile-tab.active {
+    display: block !important;
+}
+
+.profile-nav-item {
+    width: 100%;
+    text-align: left;
+    padding: 1rem 1.5rem;
+    background: #fff;
+    border: none;
+    border-left: 3px solid transparent;
+    color: #0f1111 !important;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.profile-nav-item:hover {
+    background: #f7fafa !important;
+}
+
+.profile-nav-item.active {
+    background: #f7fafa !important;
+    border-left: 3px solid #e77600 !important;
+    font-weight: 700 !important;
+}

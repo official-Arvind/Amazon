@@ -84,30 +84,13 @@
                 <div class="cart-items" id="cartItems">
                     <!-- Cart items will be populated here by JavaScript -->
                     <div class="empty-cart">
-    </div>
-
-    <!-- Cart Hero Section -->
-    <section class="shop-hero">
-        <div class="shop-hero-content">
-            <h1 class="hero-title">Shopping Cart</h1>
-            <p class="hero-subtitle">Review your items before checkout</p>
-        </div>
-    </section>
-
-    <!-- Cart Content -->
-    <section class="content-section">
-        <div class="cart-container">
-            <div class="cart-items-wrapper">
-                <div class="cart-items" id="cartItems">
-                    <!-- Cart items will be populated here by JavaScript -->
-                    <div class="empty-cart">
                         <p>Your cart is empty</p>
                         <a href="../shop/" class="cta-button">Continue Shopping</a>
                     </div>
                 </div>
             </div>
 
-            <aside class="cart-summary" style="background: #fff; border: 1px solid #ddd; padding: 1.5rem; border-radius: 4px; position: sticky; top: 120px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <aside class="cart-summary" style="background: #fff; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px; position: sticky; top: 120px; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; color: #067d62; font-size: 0.9rem;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -116,7 +99,9 @@
                     <span>Your order is eligible for FREE Delivery.</span>
                 </div>
                 
-                <h2 style="font-size: 1.2rem; margin-bottom: 1rem; border-bottom: none;">Subtotal (<span id="summaryItemCount">0</span> items): <span id="total" style="font-weight: 700;">₹0</span></h2>
+                <h2 style="font-size: 1.25rem; margin-bottom: 1rem; border-bottom: none; font-weight: normal; color: #0f1111;">
+                    Subtotal (<span id="summaryItemCount">0</span> items): <span id="total" style="font-weight: 700;">₹0</span>
+                </h2>
                 
                 <!-- Hidden elements for JS compatibility with existing updateCartSummary logic -->
                 <div style="display: none;">
@@ -126,17 +111,17 @@
                 </div>
 
                 <div style="margin-top: 1rem;">
-                    <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer; margin-bottom: 1.5rem;">
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer; margin-bottom: 1.5rem; color: #0f1111;">
                         <input type="checkbox" style="width: 16px; height: 16px;">
                         This order contains a gift
                     </label>
                 </div>
 
-                <a href="../checkout/" class="cta-button" style="width: 100%; text-align: center; background: var(--color-accent-primary); color: #fff; border: 1px solid var(--color-accent-primary); border-radius: 8px; box-shadow: 0 2px 5px rgba(213,217,217,.5); font-weight: 500; font-size: 0.95rem; display: block; padding: 10px;">Proceed to Buy</a>
+                <a href="../checkout/" class="btn-amazon-primary">Proceed to Buy</a>
                 
                 <div style="margin-top: 1.5rem; border-top: 1px solid #ddd; padding-top: 1rem;">
-                    <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">EMI Available</h3>
-                    <p style="font-size: 0.85rem; color: #565959;">Your order qualifies for EMI with valid credit cards.</p>
+                    <h3 style="font-size: 0.95rem; margin-bottom: 0.5rem; font-weight: bold; color: #0f1111;">EMI Available</h3>
+                    <p style="font-size: 0.85rem; color: #565959; line-height: 1.4;">Your order qualifies for EMI with valid credit cards.</p>
                 </div>
             </aside>
         </div>

@@ -69,8 +69,6 @@
         <a href="../contact/" class="sub-nav-link">Customer Service</a>
     </div>
 
-    </div>
-
     <!-- Profile Hero -->
     <section class="shop-hero">
         <div class="shop-hero-content">
@@ -93,20 +91,20 @@
                     </div>
                 </div>
 
-                <div style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #d9d9d9;">
-                    <button class="profile-nav-item active" style="width: 100%; text-align: left; padding: 1rem 1.5rem; background: #f7fafa; border: none; border-left: 3px solid #e77600; font-weight: 700; color: #0f1111; cursor: pointer; display: flex; justify-content: space-between;" onclick="document.querySelectorAll('.profile-nav-item').forEach(b => {b.style.background='#fff'; b.style.borderLeft='3px solid transparent'; b.style.fontWeight='400';}); this.style.background='#f7fafa'; this.style.borderLeft='3px solid #e77600'; this.style.fontWeight='700'; document.querySelectorAll('.profile-tab').forEach(t => t.style.display='none'); document.getElementById('ordersTab').style.display='block';">
+                <div class="profile-nav-group" style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #d9d9d9;">
+                    <button class="profile-nav-item active" data-tab="orders">
                         Your Orders <span>›</span>
                     </button>
-                    <button class="profile-nav-item" style="width: 100%; text-align: left; padding: 1rem 1.5rem; background: #fff; border: none; border-left: 3px solid transparent; font-weight: 400; color: #0f1111; border-top: 1px solid #f0f2f2; cursor: pointer; display: flex; justify-content: space-between;" onclick="document.querySelectorAll('.profile-nav-item').forEach(b => {b.style.background='#fff'; b.style.borderLeft='3px solid transparent'; b.style.fontWeight='400';}); this.style.background='#f7fafa'; this.style.borderLeft='3px solid #e77600'; this.style.fontWeight='700'; document.querySelectorAll('.profile-tab').forEach(t => t.style.display='none'); document.getElementById('settingsTab').style.display='block';">
+                    <button class="profile-nav-item" data-tab="settings">
                         Login & Security <span>›</span>
                     </button>
-                    <button class="profile-nav-item" style="width: 100%; text-align: left; padding: 1rem 1.5rem; background: #fff; border: none; border-left: 3px solid transparent; font-weight: 400; color: #0f1111; border-top: 1px solid #f0f2f2; cursor: pointer; display: flex; justify-content: space-between;" onclick="document.querySelectorAll('.profile-nav-item').forEach(b => {b.style.background='#fff'; b.style.borderLeft='3px solid transparent'; b.style.fontWeight='400';}); this.style.background='#f7fafa'; this.style.borderLeft='3px solid #e77600'; this.style.fontWeight='700'; document.querySelectorAll('.profile-tab').forEach(t => t.style.display='none'); document.getElementById('addressesTab').style.display='block';">
+                    <button class="profile-nav-item" data-tab="addresses">
                         Your Addresses <span>›</span>
                     </button>
-                    <button class="profile-nav-item" style="width: 100%; text-align: left; padding: 1rem 1.5rem; background: #fff; border: none; border-left: 3px solid transparent; font-weight: 400; color: #0f1111; border-top: 1px solid #f0f2f2; cursor: pointer; display: flex; justify-content: space-between;" onclick="window.location.href='../contact/'">
+                    <button class="profile-nav-item" style="border-top: 1px solid #f0f2f2;" onclick="window.location.href='../contact/'">
                         Contact Us <span>›</span>
                     </button>
-                    <button id="logoutBtn" style="width: 100%; text-align: left; padding: 1rem 1.5rem; background: #fff; border: none; border-left: 3px solid transparent; font-weight: 400; color: #dc2626; border-top: 1px solid #f0f2f2; cursor: pointer; display: flex; justify-content: space-between;">
+                    <button id="logoutBtn" class="profile-nav-item" style="color: #dc2626; border-top: 1px solid #f0f2f2;">
                         Sign Out <span>›</span>
                     </button>
                 </div>
@@ -114,11 +112,8 @@
 
             <!-- Right Content Area -->
             <main class="profile-content-area" style="flex: 1; background: #fff; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #d9d9d9; position: relative;">
-                <div id="dashboardContentWrapper">
-
-
-            <!-- Tab Content Area (Hidden by default, shown on click) -->
-            <div style="margin-top: 2rem; border-top: 1px solid #d5d9d9; padding-top: 2rem;">
+                <!-- Tab Content Area -->
+                <div style="margin-top: 0; padding-top: 0;">
                 <!-- Orders Tab -->
                 <div id="ordersTab" class="profile-tab active" style="display: none;">
                     <h2 style="margin-bottom: 1rem;">Your Orders</h2>
