@@ -4,14 +4,13 @@ A modern, professional e-commerce platform built with vanilla HTML, CSS, and Jav
 
 ## 🌟 Features
 
-- **Modern UI Design** - Professional, high-contrast design inspired by Amazon
-- **User Authentication** - Email/password signup, login, and password reset with Firebase
-- **Shopping Cart** - Add/remove items, manage quantities, persistent storage
-- **Checkout System** - Shipping methods, tax calculation, order processing
-- **User Profile** - Order history, saved addresses, account settings
-- **Help Center** - FAQ with accordion, search, and category filtering
-- **Responsive Design** - Mobile-first, works on all devices
-- **Real-time Sync** - Firebase integration for instant data updates
+- **Amazon-Inspired UI Design** - Clean, high-fidelity e-commerce interfaces matching Amazon's layout, color scheme, and typography.
+- **Robust User Authentication** - Secure Email/Password signup/login and Google Sign-In with real-time Firebase Auth integration and route guards.
+- **Interactive Shopping Cart** - Persistent cart storage for both Guests (localStorage) and Authenticated Users (Firestore) with "Fly-to-Cart" animations and bouncing badge notifications.
+- **Accordion Checkout** - An elegant 3-Step accordion checkout flow (Delivery -> Payment -> Review) supporting Guest checkout with post-purchase account conversion.
+- **Split Profile Dashboard** - A modern dashboard featuring order history, saved addresses, and profile settings using dynamic, smooth tab navigation.
+- **Admin Dashboard** - Secure administrative dashboard for managing products, tracking real-time orders, and monitoring store statistics.
+- **Help Center** - Dynamic FAQ center with accordion questions, real-time search, and category filters.
 
 ## 🚀 Live Demo
 
@@ -56,9 +55,11 @@ backend/              # Firebase backend
 
 ## 🎨 Design System
 
-- **Primary Color**: #0066cc (Professional Blue)
-- **Dark Background**: #1a3a52 (Navy)
-- **Text**: #0a0e27 (Dark Navy) / #565656 (Gray)
+- **Navbar Dark Navy**: `#131921` (Amazon Deep Navy)
+- **Primary Color**: `#ffd814` (Amazon Yellow)
+- **Secondary Color**: `#f7ca00` (Amazon Gold)
+- **Background Accent**: `#eaeded` (Amazon Light Gray)
+- **Text Color**: `#0f1111` (Dark Charcoal) / `#565959` (Slate Gray)
 - **Spacing**: 8px base unit
 - **Border Radius**: 4px (flat, crisp aesthetic)
 
@@ -145,10 +146,8 @@ Edit `frontend/css/style.css` - all styles centralized with CSS custom propertie
 
 ## 🐛 Known Issues & Limitations
 
-- Cart persists locally and in Firebase (requires auth)
-- Product images must be external URLs
-- No payment processing (demo checkout only)
-- Single user mode (no admin panel)
+- Product images must be external URLs.
+- Payment gateway integration is mocked (sandbox checkout only).
 
 ## 🗺️ Roadmap
 
@@ -157,7 +156,7 @@ Edit `frontend/css/style.css` - all styles centralized with CSS custom propertie
 - [ ] Real payment integration (Stripe/Razorpay)
 - [ ] Product reviews and ratings
 - [ ] Inventory management
-- [ ] Admin dashboard
+- [x] Admin dashboard (Implemented!)
 - [ ] Email notifications
 - [ ] Analytics integration
 
