@@ -9,40 +9,65 @@
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar">
+        <nav class="navbar">
         <div class="navbar-container">
             <div class="navbar-logo">
                 <a href="../" class="logo-text">ZONIX</a>
             </div>
-            <div class="navbar-menu">
-                <a href="../" class="nav-link">Home</a>
-                <a href="../shop/" class="nav-link">Shop</a>
-                <a href="../about/" class="nav-link">About</a>
-                <a href="../contact/" class="nav-link">Contact</a>
+            <div class="navbar-deliver">
+                <span class="deliver-to">Deliver to</span>
+                <span class="deliver-location">📍 India</span>
             </div>
-            <div class="navbar-icons">
-                <button class="icon-btn" aria-label="Search">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <div class="navbar-search">
+                <select class="search-category">
+                    <option>All Categories</option>
+                    <option>Electronics</option>
+                    <option>Fashion</option>
+                    <option>Home & Living</option>
+                    <option>Gaming</option>
+                    <option>Audio</option>
+                </select>
+                <input type="text" class="search-input" placeholder="Search ZONIX for products, brands and more">
+                <button class="search-btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5">
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
                     </svg>
                 </button>
-                <button class="icon-btn" aria-label="Cart">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            </div>
+            <div class="navbar-icons">
+                <a href="../login/" class="nav-link-custom" id="authNavLink">
+                    <span class="nav-small">Hello, sign in</span>
+                    <span class="nav-bold">Account & Lists</span>
+                </a>
+                <a href="../profile/" class="nav-link-custom">
+                    <span class="nav-small">Returns</span>
+                    <span class="nav-bold">& Orders</span>
+                </a>
+                <a href="../cart/" class="nav-link-custom cart-link">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
-                </button>
-                <button class="icon-btn" aria-label="Account">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                </button>
+                    <span class="cart-count" id="cartBadge" style="display:none;">0</span>
+                    <span class="nav-bold cart-text">Cart</span>
+                </a>
             </div>
         </div>
     </nav>
+    <div class="sub-navbar">
+        <a href="../" class="sub-nav-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            All
+        </a>
+        <a href="../shop/" class="sub-nav-link" style="color:#ffd814;">Today's Deals</a>
+        <a href="../shop/?q=electronics" class="sub-nav-link">Electronics</a>
+        <a href="../shop/?q=fashion" class="sub-nav-link">Fashion</a>
+        <a href="../shop/?q=home" class="sub-nav-link">Home & Kitchen</a>
+        <a href="../shop/?q=gaming" class="sub-nav-link">Gaming</a>
+        <a href="../contact/" class="sub-nav-link">Customer Service</a>
+    </div>
 
     <!-- Profile Hero -->
     <section class="shop-hero">
@@ -166,34 +191,36 @@
     </section>
 
     <!-- Footer -->
+        <div class="footer-back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h4>Explore</h4>
+                <h4>Get to Know Us</h4>
                 <ul>
-                    <li><a href="../shop/">Shop All</a></li>
                     <li><a href="../about/">About ZONIX</a></li>
                     <li><a href="../info/?page=collections">Collections</a></li>
+                    <li><a href="../contact/">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>Support</h4>
+                <h4>Let Us Help You</h4>
                 <ul>
-                    <li><a href="../help/">Help Center</a></li>
-                    <li><a href="../contact/">Contact Us</a></li>
+                    <li><a href="../info/?page=help">Help Center</a></li>
+                    <li><a href="../info/?page=returns">Returns & Refunds</a></li>
                     <li><a href="../info/?page=shipping">Shipping Info</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>Legal</h4>
+                <h4>Policies</h4>
                 <ul>
-                    <li><a href="../info/?page=privacy">Privacy Policy</a></li>
                     <li><a href="../info/?page=terms">Terms of Service</a></li>
-                    <li><a href="../info/?page=returns">Returns</a></li>
+                    <li><a href="../info/?page=privacy">Privacy Policy</a></li>
+                    <li><a href="../info/?page=returns">Return Policy</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
+            <div class="footer-logo">ZONIX</div>
             <p>&copy; 2026 ZONIX. The Marketplace, Redefined.</p>
         </div>
     </footer>

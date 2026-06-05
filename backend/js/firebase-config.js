@@ -20,7 +20,7 @@ import { getFirestore, enableIndexedDbPersistence } from 'https://www.gstatic.co
 
 const firebaseConfig = {
   apiKey: "AIzaSyDjpgHpiMsO7SP_DtcWbhJ_tMgsDJVSnu4",
-  authDomain: "studio-vih63.firebaseapp.com",
+  authDomain: "official-arvind.github.io",
   projectId: "studio-vih63",
   storageBucket: "studio-vih63.firebasestorage.app",
   messagingSenderId: "771569986455",
