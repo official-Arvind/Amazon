@@ -71,6 +71,10 @@
 
     <!-- Checkout Hero -->
     <section class="shop-hero">
+    </div>
+
+    <!-- Checkout Hero -->
+    <section class="shop-hero">
         <div class="shop-hero-content">
             <h1 class="hero-title">Secure Checkout</h1>
             <p class="hero-subtitle">Complete your purchase securely</p>
@@ -78,124 +82,79 @@
     </section>
 
     <!-- Checkout Content -->
-    <section class="content-section">
-        <div class="checkout-container">
-            <form id="checkoutForm" class="checkout-form">
-                <!-- Shipping Information -->
-                <div class="checkout-section">
-                    <h2>Shipping Address</h2>
-                    <div class="form-row">
-                        <input type="text" id="firstName" placeholder="First Name" required>
-                        <input type="text" id="lastName" placeholder="Last Name" required>
+    <section class="content-section" style="padding: 2rem 0; background: #eaeded; min-height: 70vh;">
+        <div class="checkout-layout" style="max-width: 1400px; margin: 0 auto; display: flex; gap: 2rem; padding: 0 1rem; align-items: flex-start;">
+            
+            <!-- Left Column: Accordion Steps -->
+            <div class="checkout-steps" style="flex: 1;">
+                
+                <!-- Step 1: Delivery -->
+                <div class="checkout-step" style="background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; margin-bottom: 1rem; overflow: hidden;">
+                    <div style="background: #f0f2f2; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #d5d9d9;">
+                        <h2 style="font-size: 1.25rem; color: #0f1111; margin: 0;"><span style="color: #e77600; margin-right: 10px;">1</span> Delivery Address</h2>
+                        <span style="color: #007185; cursor: pointer; font-size: 0.9rem;">Change</span>
                     </div>
-                    <input type="email" id="email" placeholder="Email Address" required>
-                    <input type="text" id="street" placeholder="Street Address" required>
-                    <div class="form-row">
-                        <input type="text" id="city" placeholder="City" required>
-                        <input type="text" id="state" placeholder="State/Region" required>
-                    </div>
-                    <div class="form-row">
-                        <input type="text" id="zipcode" placeholder="ZIP/Postal Code" required>
-                        <input type="text" id="country" placeholder="Country" required>
-                    </div>
-                    <input type="tel" id="phone" placeholder="Phone Number" required>
-                </div>
-
-                <!-- Shipping Method -->
-                <div class="checkout-section">
-                    <h2>Shipping Method</h2>
-                    <div class="shipping-options">
-                        <label class="shipping-option">
-                            <input type="radio" name="shipping" value="standard" checked>
-                            <span class="option-label">
-                                <strong>Standard Shipping</strong>
-                                <small>5-7 business days</small>
-                            </span>
-                            <span class="option-price">Free</span>
-                        </label>
-                        <label class="shipping-option">
-                            <input type="radio" name="shipping" value="express">
-                            <span class="option-label">
-                                <strong>Express Shipping</strong>
-                                <small>2-3 business days</small>
-                            </span>
-                            <span class="option-price">₹299</span>
-                        </label>
-                        <label class="shipping-option">
-                            <input type="radio" name="shipping" value="overnight">
-                            <span class="option-label">
-                                <strong>Overnight Delivery</strong>
-                                <small>Next business day</small>
-                            </span>
-                            <span class="option-price">₹999</span>
-                        </label>
+                    <div style="padding: 1.5rem;">
+                        <form id="checkoutForm">
+                            <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                <input type="text" id="firstName" placeholder="First Name" required style="flex: 1; padding: 0.8rem; border: 1px solid #a6a6a6; border-radius: 4px;">
+                                <input type="text" id="lastName" placeholder="Last Name" required style="flex: 1; padding: 0.8rem; border: 1px solid #a6a6a6; border-radius: 4px;">
+                            </div>
+                            <input type="text" id="street" placeholder="Street Address" required style="width: 100%; padding: 0.8rem; border: 1px solid #a6a6a6; border-radius: 4px; margin-bottom: 1rem;">
+                            <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                <input type="text" id="city" placeholder="City" required style="flex: 1; padding: 0.8rem; border: 1px solid #a6a6a6; border-radius: 4px;">
+                                <input type="text" id="zipcode" placeholder="ZIP/Postal Code" required style="flex: 1; padding: 0.8rem; border: 1px solid #a6a6a6; border-radius: 4px;">
+                            </div>
+                            <input type="tel" id="phone" placeholder="Phone Number" required style="width: 100%; padding: 0.8rem; border: 1px solid #a6a6a6; border-radius: 4px; margin-bottom: 1.5rem;">
+                            <button type="button" class="cta-button" style="padding: 0.8rem 2rem; border-radius: 8px;">Use this address</button>
+                        </form>
                     </div>
                 </div>
 
-                <!-- Payment Method -->
-                <div class="checkout-section">
-                    <h2>Payment Method</h2>
-                    <div class="payment-options">
-                        <label class="payment-option">
-                            <input type="radio" name="payment" value="card" checked>
-                            <span>Credit/Debit Card</span>
-                        </label>
-                        <label class="payment-option">
-                            <input type="radio" name="payment" value="upi">
-                            <span>UPI / Mobile Payment</span>
-                        </label>
-                        <label class="payment-option">
-                            <input type="radio" name="payment" value="wallet">
-                            <span>Digital Wallet</span>
-                        </label>
-                    </div>
-
-                    <!-- Card Details (shown when card is selected) -->
-                    <div id="cardDetails" class="payment-details">
-                        <input type="text" id="cardName" placeholder="Name on Card" required>
-                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
-                        <div class="form-row">
-                            <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" required>
-                            <input type="text" id="cardCVC" placeholder="CVC" maxlength="4" required>
-                        </div>
+                <!-- Step 2: Payment -->
+                <div class="checkout-step" style="background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; margin-bottom: 1rem; overflow: hidden; opacity: 0.6; pointer-events: none;">
+                    <div style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="font-size: 1.25rem; color: #0f1111; margin: 0;"><span style="color: #e77600; margin-right: 10px;">2</span> Payment Method</h2>
                     </div>
                 </div>
 
-                <!-- Order Summary -->
-                <div class="checkout-section">
-                    <h2>Order Summary</h2>
-                    <div class="order-summary">
-                        <div class="summary-item">
-                            <span>Subtotal</span>
-                            <span id="checkoutSubtotal">₹0</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>Shipping</span>
-                            <span id="checkoutShipping">Free</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>Tax (18%)</span>
-                            <span id="checkoutTax">₹0</span>
-                        </div>
-                        <div class="summary-divider"></div>
-                        <div class="summary-item total">
-                            <span>Total Amount</span>
-                            <span id="checkoutTotal">₹0</span>
-                        </div>
+                <!-- Step 3: Items and Shipping -->
+                <div class="checkout-step" style="background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; overflow: hidden; opacity: 0.6; pointer-events: none;">
+                    <div style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="font-size: 1.25rem; color: #0f1111; margin: 0;"><span style="color: #e77600; margin-right: 10px;">3</span> Review items and shipping</h2>
                     </div>
                 </div>
+                
+            </div>
 
-                <!-- Terms & Conditions -->
-                <div class="checkout-section">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="agreeTerms" required>
-                        <span>I agree to the <a href="../info/?page=terms">Terms of Service</a> and <a href="../info/?page=privacy">Privacy Policy</a></span>
-                    </label>
+            <!-- Right Column: Order Summary -->
+            <div class="checkout-summary-wrapper" style="width: 350px; position: sticky; top: 80px;">
+                <!-- Place Order Box -->
+                <div style="background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <button type="submit" form="checkoutForm" class="cta-button" style="width: 100%; font-size: 1rem; padding: 0.8rem; margin-bottom: 1rem; border-radius: 8px; background: #ffd814; color: #0f1111; border: 1px solid #fcd200; box-shadow: 0 2px 5px rgba(213,217,217,.5);">Place your order</button>
+                    <p style="font-size: 0.75rem; color: #565959; text-align: center; margin-bottom: 1rem;">By placing your order, you agree to ZONIX's privacy notice and conditions of use.</p>
+                    <hr style="border: 0; border-top: 1px solid #d5d9d9; margin-bottom: 1rem;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: #0f1111;">Order Summary</h3>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #0f1111; font-size: 0.9rem;">
+                        <span>Items:</span> <span id="checkoutSubtotal">₹0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #0f1111; font-size: 0.9rem;">
+                        <span>Delivery:</span> <span id="checkoutShipping">Free</span>
+                    </div>
+                    <hr style="border: 0; border-top: 1px dashed #d5d9d9; margin: 1rem 0;">
+                    <div style="display: flex; justify-content: space-between; color: #b12704; font-size: 1.2rem; font-weight: 700;">
+                        <span>Order Total:</span> <span id="checkoutTotal">₹0</span>
+                    </div>
                 </div>
+                
+                <!-- Guest Signup Prompt -->
+                <div id="guestSignupPrompt" style="background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <h3 style="font-size: 1rem; color: #0f1111; margin-bottom: 0.5rem;">Shopping as a Guest?</h3>
+                    <p style="font-size: 0.85rem; color: #565959; margin-bottom: 1rem;">Save your delivery address and track your order easily by creating an account.</p>
+                    <button onclick="window.location.href='../login/'" style="width: 100%; padding: 0.6rem; background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; color: #0f1111; font-weight: 600; cursor: pointer; box-shadow: 0 2px 5px rgba(213,217,217,.5);">Create Account / Sign In</button>
+                </div>
+            </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="cta-button" style="width: 100%; font-size: 1.125rem; padding: 1rem;">Complete Order</button>
-            </form>
         </div>
     </section>
 

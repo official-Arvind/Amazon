@@ -311,14 +311,24 @@ function initProducts() {
             addToGuestCart({ productId, name: productName, price: priceNum, image: productImage, category: productCategory, quantity: 1 });
             appState.cart = getGuestCart();
           }
-          updateCartBadge();
-          addBtn.textContent = '✓ Added';
-          showNotification(`${productName} added to cart!`, 'success');
+          
+          playFlyToCartAnimation(card);
+          
+          setTimeout(() => {
+              updateCartBadge();
+              addBtn.textContent = '✓ Added';
+              showNotification(`${productName} added to cart!`, 'success');
+              
+              setTimeout(() => {
+                  addBtn.textContent = originalText;
+                  addBtn.disabled = false;
+              }, 2000);
+          }, 800);
+          
         } catch (error) {
           showNotification('Failed to add to cart', 'error');
           addBtn.textContent = originalText;
-        } finally {
-          setTimeout(() => { addBtn.textContent = originalText; addBtn.disabled = false; }, 2000);
+          addBtn.disabled = false;
         }
       });
     }
@@ -420,7 +430,7 @@ function updateCartBadge() {
   if (!badge) {
     badge = document.createElement('span');
     badge.className = 'badge';
-    badge.style.cssText = 'position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold;';
+    badge.style.cssText = 'position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);';
     cartIcon.style.position = 'relative';
     cartIcon.appendChild(badge);
   }
@@ -428,6 +438,51 @@ function updateCartBadge() {
   const totalItems = appState.cart.reduce((sum, item) => sum + item.quantity, 0);
   badge.textContent = totalItems;
   badge.style.display = totalItems > 0 ? 'flex' : 'none';
+  
+  // Bounce animation
+  badge.style.transform = 'scale(1.4)';
+  setTimeout(() => badge.style.transform = 'scale(1)', 300);
+}
+
+function playFlyToCartAnimation(cardElement) {
+    const img = cardElement.querySelector('.product-image');
+    const cartIcon = document.querySelector('.nav-cart');
+    
+    if (!img || !cartIcon) return;
+    
+    const imgRect = img.getBoundingClientRect();
+    const cartRect = cartIcon.getBoundingClientRect();
+    
+    const flyingImg = img.cloneNode(true);
+    flyingImg.style.position = 'fixed';
+    flyingImg.style.top = imgRect.top + 'px';
+    flyingImg.style.left = imgRect.left + 'px';
+    flyingImg.style.width = imgRect.width + 'px';
+    flyingImg.style.height = imgRect.height + 'px';
+    flyingImg.style.borderRadius = '50%';
+    flyingImg.style.zIndex = '99999';
+    flyingImg.style.opacity = '0.9';
+    flyingImg.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
+    flyingImg.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+    
+    document.body.appendChild(flyingImg);
+    
+    requestAnimationFrame(() => {
+        flyingImg.style.top = cartRect.top + 10 + 'px';
+        flyingImg.style.left = cartRect.left + 10 + 'px';
+        flyingImg.style.width = '20px';
+        flyingImg.style.height = '20px';
+        flyingImg.style.opacity = '0.1';
+    });
+    
+    setTimeout(() => {
+        flyingImg.remove();
+        cartIcon.style.transform = 'scale(1.1)';
+        cartIcon.style.transition = 'transform 0.2s';
+        setTimeout(() => {
+            cartIcon.style.transform = 'scale(1)';
+        }, 200);
+    }, 800);
 }
 
 function displayCartItems() {
