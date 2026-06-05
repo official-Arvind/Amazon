@@ -121,18 +121,25 @@ function initAuthListener() {
 }
 
 function updateAuthUI() {
-  const accountBtn = document.querySelector('[aria-label="Account"]');
+  const accountBtn = document.getElementById('authNavLink');
   if (!accountBtn) return;
   
   // Check if we are in the root directory or a subdirectory to set correct relative path
   const inRoot = !window.location.pathname.includes('/frontend/') || window.location.pathname.endsWith('/frontend/') || window.location.pathname.endsWith('/frontend/index.html');
   const prefix = inRoot ? '' : '../';
 
-  if (appState.isAuthenticated) {
+  const smallText = accountBtn.querySelector('.nav-small');
+  const boldText = accountBtn.querySelector('.nav-bold');
+
+  if (appState.isAuthenticated && appState.currentUser) {
     accountBtn.href = prefix + 'profile/';
+    if (smallText) smallText.textContent = `Hello, ${appState.currentUser.displayName || 'User'}`;
+    if (boldText) boldText.textContent = 'Account & Lists';
     accountBtn.title = 'My Profile';
   } else {
     accountBtn.href = prefix + 'login/';
+    if (smallText) smallText.textContent = 'Hello, sign in';
+    if (boldText) boldText.textContent = 'Account & Lists';
     accountBtn.title = 'Login';
   }
 }
@@ -423,17 +430,8 @@ function initCart() {
 }
 
 function updateCartBadge() {
-  const cartIcon = document.querySelector('[aria-label="Cart"]');
-  if (!cartIcon) return;
-  
-  let badge = cartIcon.querySelector('.badge');
-  if (!badge) {
-    badge = document.createElement('span');
-    badge.className = 'badge';
-    badge.style.cssText = 'position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);';
-    cartIcon.style.position = 'relative';
-    cartIcon.appendChild(badge);
-  }
+  const badge = document.getElementById('cartBadge');
+  if (!badge) return;
   
   const totalItems = appState.cart.reduce((sum, item) => sum + item.quantity, 0);
   badge.textContent = totalItems;
@@ -446,7 +444,7 @@ function updateCartBadge() {
 
 function playFlyToCartAnimation(cardElement) {
     const img = cardElement.querySelector('.product-image');
-    const cartIcon = document.querySelector('.nav-cart');
+    const cartIcon = document.querySelector('.cart-link');
     
     if (!img || !cartIcon) return;
     
@@ -489,7 +487,10 @@ function displayCartItems() {
   const container = document.getElementById('cartItems');
   if (!container) return;
   
+  const summaryAside = document.querySelector('.cart-summary');
+  
   if (appState.cart.length === 0) {
+    if (summaryAside) summaryAside.style.display = 'none';
     const inRoot = !window.location.pathname.includes('/frontend/') || window.location.pathname.endsWith('/frontend/') || window.location.pathname.endsWith('/frontend/index.html');
     const shopPath = inRoot ? 'shop/' : '../shop/';
     container.innerHTML = `
@@ -501,6 +502,8 @@ function displayCartItems() {
     updateCartSummary();
     return;
   }
+  
+  if (summaryAside) summaryAside.style.display = 'block';
   
   container.innerHTML = appState.cart.map((item, index) => {
     const isFirst = index === 0;

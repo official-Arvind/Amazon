@@ -248,6 +248,7 @@ img {
 .cart-link {
     flex-direction: row;
     align-items: flex-end;
+    position: relative;
 }
 .cart-link svg {
     margin-right: 5px;
@@ -2442,4 +2443,23 @@ html, body {
     background: #f7fafa !important;
     border-left: 3px solid #e77600 !important;
     font-weight: 700 !important;
+}
+
+/* Navbar Cart Count Badge */
+.cart-count {
+    position: absolute;
+    top: -8px;
+    left: 12px;
+    background: #f08804; /* Amazon Orange Badge */
+    color: #fff !important;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: none; /* Controlled by JS */
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10;
 }
