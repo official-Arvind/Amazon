@@ -462,9 +462,9 @@ function displayCartItems() {
             </div>
           </div>
           
-          <div style="color: #007185; font-size: 0.85rem; margin-bottom: 0.5rem;">In Stock</div>
+          <div style="color: #10b981; font-size: 0.85rem; margin-bottom: 0.5rem;">In Stock</div>
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem;">
-            <img src="https://m.media-amazon.com/images/G/31/marketing/fba/fba-badge_18px-2x._CB485936079_.png" alt="ZONIX Fulfilled" style="height: 18px;">
+            <span style="display: inline-flex; align-items: center; background: #e0e7ff; color: #4338ca; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; border: 1px solid #c7d2fe; letter-spacing: 0.5px;">✓ ZONIX VERIFIED</span>
           </div>
           
           <div style="display: flex; align-items: center; gap: 1.5rem; margin-top: auto;">
@@ -474,9 +474,9 @@ function displayCartItems() {
               <button class="qty-btn inc" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer; font-size: 1.2rem; transition: background 0.1s;">+</button>
             </div>
             <div style="width: 1px; height: 16px; background: #ddd;"></div>
-            <button class="remove-btn" style="color: #007185; background: none; border: none; cursor: pointer; font-size: 0.85rem; padding: 0;">Delete</button>
-            <div style="width: 1px; height: 16px; background: #ddd;"></div>
-            <button style="color: #007185; background: none; border: none; cursor: pointer; font-size: 0.85rem; padding: 0;">Save for later</button>
+            <button class="remove-btn" style="color: var(--color-accent-primary); background: none; border: none; cursor: pointer; font-size: 0.85rem; padding: 0;">Delete</button>
+            <span style="color: #d5d9d9;">|</span>
+            <button style="color: var(--color-accent-primary); background: none; border: none; cursor: pointer; font-size: 0.85rem; padding: 0;">Save for later</button>
           </div>
         </div>
       </div>
@@ -662,7 +662,7 @@ function showOrderConfirmation(orderData, isGuest) {
           <a href="../login/" class="cta-button" style="display:inline-block;">Create Account</a>
         </div>
       ` : ''}
-      <a href="../shop/" class="cta-button" style="display:inline-block;background:#232f3e;color:white;">Continue Shopping</a>
+      <a href="../shop/" class="cta-button" style="display:inline-block;background:var(--color-text-primary);color:white;">Continue Shopping</a>
     </div>
   `;
 }
@@ -685,10 +685,10 @@ function showCheckoutAuthModal(orderData) {
         <p style="color:#565656;">How would you like to complete your order?</p>
       </div>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
-        <button id="checkoutSignIn" style="padding:0.9rem;background:#ffd814;color:#0a0e27;border:none;border-radius:6px;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;">
+        <button id="checkoutSignIn" style="padding:0.9rem;background:var(--color-accent-primary);color:#ffffff;border:none;border-radius:6px;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;">
           Sign In to Your Account
         </button>
-        <button id="checkoutSignUp" style="padding:0.9rem;background:#232f3e;color:#fff;border:none;border-radius:6px;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;">
+        <button id="checkoutSignUp" style="padding:0.9rem;background:var(--color-text-primary);color:#fff;border:none;border-radius:6px;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;">
           Create New Account
         </button>
         <div style="display:flex;align-items:center;gap:8px;margin:0.25rem 0;">

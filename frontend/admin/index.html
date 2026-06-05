@@ -13,12 +13,12 @@
            ADMIN DASHBOARD - ZONIX DARK THEME
            ============================================= */
         :root {
-            --navbar-dark: #131921;
+            --navbar-dark: var(--color-navbar);
             --sidebar-bg: #0d1117;
             --sidebar-hover: #1f2d3d;
             --main-bg: #f3f4f6;
             --card-bg: #ffffff;
-            --accent-gold: #ffd814;
+            --accent-gold: var(--color-accent-primary);
             --accent-gold-hover: #f7ca00;
             --accent-blue: #0066cc;
             --accent-danger: #e74c3c;
@@ -456,7 +456,7 @@
         }
 
         .btn-dark:hover {
-            background: #232f3e;
+            background: var(--color-navbar);
             transform: translateY(-1px);
         }
 
@@ -873,7 +873,7 @@
                     <p>Welcome back, Admin</p>
                 </div>
                 <div class="header-actions" style="display:flex;align-items:center;gap:12px;">
-                    <span id="adminRoleBadge" style="background:#ffd81422;color:#ffd814;padding:4px 12px;border-radius:12px;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;"></span>
+                    <span id="adminRoleBadge" style="background:rgba(79, 70, 229, 0.13);color:var(--color-accent-primary);padding:4px 12px;border-radius:12px;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;"></span>
                     <a href="../" class="store-link" target="_blank">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
