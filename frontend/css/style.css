@@ -2332,11 +2332,17 @@ html, body {
 
 @media (max-width: 900px) {
     .cart-container {
+        display: flex;
         flex-direction: column;
     }
+    .cart-items-wrapper {
+        order: 2;
+    }
     .cart-summary {
+        order: 1;
         width: 100%;
         position: static !important;
+        margin-bottom: 1.5rem;
     }
 }
 
