@@ -69,6 +69,32 @@ export async function checkAdminAuth() {
         return;
       }
 
+      // Check if user is the hardcoded super admin
+      if (user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
+        console.log('✓ Super admin authenticated via email match:', user.email);
+        
+        // Try to bootstrap/update the doc if possible, but don't fail if permissions are missing
+        try {
+          await setDoc(doc(db, 'admins', user.uid), {
+            email: user.email,
+            role: ADMIN_ROLES.SUPER_ADMIN,
+            displayName: user.displayName || 'Super Admin',
+            lastLogin: serverTimestamp()
+          }, { merge: true });
+        } catch (e) {
+          console.warn('Could not write admin doc, likely due to Firestore rules. Proceeding anyway.');
+        }
+
+        resolve({
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName || 'Super Admin',
+          role: ADMIN_ROLES.SUPER_ADMIN,
+          permissions: getPermissions(ADMIN_ROLES.SUPER_ADMIN)
+        });
+        return;
+      }
+
       // Check if user is in the admins collection
       try {
         const adminRef = doc(db, 'admins', user.uid);
@@ -83,26 +109,6 @@ export async function checkAdminAuth() {
             displayName: user.displayName || 'Admin',
             role: adminData.role,
             permissions: getPermissions(adminData.role)
-          });
-          return;
-        }
-
-        // Auto-bootstrap super admin
-        if (user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
-          await setDoc(doc(db, 'admins', user.uid), {
-            email: user.email,
-            role: ADMIN_ROLES.SUPER_ADMIN,
-            displayName: user.displayName || 'Super Admin',
-            createdAt: serverTimestamp(),
-            createdBy: 'system'
-          });
-          console.log('✓ Super admin bootstrapped:', user.email);
-          resolve({
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName || 'Super Admin',
-            role: ADMIN_ROLES.SUPER_ADMIN,
-            permissions: getPermissions(ADMIN_ROLES.SUPER_ADMIN)
           });
           return;
         }
