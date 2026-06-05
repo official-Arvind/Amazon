@@ -2220,3 +2220,83 @@ html, body {
     .hero-text h1 { font-size: 1.6rem; }
     .navbar-deliver { display: none; }
 }
+
+/* =============================================
+   CART & PROFILE PAGE LAYOUT
+   ============================================= */
+.cart-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    align-items: flex-start;
+}
+
+.cart-items-wrapper {
+    flex: 1;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.cart-summary {
+    width: 320px;
+}
+
+.profile-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.profile-card {
+    background: #fff;
+    border: 1px solid #d5d9d9;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.profile-card:hover {
+    background: #f7fafa;
+}
+
+.profile-card-icon {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+.profile-card-text h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #0f1111;
+    margin-bottom: 0.2rem;
+}
+
+.profile-card-text p {
+    font-size: 0.9rem;
+    color: #565959;
+}
+
+@media (max-width: 900px) {
+    .cart-container {
+        flex-direction: column;
+    }
+    .cart-summary {
+        width: 100%;
+        position: static !important;
+    }
+}

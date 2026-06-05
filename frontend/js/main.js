@@ -447,25 +447,41 @@ function displayCartItems() {
     return;
   }
   
-  container.innerHTML = appState.cart.map(item => `
-    <div class="cart-item" data-id="${item.productId}" style="display: flex; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid #eee; align-items: center;">
-      <div style="flex: 1;">
-        <h4 style="font-size: 1.1rem; color: #0a0e27; margin-bottom: 0.5rem;">${item.name}</h4>
-        <p style="color: #0066cc; font-weight: bold; margin-bottom: 1rem;">₹${item.price}</p>
-        <div style="display: flex; gap: 1rem; align-items: center;">
-          <div style="display: flex; border: 1px solid #ddd; border-radius: 4px; overflow: hidden;">
-            <button class="qty-btn dec" style="padding: 0.5rem 0.8rem; background: #f5f5f5; border: none; cursor: pointer;">−</button>
-            <span style="padding: 0.5rem 1rem; border-left: 1px solid #ddd; border-right: 1px solid #ddd;">${item.quantity}</span>
-            <button class="qty-btn inc" style="padding: 0.5rem 0.8rem; background: #f5f5f5; border: none; cursor: pointer;">+</button>
+  container.innerHTML = appState.cart.map((item, index) => {
+    const isFirst = index === 0;
+    return `
+      <div class="cart-item" data-id="${item.productId}" style="display: flex; gap: 1.5rem; padding: 1.5rem 0; border-top: ${isFirst ? 'none' : '1px solid #e8e8e8'};">
+        <div style="flex-shrink: 0; width: 140px; height: 140px; background: #f7f7f7; display: flex; align-items: center; justify-content: center; border-radius: 4px; padding: 10px;">
+            <img src="${item.image || '../assets/images/placeholder.jpg'}" alt="${item.name}" style="max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply;" onerror="this.src='https://via.placeholder.com/150x150?text=Image+Not+Found'"/>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem;">
+            <h4 class="cart-item-title" style="font-size: 1.15rem; color: #0f1111; font-weight: 500; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.name}</h4>
+            <div style="text-align: right; min-width: 100px;">
+              <span style="font-size: 1.3rem; font-weight: 700; color: #0f1111;">₹${(item.price * item.quantity).toLocaleString()}</span>
+            </div>
           </div>
-          <button class="remove-btn" style="color: #e74c3c; background: none; border: none; cursor: pointer; font-size: 0.9rem;">Remove</button>
+          
+          <div style="color: #007185; font-size: 0.85rem; margin-bottom: 0.5rem;">In Stock</div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem;">
+            <img src="https://m.media-amazon.com/images/G/31/marketing/fba/fba-badge_18px-2x._CB485936079_.png" alt="ZONIX Fulfilled" style="height: 18px;">
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 1.5rem; margin-top: auto;">
+            <div style="display: flex; align-items: center; border: 1px solid #d5d9d9; border-radius: 8px; background: #f0f2f2; box-shadow: 0 2px 5px rgba(15,17,17,.15); overflow: hidden;">
+              <button class="qty-btn dec" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer; font-size: 1.2rem; transition: background 0.1s;">−</button>
+              <span style="width: 40px; height: 32px; display: flex; align-items: center; justify-content: center; background: #fff; font-size: 0.95rem; font-weight: 600; border-left: 1px solid #d5d9d9; border-right: 1px solid #d5d9d9;">${item.quantity}</span>
+              <button class="qty-btn inc" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer; font-size: 1.2rem; transition: background 0.1s;">+</button>
+            </div>
+            <div style="width: 1px; height: 16px; background: #ddd;"></div>
+            <button class="remove-btn" style="color: #007185; background: none; border: none; cursor: pointer; font-size: 0.85rem; padding: 0;">Delete</button>
+            <div style="width: 1px; height: 16px; background: #ddd;"></div>
+            <button style="color: #007185; background: none; border: none; cursor: pointer; font-size: 0.85rem; padding: 0;">Save for later</button>
+          </div>
         </div>
       </div>
-      <div style="font-weight: bold; font-size: 1.1rem;">
-        ₹${item.price * item.quantity}
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
   
   container.querySelectorAll('.qty-btn.inc').forEach(btn => 
     btn.addEventListener('click', e => updateCartQty(e.target.closest('.cart-item').dataset.id, 1)));
@@ -522,14 +538,16 @@ async function removeCartItem(productId) {
 
 function updateCartSummary() {
   const subtotal = appState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const totalItems = appState.cart.reduce((sum, item) => sum + item.quantity, 0);
   const shipping = subtotal > 0 ? (subtotal > 5000 ? 0 : 299) : 0;
   const tax = Math.round(subtotal * 0.18); // 18% GST
   const total = subtotal + shipping + tax;
   
-  if (document.getElementById('subtotal')) document.getElementById('subtotal').textContent = `₹${subtotal}`;
-  if (document.getElementById('shipping')) document.getElementById('shipping').textContent = shipping === 0 ? 'Free' : `₹${shipping}`;
-  if (document.getElementById('tax')) document.getElementById('tax').textContent = `₹${tax}`;
-  if (document.getElementById('total')) document.getElementById('total').textContent = `₹${total}`;
+  if (document.getElementById('summaryItemCount')) document.getElementById('summaryItemCount').textContent = totalItems;
+  if (document.getElementById('subtotal')) document.getElementById('subtotal').textContent = `₹${subtotal.toLocaleString()}`;
+  if (document.getElementById('shipping')) document.getElementById('shipping').textContent = shipping === 0 ? 'Free' : `₹${shipping.toLocaleString()}`;
+  if (document.getElementById('tax')) document.getElementById('tax').textContent = `₹${tax.toLocaleString()}`;
+  if (document.getElementById('total')) document.getElementById('total').textContent = `₹${total.toLocaleString()}`;
 }
 
 // =============================================
