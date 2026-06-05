@@ -189,6 +189,47 @@ export async function createOrder(userId, orderData) {
   }
 }
 
+/**
+ * Create a guest order (no userId)
+ */
+export async function createGuestOrder(orderData) {
+  try {
+    if (!orderData.items || orderData.items.length === 0) throw new Error('Order must have at least one item');
+
+    console.log('Creating guest order for:', orderData.shippingAddress?.email);
+
+    const ordersRef = collection(db, 'guestOrders');
+    const orderDoc = await addDoc(ordersRef, {
+      userId: null,
+      guestEmail: orderData.shippingAddress?.email || 'unknown',
+      orderNumber: `ZNX-${Date.now().toString(36).toUpperCase()}`,
+      items: orderData.items,
+      shippingAddress: orderData.shippingAddress,
+      shippingMethod: orderData.shippingMethod,
+      paymentMethod: orderData.paymentMethod,
+      subtotal: orderData.subtotal,
+      shippingCost: orderData.shippingCost || 0,
+      tax: orderData.tax || 0,
+      total: orderData.total,
+      status: 'pending',
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now()
+    });
+
+    console.log('✓ Guest order created:', orderDoc.id);
+    return {
+      orderId: orderDoc.id,
+      orderNumber: `ZNX-${Date.now().toString(36).toUpperCase()}`,
+      status: 'pending',
+      total: orderData.total,
+      createdAt: new Date()
+    };
+  } catch (error) {
+    console.error('✗ Error creating guest order:', error.message);
+    throw error;
+  }
+}
+
 export async function getOrders(userId) {
   try {
     console.log('Fetching orders for user:', userId);

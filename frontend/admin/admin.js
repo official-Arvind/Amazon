@@ -368,7 +368,7 @@ function populateRecentOrdersTable(orders) {
 function populateInventoryTable(products) {
   const countEl = document.getElementById('inventoryCount');
   if (products.length === 0) {
-    inventoryBody.innerHTML = '<tr><td colspan="6" class="empty-state">No products yet. Add one above or import from CJ!</td></tr>';
+    inventoryBody.innerHTML = '<tr><td colspan="6" class="empty-state">No products yet. Add one above!</td></tr>';
     if (countEl) countEl.textContent = '0 products';
     return;
   }
@@ -385,7 +385,7 @@ function populateInventoryTable(products) {
 
     return `
       <tr>
-        <td><strong>${product.name}</strong>${product.source === 'cj_dropshipping' ? ' <span style="font-size:0.7rem;color:#f59e0b;font-weight:600;">CJ</span>' : ''}</td>
+        <td><strong>${product.name}</strong></td>
         <td>${formatCurrency(product.price)}</td>
         <td>${product.stock}</td>
         <td>${product.category || 'Uncategorized'}</td>
