@@ -2659,6 +2659,292 @@ html, body {
 }
 
 /* =============================================
+   AMAZON BRANDING STYLE OVERRIDES
+   ============================================= */
+.amazon-price-wrapper {
+    display: inline-flex;
+    align-items: flex-start;
+    color: #0f1111;
+    font-family: Arial, sans-serif;
+}
+.amazon-price-symbol {
+    font-size: 0.65em;
+    margin-right: 1px;
+    margin-top: 0.15em;
+    font-weight: 500;
+}
+.amazon-price-whole {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1;
+}
+.amazon-price-fraction {
+    font-size: 0.65em;
+    margin-left: 1px;
+    margin-top: 0.15em;
+    font-weight: 500;
+}
+
+/* Prime Badge styling */
+.prime-badge {
+    display: inline-flex;
+    align-items: center;
+    color: #00a8e1;
+    font-size: 0.75rem;
+    font-weight: 800;
+    font-style: italic;
+    margin: 4px 0 2px;
+    gap: 2px;
+}
+.prime-badge::before {
+    content: "✓";
+    font-weight: 900;
+    font-style: normal;
+    font-size: 0.7rem;
+    background: #00a8e1;
+    color: #fff;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 2px;
+}
+.prime-badge-text {
+    color: #00a8e1;
+}
+
+/* Star rating style */
+.amazon-stars {
+    color: #de7921; /* Amazon Star Gold */
+    font-size: 0.9rem;
+    display: inline-block;
+    letter-spacing: -1px;
+}
+.rating-count-link {
+    font-size: 0.8rem;
+    color: #007185; /* Amazon Link Color */
+    margin-left: 5px;
+}
+.rating-count-link:hover {
+    color: #c45500;
+    text-decoration: underline;
+}
+
+/* Amazon Gradient Buttons */
+.btn-amazon-primary, .add-to-cart-btn {
+    background: linear-gradient(to bottom, #ffe093, #ffc439) !important;
+    border: 1px solid #a88734 !important;
+    border-color: #a88734 #9c7e31 #846a29 !important;
+    color: #111 !important;
+    border-radius: 20px !important;
+    padding: 6px 12px !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 5px 0 rgba(213,217,217,.5) !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    transition: background 0.1s ease-in-out !important;
+    display: inline-block !important;
+    width: 100% !important;
+}
+.btn-amazon-primary:hover, .add-to-cart-btn:hover {
+    background: linear-gradient(to bottom, #ffd777, #f7be23) !important;
+}
+.btn-amazon-primary:active, .add-to-cart-btn:active {
+    background: #f7ca00 !important;
+    border-color: #846a29 !important;
+}
+
+.btn-amazon-secondary {
+    background: linear-gradient(to bottom, #f7f8fa, #e7e9ec) !important;
+    border: 1px solid #a6a6a6 !important;
+    border-color: #adb1b8 #a2a6ac #8d9096 !important;
+    color: #111 !important;
+    border-radius: 20px !important;
+    padding: 6px 12px !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 5px 0 rgba(213,217,217,.5) !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    transition: background 0.1s ease-in-out !important;
+}
+.btn-amazon-secondary:hover {
+    background: linear-gradient(to bottom, #e7ebf0, #d9dce1) !important;
+}
+
+/* Amazon centered login card styles */
+.auth-page-container {
+    background-color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px 10px;
+    font-family: Arial, sans-serif;
+}
+.auth-logo-center {
+    margin-bottom: 20px;
+    display: block;
+}
+.auth-card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 350px;
+    padding: 20px 26px;
+    box-sizing: border-box;
+}
+.auth-card h2 {
+    font-size: 1.75rem;
+    font-weight: 400;
+    margin-bottom: 15px;
+    color: #111;
+}
+.auth-card .form-group {
+    margin-bottom: 14px;
+}
+.auth-card label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 4px;
+}
+.auth-card input[type="email"],
+.auth-card input[type="password"],
+.auth-card input[type="text"] {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #a6a6a6;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    height: 31px;
+    transition: border-color 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+}
+.auth-card input:focus {
+    border-color: #e77600;
+    box-shadow: 0 0 3px 2px rgba(228, 121, 17, 0.5);
+    outline: none;
+}
+.auth-card .auth-button {
+    width: 100%;
+    height: 31px;
+    background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+    border: 1px solid #a88734;
+    border-color: #a88734 #9c7e31 #846a29;
+    color: #111;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    box-shadow: 0 1px 0 rgba(255,255,255,.4) inset;
+    margin-top: 10px;
+}
+.auth-card .auth-button:hover {
+    background: linear-gradient(to bottom, #f5d78e, #eeb933);
+}
+.auth-card .auth-button:active {
+    background: #f0c14b;
+    border-color: #846a29;
+}
+.auth-notice-text {
+    font-size: 0.72rem;
+    color: #555;
+    line-height: 1.5;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.auth-notice-text a {
+    color: #0066c0;
+}
+.auth-notice-text a:hover {
+    color: #c45500;
+    text-decoration: underline;
+}
+
+.auth-divider-container {
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+    position: relative;
+    margin: 20px 0 10px;
+}
+.auth-divider-container h5 {
+    font-size: 0.75rem;
+    color: #767676;
+    background: #fff;
+    display: inline-block;
+    padding: 0 8px;
+    position: relative;
+    z-index: 2;
+    font-weight: 400;
+}
+.auth-divider-container::after {
+    content: "";
+    width: 100%;
+    height: 1px;
+    background: #e7e7e7;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    z-index: 1;
+}
+
+.auth-create-account-btn {
+    width: 100%;
+    max-width: 350px;
+    height: 31px;
+    background: linear-gradient(to bottom, #f7f8fa, #e7e9ec);
+    border: 1px solid #adb1b8;
+    border-color: #adb1b8 #a2a6ac #8d9096;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    box-shadow: 0 1px 0 rgba(255,255,255,.6) inset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    margin: 0 auto;
+}
+.auth-create-account-btn:hover {
+    background: linear-gradient(to bottom, #e7ebf0, #d9dce1);
+}
+.auth-create-account-btn:active {
+    background: #e7e9ec;
+    border-color: #8d9096;
+}
+
+.auth-footer-minimal {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 350px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    text-align: center;
+    font-size: 0.72rem;
+    color: #555;
+}
+.auth-footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+.auth-footer-links a {
+    color: #0066c0;
+}
+.auth-footer-links a:hover {
+    color: #c45500;
+    text-decoration: underline;
+}
+
+/* =============================================
    MOBILE MEDIA QUERY OVERRIDES (width <= 768px)
    ============================================= */
 @media (max-width: 768px) {

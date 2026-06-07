@@ -4,137 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ZONIX - Login & Signup">
-    <title>ZONIX - Authentication</title>
+    <title>ZONIX Sign-In</title>
     <link rel="stylesheet" href="../css/style.css?v=1.2">
 </head>
-<body>
-    <!-- Navigation -->
-        <nav class="navbar">
-        <div class="navbar-container">
-            <div class="navbar-logo">
-                <a href="../" class="logo-text">ZONIX</a>
-            </div>
-            <div class="navbar-deliver">
-                <span class="deliver-to">Deliver to</span>
-                <span class="deliver-location">📍 India</span>
-            </div>
-            <div class="navbar-search">
-                <select class="search-category">
-                    <option>All Categories</option>
-                    <option>Electronics</option>
-                    <option>Fashion</option>
-                    <option>Home & Living</option>
-                    <option>Gaming</option>
-                    <option>Audio</option>
-                </select>
-                <input type="text" class="search-input" placeholder="Search ZONIX for products, brands and more">
-                <button class="search-btn" aria-label="Search">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.35-4.35"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="navbar-icons">
-                <a href="../login/" class="nav-link-custom" id="authNavLink">
-                    <span class="nav-small">Hello, sign in</span>
-                    <span class="nav-bold">Account & Lists</span>
-                </a>
-                <a href="../profile/" class="nav-link-custom">
-                    <span class="nav-small">Returns</span>
-                    <span class="nav-bold">& Orders</span>
-                </a>
-                <a href="../cart/" class="nav-link-custom cart-link">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                    <span class="cart-count" id="cartBadge" style="display:none;">0</span>
-                    <span class="nav-bold cart-text">Cart</span>
-                </a>
-            </div>
-        </div>
-    </nav>
-    <div class="sub-navbar">
-        <a href="../" class="sub-nav-link">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-            All
-        </a>
-        <a href="../shop/" class="sub-nav-link" style="color:var(--color-accent-primary);">Today's Deals</a>
-        <a href="../shop/?q=electronics" class="sub-nav-link">Electronics</a>
-        <a href="../shop/?q=fashion" class="sub-nav-link">Fashion</a>
-        <a href="../shop/?q=home" class="sub-nav-link">Home & Kitchen</a>
-        <a href="../shop/?q=gaming" class="sub-nav-link">Gaming</a>
-        <a href="../contact/" class="sub-nav-link">Customer Service</a>
-    </div>
+<body style="background: #ffffff; min-height: 100vh;">
 
-    <!-- Main Container -->
-    <div class="auth-container">
-        <!-- Left Panel - Branding -->
-        <div class="auth-left">
-            <div class="auth-branding">
-                <h1>Welcome to ZONIX</h1>
-                <p>Discover premium, curated products for the modern lifestyle.</p>
-                <div class="auth-features">
-                    <div class="feature">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span>Secure shopping</span>
-                    </div>
-                    <div class="feature">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span>Fast checkout</span>
-                    </div>
-                    <div class="feature">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span>Exclusive deals</span>
-                    </div>
-                </div>
-            </div>
+    <!-- Center Page Auth Wrapper -->
+    <div class="auth-page-container">
+        
+        <!-- Centered Smile Brand Logo -->
+        <div class="auth-logo-center">
+            <a href="../" class="logo-text" style="color:#111; font-size: 2.2rem; position:relative; display:inline-block; padding-bottom: 5px; font-weight: 700; font-family: sans-serif; text-decoration: none;">
+              ZONIX
+              <svg viewBox="0 0 100 15" style="position:absolute; bottom:-4px; left:0; width:100%; height:12px; pointer-events:none;">
+                <path d="M 5 2 Q 45 14 90 2" fill="none" stroke="#f08804" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M 85 0 L 91 3 L 88 9 Z" fill="#f08804"/>
+              </svg>
+            </a>
         </div>
 
-        <!-- Right Panel - Auth Forms -->
-        <div class="auth-right">
-            <!-- Toggle Buttons -->
-            <div class="auth-toggle">
-                <button class="toggle-btn active" id="loginTabBtn" data-tab="login">Login</button>
-                <button class="toggle-btn" id="signupTabBtn" data-tab="signup">Sign Up</button>
-            </div>
+        <!-- Hidden navigation tab buttons for auth.js compatibility -->
+        <div style="display: none;">
+            <button id="loginTabBtn" class="toggle-btn active"></button>
+            <button id="signupTabBtn" class="toggle-btn"></button>
+        </div>
 
-            <!-- Login Form -->
+        <!-- Centered Card Container -->
+        <div class="auth-card">
+            
+            <!-- 1. LOGIN FORM -->
             <form id="loginForm" class="auth-form active" data-form="login">
-                <h2>Login to Your Account</h2>
+                <h2>Sign in</h2>
                 
                 <div class="form-group">
-                    <label for="loginEmail">Email Address</label>
+                    <label for="loginEmail">Email</label>
                     <input 
                         type="email" 
                         id="loginEmail" 
                         name="email" 
-                        placeholder="you@example.com" 
                         required
                     />
                     <span class="error-msg" id="loginEmailError"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <div class="password-input">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <label for="loginPassword" style="margin: 0;">Password</label>
+                        <a href="#forgot-password" id="forgotPasswordLink" style="font-size: 0.78rem; color: #0066c0; text-decoration: none;">Forgot password?</a>
+                    </div>
+                    <div style="position: relative;">
                         <input 
                             type="password" 
                             id="loginPassword" 
                             name="password" 
-                            placeholder="••••••••" 
                             required
                         />
-                        <button type="button" class="toggle-password" id="toggleLoginPassword">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button type="button" id="toggleLoginPassword" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: #767676; padding: 2px; border-radius: 4px; display: flex; align-items: center; background: none; border: none; cursor: pointer;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
@@ -143,20 +69,27 @@
                     <span class="error-msg" id="loginPasswordError"></span>
                 </div>
 
-                <div class="form-options">
-                    <label class="remember-me">
-                        <input type="checkbox" name="rememberMe" id="rememberMe" />
-                        <span>Remember me</span>
+                <button type="submit" class="auth-button" id="loginBtn">Sign in</button>
+                
+                <p class="auth-notice-text">
+                    By continuing, you agree to ZONIX's <a href="../info/?page=terms">Conditions of Use</a> and <a href="../info/?page=privacy">Privacy Notice</a>.
+                </p>
+
+                <div style="margin-bottom: 12px;">
+                    <label style="display: flex; align-items: center; gap: 6px; font-weight: normal; font-size: 0.8rem; cursor: pointer; color: #111;">
+                        <input type="checkbox" name="rememberMe" id="rememberMe" style="width: 14px; height: 14px; margin: 0; cursor: pointer;" />
+                        Keep me signed in
                     </label>
-                    <a href="#forgot-password" class="forgot-password" id="forgotPasswordLink">Forgot password?</a>
                 </div>
 
-                <button type="submit" class="auth-button" id="loginBtn">Login</button>
-                <div class="social-divider">
-                    <span>or continue with</span>
+                <!-- Google Sign In Option -->
+                <div class="social-divider" style="margin: 15px 0 10px; text-align: center; position: relative;">
+                    <span style="font-size: 0.72rem; color: #767676; background: #fff; padding: 0 8px; position: relative; z-index: 2;">or</span>
+                    <div style="content: ''; width: 100%; height: 1px; background: #e7e7e7; position: absolute; left: 0; top: 50%; z-index: 1;"></div>
                 </div>
-                <button type="button" class="google-btn" id="googleLoginBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24">
+                
+                <button type="button" class="google-btn" id="googleLoginBtn" style="width: 100%; height: 31px; background: #fff; border: 1px solid #a6a6a6; border-radius: 3px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 1px 0 rgba(255,255,255,.6) inset; color: #111;">
+                    <svg width="15" height="15" viewBox="0 0 24 24">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
                         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                         <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -164,53 +97,39 @@
                     </svg>
                     Continue with Google
                 </button>
-                <span class="error-msg" id="loginError"></span>
 
-                <!-- Admin Login Section -->
-                <div class="admin-section">
-                    <div class="divider">
-                        <span>Or</span>
-                    </div>
-                    <button type="button" class="admin-button" id="adminToggleBtn">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="1"></circle>
-                            <path d="M12 1v6m0 6v6"></path>
-                            <path d="M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24"></path>
-                            <path d="M1 12h6m6 0h6"></path>
-                            <path d="M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24"></path>
-                        </svg>
-                        Login as Admin
-                    </button>
+                <!-- Admin Link -->
+                <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 12px; text-align: center;">
+                    <a href="#" id="adminToggleBtn" style="font-size: 0.8rem; color: #0066c0; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                        🔑 Administrator Sign-In
+                    </a>
                 </div>
-
-                <p class="auth-footer">
-                    Don't have an account? <a href="#" class="auth-link" id="switchToSignup">Sign up here</a>
-                </p>
+                
+                <span class="error-msg" id="loginError"></span>
             </form>
 
-            <!-- Signup Form -->
+            <!-- 2. SIGNUP FORM -->
             <form id="signupForm" class="auth-form" data-form="signup">
-                <h2>Create Your Account</h2>
+                <h2>Create account</h2>
                 
                 <div class="form-group">
-                    <label for="signupName">Full Name</label>
+                    <label for="signupName">Your name</label>
                     <input 
                         type="text" 
                         id="signupName" 
                         name="displayName" 
-                        placeholder="John Doe" 
+                        placeholder="First and last name"
                         required
                     />
                     <span class="error-msg" id="signupNameError"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="signupEmail">Email Address</label>
+                    <label for="signupEmail">Email</label>
                     <input 
                         type="email" 
                         id="signupEmail" 
                         name="email" 
-                        placeholder="you@example.com" 
                         required
                     />
                     <span class="error-msg" id="signupEmailError"></span>
@@ -218,16 +137,16 @@
 
                 <div class="form-group">
                     <label for="signupPassword">Password</label>
-                    <div class="password-input">
+                    <div style="position: relative;">
                         <input 
                             type="password" 
                             id="signupPassword" 
                             name="password" 
-                            placeholder="Minimum 8 characters" 
+                            placeholder="At least 8 characters" 
                             required
                         />
-                        <button type="button" class="toggle-password" id="toggleSignupPassword">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button type="button" id="toggleSignupPassword" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: #767676; padding: 2px; border-radius: 4px; display: flex; align-items: center; background: none; border: none; cursor: pointer;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
@@ -237,17 +156,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="signupConfirmPassword">Confirm Password</label>
-                    <div class="password-input">
+                    <label for="signupConfirmPassword">Confirm password</label>
+                    <div style="position: relative;">
                         <input 
                             type="password" 
                             id="signupConfirmPassword" 
                             name="confirmPassword" 
-                            placeholder="Re-enter password" 
                             required
                         />
-                        <button type="button" class="toggle-password" id="toggleSignupConfirmPassword">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button type="button" id="toggleSignupConfirmPassword" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: #767676; padding: 2px; border-radius: 4px; display: flex; align-items: center; background: none; border: none; cursor: pointer;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
@@ -256,20 +174,28 @@
                     <span class="error-msg" id="signupConfirmPasswordError"></span>
                 </div>
 
-                <div class="form-group terms">
-                    <label class="checkbox">
-                        <input type="checkbox" name="agreeTerms" id="agreeTerms" required />
-                        <span>I agree to the Terms of Service and Privacy Policy</span>
+                <div class="form-group terms" style="margin: 15px 0;">
+                    <label class="checkbox" style="display: flex; align-items: flex-start; gap: 6px; font-weight: normal; font-size: 0.8rem; cursor: pointer; color: #111;">
+                        <input type="checkbox" name="agreeTerms" id="agreeTerms" required style="width: 14px; height: 14px; margin-top: 2px; cursor: pointer;" checked />
+                        <span>Agree to ZONIX's Conditions & Privacy policy</span>
                     </label>
                     <span class="error-msg" id="termsError"></span>
                 </div>
 
-                <button type="submit" class="auth-button" id="signupBtn">Create Account</button>
-                <div class="social-divider">
-                    <span>or continue with</span>
+                <button type="submit" class="auth-button" id="signupBtn">Create account</button>
+                
+                <p class="auth-notice-text">
+                    By creating an account, you agree to ZONIX's <a href="../info/?page=terms">Conditions of Use</a> and <a href="../info/?page=privacy">Privacy Notice</a>.
+                </p>
+
+                <!-- Google Sign Up Option -->
+                <div class="social-divider" style="margin: 15px 0 10px; text-align: center; position: relative;">
+                    <span style="font-size: 0.72rem; color: #767676; background: #fff; padding: 0 8px; position: relative; z-index: 2;">or</span>
+                    <div style="content: ''; width: 100%; height: 1px; background: #e7e7e7; position: absolute; left: 0; top: 50%; z-index: 1;"></div>
                 </div>
-                <button type="button" class="google-btn" id="googleSignupBtn">
-                    <svg width="20" height="20" viewBox="0 0 24 24">
+
+                <button type="button" class="google-btn" id="googleSignupBtn" style="width: 100%; height: 31px; background: #fff; border: 1px solid #a6a6a6; border-radius: 3px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 1px 0 rgba(255,255,255,.6) inset; color: #111;">
+                    <svg width="15" height="15" viewBox="0 0 24 24">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
                         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                         <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -277,17 +203,20 @@
                     </svg>
                     Sign up with Google
                 </button>
-                <span class="error-msg" id="signupError"></span>
 
-                <p class="auth-footer">
-                    Already have an account? <a href="#" class="auth-link" id="switchToLogin">Login here</a>
-                </p>
+                <div style="font-size: 0.85rem; margin-top: 20px; border-top: 1px solid #e7e7e7; padding-top: 15px; width: 100%; text-align: left; color: #111;">
+                    Already have an account? <a href="#" id="switchToLogin" style="color: #0066c0; text-decoration: none;">Sign in ›</a>
+                </div>
+                
+                <span class="error-msg" id="signupError"></span>
             </form>
 
-            <!-- Admin Login Form -->
+            <!-- 3. ADMIN FORM -->
             <form id="adminForm" class="auth-form" data-form="admin">
-                <h2>Admin Login</h2>
-                <p class="admin-note">🔐 Admin access only. Unauthorized access is prohibited.</p>
+                <h2>Admin Sign-In</h2>
+                <p class="admin-note" style="background-color: #fef3c7; border-left: 4px solid #fbbf24; padding: 8px 12px; border-radius: 4px; font-size: 0.8rem; margin-bottom: 15px; color: #111;">
+                    🔐 Authorized admin access only.
+                </p>
                 
                 <div class="form-group">
                     <label for="adminEmail">Admin Email</label>
@@ -303,16 +232,15 @@
 
                 <div class="form-group">
                     <label for="adminPassword">Admin Password</label>
-                    <div class="password-input">
+                    <div style="position: relative;">
                         <input 
                             type="password" 
                             id="adminPassword" 
                             name="password" 
-                            placeholder="••••••••" 
                             required
                         />
-                        <button type="button" class="toggle-password" id="toggleAdminPassword">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button type="button" id="toggleAdminPassword" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: #767676; padding: 2px; border-radius: 4px; display: flex; align-items: center; background: none; border: none; cursor: pointer;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
@@ -321,16 +249,35 @@
                     <span class="error-msg" id="adminPasswordError"></span>
                 </div>
 
-                <button type="submit" class="auth-button admin-button-submit" id="adminLoginBtn">Login as Admin</button>
-                <span class="error-msg" id="adminError"></span>
-
-                <div class="admin-section">
-                    <button type="button" class="back-button" id="backFromAdminBtn">
-                        ← Back to Login
-                    </button>
+                <button type="submit" class="auth-button" id="adminLoginBtn" style="background: linear-gradient(to bottom, #f0c14b, #dd9124); border-color: #a88734 #9c7e31 #846a29;">Sign in as Admin</button>
+                
+                <div style="font-size: 0.85rem; margin-top: 20px; border-top: 1px solid #e7e7e7; padding-top: 15px; width: 100%; text-align: center;">
+                    <a href="#" id="backFromAdminBtn" style="color: #0066c0; text-decoration: none;">← Back to Login</a>
                 </div>
+                
+                <span class="error-msg" id="adminError"></span>
             </form>
         </div>
+
+        <!-- Divider and Create Account section for login view -->
+        <div id="loginAlternativeActions" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+            <div class="auth-divider-container">
+                <h5>New to ZONIX?</h5>
+            </div>
+            
+            <button type="button" class="auth-create-account-btn" id="switchToSignupBtn">Create your ZONIX account</button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="auth-footer-minimal">
+            <div class="auth-footer-links">
+                <a href="../info/?page=terms">Conditions of Use</a>
+                <a href="../info/?page=privacy">Privacy Notice</a>
+                <a href="../info/?page=help">Help</a>
+            </div>
+            <p>&copy; 2026 ZONIX, Inc. or its affiliates. All rights reserved.</p>
+        </footer>
+
     </div>
 
     <!-- Loading Indicator -->
@@ -345,6 +292,46 @@
     </div>
 
     <script type="module" src="auth.js"></script>
+    <script>
+        // Custom switcher logic for the 'Create your account' button underneath the card
+        document.addEventListener('DOMContentLoaded', () => {
+            const signupBtnAlt = document.getElementById('switchToSignupBtn');
+            const loginAltActions = document.getElementById('loginAlternativeActions');
+            const authCard = document.querySelector('.auth-card');
+            
+            // Switch tabs and toggle the alt button visibility
+            const syncAltActionsVisibility = () => {
+                const loginForm = document.getElementById('loginForm');
+                if (loginForm && loginForm.classList.contains('active')) {
+                    loginAltActions.style.display = 'flex';
+                } else {
+                    loginAltActions.style.display = 'none';
+                }
+            };
+            
+            if (signupBtnAlt) {
+                signupBtnAlt.addEventListener('click', () => {
+                    // Trigger the existing JS switch
+                    const switchToSignup = document.getElementById('switchToSignup');
+                    if (switchToSignup) switchToSignup.click();
+                    syncAltActionsVisibility();
+                });
+            }
+            
+            // Listen for switches inside forms
+            const formSwitches = ['switchToSignup', 'switchToLogin', 'adminToggleBtn', 'backFromAdminBtn'];
+            formSwitches.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('click', () => {
+                        setTimeout(syncAltActionsVisibility, 50);
+                    });
+                }
+            });
+            
+            // Initial sync
+            setTimeout(syncAltActionsVisibility, 100);
+        });
+    </script>
 </body>
 </html>
-

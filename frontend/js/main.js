@@ -735,7 +735,36 @@ async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) 
       
       container.innerHTML = sliceProducts.map(product => {
         const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
-        const ratingColor = product.rating >= 4 ? '#16a34a' : product.rating >= 3 ? '#ea8c2b' : '#dc2626';
+        
+        // Generate Star Rating HTML
+        const roundedStars = Math.round(product.rating || 4.5);
+        let starsStr = '';
+        for (let i = 1; i <= 5; i++) {
+          starsStr += i <= roundedStars ? '★' : '☆';
+        }
+        const starsHTML = `<span class="amazon-stars">${starsStr}</span>`;
+        
+        // Format price with superscript layout
+        const priceNum = Number(product.price) || 0;
+        const wholePrice = Math.floor(priceNum).toLocaleString('en-IN');
+        const fractionPrice = (priceNum % 1).toFixed(2).split('.')[1] || '00';
+        
+        // Dynamic Delivery Text
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const options = { weekday: 'short', month: 'short', day: 'numeric' };
+        const tomorrowStr = tomorrow.toLocaleDateString('en-US', options);
+        
+        const standard = new Date();
+        standard.setDate(standard.getDate() + 3);
+        const standardStr = standard.toLocaleDateString('en-US', options);
+        
+        let deliveryHTML = '';
+        if (priceNum >= 999) {
+          deliveryHTML = `<p class="product-delivery" style="font-size:0.8rem; margin: 4px 0 0; color:#0f1111;">Get it by <strong>Tomorrow, ${tomorrowStr}</strong><br><span style="color:#565959; font-size:0.75rem;">FREE Delivery by ZONIX</span></p>`;
+        } else {
+          deliveryHTML = `<p class="product-delivery" style="font-size:0.8rem; margin: 4px 0 0; color:#0f1111;">Get it by <strong>${standardStr}</strong><br><span style="color:#565959; font-size:0.75rem;">FREE Delivery over ₹499</span></p>`;
+        }
         
         return `
         <article class="product-card" data-product-id="${product.id}">
@@ -751,18 +780,28 @@ async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) 
             <div class="product-info">
                 <p class="product-category">${product.category || 'General'}</p>
                 <h3 class="product-name">${product.name}</h3>
-                ${product.rating ? `
-                <div class="product-rating">
-                    <span class="rating-badge" style="background:${ratingColor}">${product.rating} ★</span>
-                    <span class="rating-count">(${(product.reviews || 0).toLocaleString()})</span>
-                </div>` : ''}
-                <div class="product-pricing">
-                    <span class="product-price">₹${product.price.toLocaleString()}</span>
-                    ${product.originalPrice ? `
-                    <span class="product-original-price">₹${product.originalPrice.toLocaleString()}</span>
-                    <span class="product-discount">${discount}% off</span>` : ''}
+                
+                <div class="product-rating" style="display:flex; align-items:center; gap:4px; margin-bottom: 4px;">
+                    ${starsHTML}
+                    <a href="#" class="rating-count-link" onclick="event.preventDefault();">${(product.reviews || 100).toLocaleString()}</a>
                 </div>
-                ${product.price > 499 ? '<p class="product-delivery">FREE delivery by ZONIX</p>' : ''}
+
+                <div class="product-pricing" style="margin-bottom: 4px;">
+                    <div class="amazon-price-wrapper">
+                        <span class="amazon-price-symbol">₹</span>
+                        <span class="amazon-price-whole">${wholePrice}</span>
+                        <span class="amazon-price-fraction">${fractionPrice}</span>
+                    </div>
+                    ${product.originalPrice ? `
+                    <span class="product-original-price" style="text-decoration:line-through; color:#565959; font-size:0.85rem; margin-left:6px;">₹${Math.floor(product.originalPrice).toLocaleString('en-IN')}</span>
+                    <span class="product-discount" style="color:#b12704; font-size:0.85rem; font-weight:600; margin-left:6px;">(${discount}% off)</span>` : ''}
+                </div>
+
+                <div style="margin-bottom: 8px; display:flex; flex-direction:column; gap:2px;">
+                    ${priceNum >= 499 ? '<span class="prime-badge"><span class="prime-badge-text">prime</span></span>' : ''}
+                    ${deliveryHTML}
+                </div>
+
                 <button class="add-to-cart-btn">Add to Cart</button>
             </div>
         </article>
@@ -1167,6 +1206,10 @@ function updateCheckoutSummary() {
   if (document.getElementById('checkoutShipping')) document.getElementById('checkoutShipping').textContent = shippingCost === 0 ? 'Free' : `₹${shippingCost}`;
   if (document.getElementById('checkoutTax')) document.getElementById('checkoutTax').textContent = `₹${tax}`;
   if (document.getElementById('checkoutTotal')) document.getElementById('checkoutTotal').textContent = `₹${total}`;
+  if (document.getElementById('checkoutHeaderItemCount')) {
+    const totalItems = appState.cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById('checkoutHeaderItemCount').textContent = totalItems;
+  }
 }
 
 // =============================================
