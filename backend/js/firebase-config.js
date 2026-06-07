@@ -1,16 +1,3 @@
-/**
- * Firebase Configuration and Initialization
- * Uses Firebase v9+ Modular Web SDK
- * 
- * SETUP INSTRUCTIONS:
- * 1. Create a Firebase project at https://console.firebase.google.com
- * 2. Add a Web app to your project
- * 3. Copy your Firebase config credentials below
- * 4. Enable Authentication (Email/Password) in Firebase Console
- * 5. Enable Firestore Database in Firebase Console
- * 6. Set Firestore security rules as specified in documentation
- */
-
 'use strict';
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';

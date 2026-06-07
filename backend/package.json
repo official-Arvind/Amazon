@@ -1,0 +1,14 @@
+{
+  "name": "zonix-backend",
+  "version": "1.0.0",
+  "description": "ZONIX E-Commerce Backend Tools",
+  "main": "js/scrape_amazon.js",
+  "type": "module",
+  "scripts": {
+    "scrape": "node js/scrape_amazon.js"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12"
+  }
+}

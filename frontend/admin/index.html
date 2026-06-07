@@ -796,6 +796,81 @@
             margin-top: 24px;
         }
 
+        /* =============================================
+           AMAZON SCRAPER VIEW STYLES
+           ============================================= */
+        .scraper-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 1.5px solid var(--border);
+            padding-bottom: 1px;
+        }
+        .scraper-tab-btn {
+            padding: 10px 18px;
+            background: none;
+            border: none;
+            border-bottom: 2.5px solid transparent;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .scraper-tab-btn:hover {
+            color: var(--text-primary);
+        }
+        .scraper-tab-btn.active {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+        .scraper-pane {
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+        .scraper-pane.active {
+            display: block;
+        }
+        .console-logs {
+            background: #0d1117;
+            color: #39ff14; /* Neon Green */
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.82rem;
+            padding: 15px;
+            border-radius: var(--radius);
+            height: 180px;
+            overflow-y: auto;
+            border: 1px solid var(--border-dark);
+            margin-top: 15px;
+            white-space: pre-wrap;
+        }
+        .html-paste-textarea {
+            width: 100%;
+            height: 180px;
+            background: #fafafa;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.82rem;
+            resize: vertical;
+            color: var(--text-primary);
+        }
+        .html-paste-textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(255,216,20,.15);
+        }
+        .tracked-status-badge {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+        .tracked-status-badge.sync-ok { background: rgba(22,163,74,.1); color: var(--accent-success); }
+        .tracked-status-badge.sync-pending { background: rgba(245,158,11,.12); color: #b45309; }
+        .tracked-status-badge.sync-error { background: rgba(231,76,60,.1); color: var(--accent-danger); }
 
     </style>
 </head>
@@ -849,6 +924,15 @@
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     </svg>
                     <span>Admins</span>
+                </button>
+
+                <button class="nav-link" data-section="scraper">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    <span>Amazon Scraper</span>
                 </button>
             </nav>
 
@@ -1141,6 +1225,138 @@
                         <div id="adminsContent">
                             <p style="color:#94a3b8;text-align:center;padding:2rem;">Loading admin accounts...</p>
                         </div>
+                    </div>
+                </section>
+
+                <!-- ============================
+                     AMAZON SCRAPER SECTION
+                     ============================ -->
+                <section class="section" id="scraper" data-section="scraper">
+                    <div class="section-header">
+                        <div>
+                            <h2 class="section-title">Amazon Scraper & Price Tracker</h2>
+                            <p class="section-subtitle">Import real Amazon listings automatically or via copied HTML page source.</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="scraper-tabs">
+                            <button class="scraper-tab-btn active" data-tab="auto-import">Automated Search Importer</button>
+                            <button class="scraper-tab-btn" data-tab="html-paste">HTML Source Paste Importer</button>
+                            <button class="scraper-tab-btn" data-tab="price-tracker">Price Tracker & Sync</button>
+                        </div>
+
+                        <!-- Pane 1: Automated Search -->
+                        <div class="scraper-pane active" id="pane-auto-import">
+                            <form id="autoScraperForm" class="product-form">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="autoScrapeKeyword">Search Keyword / Query *</label>
+                                        <input type="text" id="autoScrapeKeyword" placeholder="e.g. Mechanical Keyboard" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="autoScrapeCategory">Assign Category *</label>
+                                        <select id="autoScrapeCategory" required>
+                                            <option value="Electronics">Electronics</option>
+                                            <option value="Laptops">Laptops</option>
+                                            <option value="Smartphones">Smartphones</option>
+                                            <option value="Tablets">Tablets</option>
+                                            <option value="Audio">Audio</option>
+                                            <option value="Gaming">Gaming</option>
+                                            <option value="Home & Kitchen">Home & Kitchen</option>
+                                            <option value="Fashion">Fashion</option>
+                                            <option value="Footwear">Footwear</option>
+                                            <option value="Wearables">Wearables</option>
+                                            <option value="Accessories">Accessories</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="autoScrapeLimit">Limit Import Count</label>
+                                        <input type="number" id="autoScrapeLimit" value="10" min="1" max="25">
+                                    </div>
+                                </div>
+                                <div class="form-actions" style="margin-top:10px;">
+                                    <button type="submit" class="btn btn-primary">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                                        Start Automated Scrape
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="console-logs" id="autoScrapeConsole">System ready. Enter query and press start.</div>
+                        </div>
+
+                        <!-- Pane 2: HTML Paste -->
+                        <div class="scraper-pane" id="pane-html-paste">
+                            <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:12px;line-height:1.4;">
+                                💡 <strong>How to use</strong>: Open Amazon in your browser, search for items (or go to a product page), right-click and choose "View Page Source" (or inspect the container). Copy the entire HTML source, paste it in the box below, and click Import.
+                            </p>
+                            <form id="htmlPasteForm" class="product-form">
+                                <div class="form-grid">
+                                    <div class="form-group form-full">
+                                        <label for="htmlPasteContent">Pasted Amazon HTML Source Code *</label>
+                                        <textarea id="htmlPasteContent" class="html-paste-textarea" placeholder="Paste Amazon Page HTML source here... (Ctrl+A, Ctrl+C in View Source page)" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="htmlPasteCategory">Assign Category *</label>
+                                        <select id="htmlPasteCategory" required>
+                                            <option value="Electronics">Electronics</option>
+                                            <option value="Laptops">Laptops</option>
+                                            <option value="Smartphones">Smartphones</option>
+                                            <option value="Tablets">Tablets</option>
+                                            <option value="Audio">Audio</option>
+                                            <option value="Gaming">Gaming</option>
+                                            <option value="Home & Kitchen">Home & Kitchen</option>
+                                            <option value="Fashion">Fashion</option>
+                                            <option value="Footwear">Footwear</option>
+                                            <option value="Wearables">Wearables</option>
+                                            <option value="Accessories">Accessories</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-actions" style="margin-top:10px;">
+                                    <button type="submit" class="btn btn-primary">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+                                        Parse & Import Products
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="console-logs" id="htmlPasteConsole">Paste HTML source to parse.</div>
+                        </div>
+
+                        <!-- Pane 3: Price Tracker & Sync -->
+                        <div class="scraper-pane" id="pane-price-tracker">
+                            <div class="section-header" style="margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <h3 class="card-title">Tracked Amazon Products</h3>
+                                    <p class="section-subtitle">Real-time listing of active products imported from Amazon with sync status.</p>
+                                </div>
+                                <button class="btn btn-primary btn-sm" id="syncAllPricesBtn">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                                    Sync Tracked Prices Now
+                                </button>
+                            </div>
+                            
+                            <div class="table-wrapper">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product Image & Title</th>
+                                            <th>ASIN</th>
+                                            <th>Category</th>
+                                            <th>Tracked Price</th>
+                                            <th>Original MSRP</th>
+                                            <th>Status</th>
+                                            <th>Last Synced</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="trackedProductsBody">
+                                        <tr><td colspan="8" class="empty-state">Loading tracked products...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
                 </section>
 

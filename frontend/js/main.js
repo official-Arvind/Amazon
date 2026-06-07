@@ -45,6 +45,9 @@ const appState = {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('✓ ZONIX App initializing...');
   
+  // 0. Render dynamic Amazon Navbar & mobile drawer
+  renderNavbar();
+  
   // 1. Setup Auth & Navigation
   initAuthListener();
   setupNavigation();
@@ -222,6 +225,209 @@ function showLoginModal() {
 // =============================================
 // NAVIGATION & UI
 // =============================================
+function renderNavbar() {
+  const navbar = document.querySelector('.navbar');
+  const subNavbar = document.querySelector('.sub-navbar');
+  if (!navbar) return;
+
+  const path = window.location.pathname;
+  const inRoot = !path.includes('/frontend/') || path.endsWith('/frontend/') || path.endsWith('/frontend/index.html');
+  const prefix = inRoot ? '' : '../';
+
+  // Amazon Logo SVG with yellow curved smile arrow underneath
+  const logoHTML = `
+    <a href="${prefix}" class="logo-text" style="position:relative; display:inline-block; padding-bottom: 5px;">
+      ZONIX
+      <svg viewBox="0 0 100 15" style="position:absolute; bottom:-4px; left:0; width:100%; height:12px; pointer-events:none;">
+        <path d="M 5 2 Q 45 14 90 2" fill="none" stroke="#f08804" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M 85 0 L 91 3 L 88 9 Z" fill="#f08804"/>
+      </svg>
+    </a>
+  `;
+
+  // Standard Navbar top row (containing logo, deliver location, search, icons)
+  navbar.innerHTML = `
+    <div class="navbar-container">
+      <div class="navbar-row-top">
+        <!-- Mobile Hamburger Button -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menu" style="display:none; align-items:center; color:#fff; padding:6px; background:none; border:none; cursor:pointer;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
+        <div class="navbar-logo">
+          ${logoHTML}
+        </div>
+
+        <div class="navbar-deliver">
+          <span class="deliver-to">Deliver to</span>
+          <span class="deliver-location">📍 India</span>
+        </div>
+
+        <div class="navbar-search">
+          <select class="search-category" style="background:#f3f3f3; border:none; padding:0 10px; color:#555; border-right:1px solid #ccc; font-size:0.875rem; cursor:pointer;">
+            <option>All Categories</option>
+            <option>Electronics</option>
+            <option>Fashion</option>
+            <option>Home & Living</option>
+            <option>Gaming</option>
+            <option>Audio</option>
+          </select>
+          <input type="text" class="search-input" placeholder="Search ZONIX for products, brands and more">
+          <button class="search-btn" aria-label="Search">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="navbar-icons">
+          <a href="${prefix}login/" class="nav-link-custom" id="authNavLink" style="position:relative;">
+            <span class="nav-small">Hello, sign in</span>
+            <span class="nav-bold">Account & Lists</span>
+          </a>
+          
+          <a href="${prefix}profile/" class="nav-link-custom">
+            <span class="nav-small">Returns</span>
+            <span class="nav-bold">& Orders</span>
+          </a>
+
+          <a href="${prefix}cart/" class="nav-link-custom cart-link" style="position:relative; display:flex; align-items:center; gap:4px;">
+            <div style="position:relative; display:flex; align-items:center;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              <span class="cart-count" id="cartBadge">0</span>
+            </div>
+            <span class="nav-bold cart-text" style="margin-top:6px;">Cart</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Inject dynamic sub-navbar
+  if (subNavbar) {
+    subNavbar.innerHTML = `
+      <a href="#" class="sub-nav-link" id="desktopMenuToggle" style="display:flex; align-items:center; gap:4px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        All
+      </a>
+      <a href="${prefix}shop/" class="sub-nav-link">Today's Deals</a>
+      <a href="${prefix}shop/?q=electronics" class="sub-nav-link">Electronics</a>
+      <a href="${prefix}shop/?q=fashion" class="sub-nav-link">Fashion</a>
+      <a href="${prefix}shop/?q=home" class="sub-nav-link">Home & Kitchen</a>
+      <a href="${prefix}shop/?q=gaming" class="sub-nav-link">Gaming</a>
+      <a href="${prefix}contact/" class="sub-nav-link">Customer Service</a>
+      <a href="${prefix}help/" class="sub-nav-link">Help</a>
+      <a href="${prefix}admin/" class="sub-nav-link" style="color:var(--color-accent-primary); font-weight:bold; margin-left:auto;">Admin Dashboard</a>
+    `;
+  }
+
+  // Inject Mobile Location Bar just below the subnavbar (only visible on mobile via media query)
+  const locBar = document.createElement('div');
+  locBar.className = 'mobile-location-bar';
+  locBar.style.cssText = 'display:none;';
+  locBar.innerHTML = `
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+    <span>Deliver to India</span>
+  `;
+  subNavbar.parentNode.insertBefore(locBar, subNavbar.nextSibling);
+
+  // Inject Navigation drawer into body
+  let drawer = document.getElementById('mobileNavDrawer');
+  if (!drawer) {
+    drawer = document.createElement('div');
+    drawer.id = 'mobileNavDrawer';
+    drawer.innerHTML = `
+      <div class="mobile-drawer-overlay" id="drawerOverlay"></div>
+      <div class="mobile-drawer" id="drawerMenu">
+        <div class="mobile-drawer-header">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="drawerGreeting">Hello, Sign In</span>
+        </div>
+        <div class="mobile-drawer-content">
+          <div class="mobile-drawer-title">Trending</div>
+          <a href="${prefix}shop/" class="mobile-drawer-link">Best Sellers <span class="arrow">›</span></a>
+          <a href="${prefix}shop/" class="mobile-drawer-link">New Arrivals <span class="arrow">›</span></a>
+          <a href="${prefix}shop/" class="mobile-drawer-link">Today's Deals <span class="arrow">›</span></a>
+
+          <div class="mobile-drawer-title">Shop by Category</div>
+          <a href="${prefix}shop/?q=electronics" class="mobile-drawer-link">Electronics <span class="arrow">›</span></a>
+          <a href="${prefix}shop/?q=fashion" class="mobile-drawer-link">Fashion <span class="arrow">›</span></a>
+          <a href="${prefix}shop/?q=home" class="mobile-drawer-link">Home & Kitchen <span class="arrow">›</span></a>
+          <a href="${prefix}shop/?q=gaming" class="mobile-drawer-link">Gaming <span class="arrow">›</span></a>
+          <a href="${prefix}shop/?q=audio" class="mobile-drawer-link">Audio & Accessories <span class="arrow">›</span></a>
+
+          <div class="mobile-drawer-title">Help & Settings</div>
+          <a href="${prefix}profile/" class="mobile-drawer-link">Your Account <span class="arrow">›</span></a>
+          <a href="${prefix}help/" class="mobile-drawer-link">Customer Service <span class="arrow">›</span></a>
+          <a href="${prefix}login/" class="mobile-drawer-link" id="drawerAuthBtn">Sign In <span class="arrow">›</span></a>
+        </div>
+      </div>
+      <button class="mobile-drawer-close" id="drawerCloseBtn" aria-label="Close menu">&times;</button>
+    `;
+    document.body.appendChild(drawer);
+  }
+
+  // Setup navigation drawer listeners
+  const openBtn = document.getElementById('mobileMenuToggle');
+  const desktopOpenBtn = document.getElementById('desktopMenuToggle');
+  const closeBtn = document.getElementById('drawerCloseBtn');
+  const overlay = document.getElementById('drawerOverlay');
+  const menu = document.getElementById('drawerMenu');
+
+  const toggleDrawer = (active) => {
+    if (active) {
+      menu.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      // Update greeting in drawer
+      const greeting = document.getElementById('drawerGreeting');
+      const authBtn = document.getElementById('drawerAuthBtn');
+      if (appState.currentUser) {
+        if (greeting) greeting.textContent = `Hello, ${appState.currentUser.displayName || 'User'}`;
+        if (authBtn) {
+          authBtn.textContent = 'Sign Out';
+          authBtn.href = '#';
+          authBtn.onclick = async (e) => {
+            e.preventDefault();
+            await logoutUser();
+            window.location.reload();
+          };
+        }
+      } else {
+        if (greeting) greeting.textContent = 'Hello, Sign In';
+        if (authBtn) {
+          authBtn.textContent = 'Sign In';
+          authBtn.href = `${prefix}login/`;
+          authBtn.onclick = null;
+        }
+      }
+    } else {
+      menu.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  };
+
+  if (openBtn) openBtn.addEventListener('click', () => toggleDrawer(true));
+  if (desktopOpenBtn) desktopOpenBtn.addEventListener('click', (e) => { e.preventDefault(); toggleDrawer(true); });
+  if (closeBtn) closeBtn.addEventListener('click', () => toggleDrawer(false));
+  if (overlay) overlay.addEventListener('click', () => toggleDrawer(false));
+}
+
 function setupNavigation() {
   const navLinks = document.querySelectorAll('.navbar-menu .nav-link');
   navLinks.forEach(link => {
@@ -351,9 +557,10 @@ async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) 
     const urlParams = new URLSearchParams(window.location.search);
     const searchQuery = urlParams.get('q')?.toLowerCase();
 
-    let filteredProducts = products;
-    if (searchQuery && maxItems === 0) {
-      filteredProducts = products.filter(p => 
+    // Initial search filter
+    let searchFiltered = products;
+    if (searchQuery) {
+      searchFiltered = products.filter(p => 
         p.name.toLowerCase().includes(searchQuery) || 
         (p.category && p.category.toLowerCase().includes(searchQuery))
       );
@@ -363,58 +570,212 @@ async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) 
         searchTitle.textContent = `Search Results for "${searchQuery}"`;
       }
     }
-    
-    if (filteredProducts.length === 0) {
-      container.innerHTML = '<div class="empty-state">No products found matching your search.</div>';
-      const countEl = document.querySelector('.products-count');
-      if(countEl) countEl.textContent = 'Showing 0 Products';
-      return;
-    }
-    
-    const displayProducts = maxItems > 0 ? filteredProducts.slice(0, maxItems) : filteredProducts;
-    
-    container.innerHTML = displayProducts.map(product => {
-      const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
-      const ratingStars = product.rating ? '★'.repeat(Math.floor(product.rating)) + (product.rating % 1 >= 0.5 ? '½' : '') : '';
-      const ratingColor = product.rating >= 4 ? '#16a34a' : product.rating >= 3 ? '#ea8c2b' : '#dc2626';
+
+    // Cloning Sidebar Filters to Mobile Drawer
+    const sidebar = document.querySelector('.shop-sidebar');
+    const mobileFiltersContainer = document.getElementById('mobileFiltersContainer');
+    if (sidebar && mobileFiltersContainer && mobileFiltersContainer.children.length === 0) {
+      mobileFiltersContainer.innerHTML = sidebar.innerHTML;
       
-      return `
-      <article class="product-card" data-product-id="${product.id}">
-          <div class="product-image-container">
-              ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
-              <img src="${product.image || '../assets/images/placeholder.jpg'}" alt="${product.name}" class="product-image" loading="lazy" onerror="this.src='https://via.placeholder.com/400x400?text=Image+Not+Found'"/>
-              <button class="wishlist-btn" aria-label="Add to wishlist">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                  </svg>
-              </button>
-          </div>
-          <div class="product-info">
-              <p class="product-category">${product.category || 'General'}</p>
-              <h3 class="product-name">${product.name}</h3>
-              ${product.rating ? `
-              <div class="product-rating">
-                  <span class="rating-badge" style="background:${ratingColor}">${product.rating} ★</span>
-                  <span class="rating-count">(${(product.reviews || 0).toLocaleString()})</span>
-              </div>` : ''}
-              <div class="product-pricing">
-                  <span class="product-price">₹${product.price.toLocaleString()}</span>
-                  ${product.originalPrice ? `
-                  <span class="product-original-price">₹${product.originalPrice.toLocaleString()}</span>
-                  <span class="product-discount">${discount}% off</span>` : ''}
-              </div>
-              ${product.price > 499 ? '<p class="product-delivery">FREE delivery by ZONIX</p>' : ''}
-              <button class="add-to-cart-btn">Add to Cart</button>
-          </div>
-      </article>
-    `}).join('');
-    
-    // Update products count
-    const countEl = document.querySelector('.products-count');
-    if(countEl) countEl.textContent = `Showing ${displayProducts.length} Products`;
-    
-    // Re-initialize add to cart listeners
-    initProducts();
+      // Sync mobile input changes to desktop inputs
+      const mobileInputs = mobileFiltersContainer.querySelectorAll('input');
+      const desktopInputs = sidebar.querySelectorAll('input');
+      mobileInputs.forEach((mobInput, idx) => {
+        mobInput.addEventListener('change', () => {
+          if (desktopInputs[idx]) {
+            desktopInputs[idx].checked = mobInput.checked;
+            applyFilters();
+          }
+        });
+      });
+      
+      // Sync Price link clicks
+      mobileFiltersContainer.querySelectorAll('.filter-options a').forEach(a => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          const href = a.getAttribute('href');
+          const desktopLink = Array.from(sidebar.querySelectorAll('.filter-options a'))
+            .find(da => da.getAttribute('href') === href || da.textContent === a.textContent);
+          if (desktopLink) {
+            desktopLink.click();
+          }
+        });
+      });
+    }
+
+    // Setup Desktop filter listeners
+    if (sidebar && !sidebar.dataset.listenersAttached) {
+      sidebar.dataset.listenersAttached = 'true';
+      sidebar.querySelectorAll('input').forEach(input => {
+        input.addEventListener('change', () => {
+          const desktopInputs = Array.from(sidebar.querySelectorAll('input'));
+          const idx = desktopInputs.indexOf(input);
+          const mobInputs = document.querySelectorAll('#mobileFiltersContainer input');
+          if (mobInputs[idx]) {
+            mobInputs[idx].checked = input.checked;
+          }
+          applyFilters();
+        });
+      });
+
+      // Price filter clicks logic
+      sidebar.querySelectorAll('.filter-options a').forEach(a => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          sidebar.querySelectorAll('.filter-options a').forEach(link => link.style.fontWeight = 'normal');
+          a.style.fontWeight = 'bold';
+          sidebar.dataset.selectedPriceFilter = a.textContent.trim();
+          applyFilters();
+        });
+      });
+
+      // Clear mobile filters button hook
+      const clearBtn = document.getElementById('clearMobileFiltersBtn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          sidebar.querySelectorAll('input[type="checkbox"]').forEach(i => i.checked = false);
+          document.querySelectorAll('#mobileFiltersContainer input[type="checkbox"]').forEach(i => i.checked = false);
+          sidebar.querySelectorAll('.filter-options a').forEach(link => link.style.fontWeight = 'normal');
+          delete sidebar.dataset.selectedPriceFilter;
+          applyFilters();
+        });
+      }
+    }
+
+    // Mobile filter drawer toggles
+    const filterBtn = document.getElementById('mobileFilterBtn');
+    const closeFilterBtn = document.getElementById('closeFiltersBtn');
+    const applyFilterBtn = document.getElementById('applyMobileFiltersBtn');
+    const filtersOverlay = document.getElementById('filtersOverlay');
+    const filtersDrawer = document.getElementById('filtersDrawer');
+
+    if (filterBtn) {
+      filterBtn.onclick = () => {
+        filtersDrawer.classList.add('active');
+        filtersOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      };
+    }
+    const hideFilterDrawer = () => {
+      filtersDrawer.classList.remove('active');
+      filtersOverlay.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+    if (closeFilterBtn) closeFilterBtn.onclick = hideFilterDrawer;
+    if (applyFilterBtn) applyFilterBtn.onclick = hideFilterDrawer;
+    if (filtersOverlay) filtersOverlay.onclick = hideFilterDrawer;
+
+    // Apply Filter Logic
+    const applyFilters = () => {
+      let result = searchFiltered;
+
+      // 1. Department Filter
+      if (sidebar) {
+        const checkedCategories = Array.from(sidebar.querySelectorAll('input[name="category"]:checked'))
+          .map(input => input.parentElement.textContent.trim().toLowerCase())
+          .filter(cat => cat !== 'all products');
+        
+        if (checkedCategories.length > 0) {
+          result = result.filter(product => 
+            product.category && checkedCategories.includes(product.category.toLowerCase())
+          );
+        }
+
+        // 2. Price Filter (from selected link)
+        const priceFilter = sidebar.dataset.selectedPriceFilter;
+        if (priceFilter) {
+          result = result.filter(product => {
+            const price = product.price;
+            if (priceFilter.includes('Under ₹1,000')) return price < 1000;
+            if (priceFilter.includes('₹1,000 - ₹5,000')) return price >= 1000 && price <= 5000;
+            if (priceFilter.includes('₹5,000 - ₹20,000')) return price >= 5000 && price <= 20000;
+            if (priceFilter.includes('₹20,000 - ₹50,000')) return price >= 20000 && price <= 50000;
+            if (priceFilter.includes('Over ₹50,000')) return price > 50000;
+            return true;
+          });
+        }
+
+        // 3. Discount Filter
+        const checkedDiscounts = Array.from(sidebar.querySelectorAll('input[name="discount"]:checked'))
+          .map(input => input.parentElement.textContent.trim().toLowerCase());
+          
+        if (checkedDiscounts.length > 0) {
+          result = result.filter(product => {
+            if (!product.originalPrice) return false;
+            const pct = Math.round((1 - product.price / product.originalPrice) * 100);
+            return checkedDiscounts.some(discText => {
+              if (discText.includes('10%')) return pct >= 10;
+              if (discText.includes('25%')) return pct >= 25;
+              if (discText.includes('50%')) return pct >= 50;
+              return false;
+            });
+          });
+        }
+
+        // 4. Availability Filter
+        const includeOutOfStockInput = sidebar.querySelector('input[name="availability"]');
+        const includeOutOfStock = includeOutOfStockInput ? includeOutOfStockInput.checked : true;
+        if (!includeOutOfStock) {
+          result = result.filter(product => product.stock > 0);
+        }
+      }
+
+      renderProductGrid(result);
+    };
+
+    const renderProductGrid = (displayProducts) => {
+      if (displayProducts.length === 0) {
+        container.innerHTML = '<div class="empty-state">No products found matching your filters.</div>';
+        const countEl = document.querySelector('.products-count');
+        if(countEl) countEl.textContent = 'Showing 0 Products';
+        return;
+      }
+      
+      const sliceProducts = maxItems > 0 ? displayProducts.slice(0, maxItems) : displayProducts;
+      
+      container.innerHTML = sliceProducts.map(product => {
+        const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
+        const ratingColor = product.rating >= 4 ? '#16a34a' : product.rating >= 3 ? '#ea8c2b' : '#dc2626';
+        
+        return `
+        <article class="product-card" data-product-id="${product.id}">
+            <div class="product-image-container">
+                ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
+                <img src="${product.image || '../assets/images/placeholder.jpg'}" alt="${product.name}" class="product-image" loading="lazy" onerror="this.src='https://via.placeholder.com/400x400?text=Image+Not+Found'"/>
+                <button class="wishlist-btn" aria-label="Add to wishlist">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="product-info">
+                <p class="product-category">${product.category || 'General'}</p>
+                <h3 class="product-name">${product.name}</h3>
+                ${product.rating ? `
+                <div class="product-rating">
+                    <span class="rating-badge" style="background:${ratingColor}">${product.rating} ★</span>
+                    <span class="rating-count">(${(product.reviews || 0).toLocaleString()})</span>
+                </div>` : ''}
+                <div class="product-pricing">
+                    <span class="product-price">₹${product.price.toLocaleString()}</span>
+                    ${product.originalPrice ? `
+                    <span class="product-original-price">₹${product.originalPrice.toLocaleString()}</span>
+                    <span class="product-discount">${discount}% off</span>` : ''}
+                </div>
+                ${product.price > 499 ? '<p class="product-delivery">FREE delivery by ZONIX</p>' : ''}
+                <button class="add-to-cart-btn">Add to Cart</button>
+            </div>
+        </article>
+      `}).join('');
+      
+      const countEl = document.querySelector('.products-count');
+      if(countEl) countEl.textContent = `Showing ${sliceProducts.length} Products`;
+      
+      initProducts();
+    };
+
+    applyFilters();
+
   } catch (error) {
     container.innerHTML = '<div class="error-state">Failed to load products. Please try again later.</div>';
     console.error('Error loading products:', error);

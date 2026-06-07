@@ -8,17 +8,24 @@
     <link rel="stylesheet" href="../css/style.css?v=1.2">
 </head>
 <body>
-    <!-- Navigation Bar -->
-        <nav class="navbar">
+        <!-- Navigation Bar -->
+    <nav class="navbar">
         <div class="navbar-container">
-            <div class="navbar-logo">
-                <a href="../" class="logo-text">ZONIX</a>
+            <div class="navbar-left">
+                <button class="mobile-menu-btn mobile-only" aria-label="Menu" id="mobileMenuBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <div class="navbar-logo">
+                    <a href="../" class="logo-text">ZONIX</a>
+                </div>
             </div>
-            <div class="navbar-deliver">
+            
+            <div class="navbar-deliver desktop-only">
                 <span class="deliver-to">Deliver to</span>
                 <span class="deliver-location">📍 India</span>
             </div>
-            <div class="navbar-search">
+
+            <div class="navbar-search desktop-only">
                 <select class="search-category">
                     <option>All Categories</option>
                     <option>Electronics</option>
@@ -35,15 +42,23 @@
                     </svg>
                 </button>
             </div>
+
             <div class="navbar-icons">
-                <a href="../login/" class="nav-link-custom" id="authNavLink">
+                <a href="../profile/" class="nav-link-custom mobile-only mobile-user-icon">
+                    <span class="nav-small">Sign in ›</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </a>
+
+                <a href="../login/" class="nav-link-custom desktop-only" id="authNavLink">
                     <span class="nav-small">Hello, sign in</span>
                     <span class="nav-bold">Account & Lists</span>
                 </a>
-                <a href="../profile/" class="nav-link-custom">
+                
+                <a href="../profile/" class="nav-link-custom desktop-only">
                     <span class="nav-small">Returns</span>
                     <span class="nav-bold">& Orders</span>
                 </a>
+
                 <a href="../cart/" class="nav-link-custom cart-link">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="9" cy="21" r="1"></circle>
@@ -55,7 +70,50 @@
                 </a>
             </div>
         </div>
+        
+        <!-- Mobile Search Bar (Full Width) -->
+        <div class="mobile-search-bar mobile-only">
+            <div class="navbar-search mobile-search-inner">
+                <input type="text" class="search-input" placeholder="Search ZONIX">
+                <button class="search-btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
     </nav>
+
+    <!-- Mobile Drawer Overlay & Menu -->
+    <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <div class="drawer-header">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span class="drawer-greeting">Hello, sign in</span>
+            <button class="drawer-close" id="drawerCloseBtn">&times;</button>
+        </div>
+        <div class="drawer-content">
+            <div class="drawer-section">
+                <h3>Trending</h3>
+                <a href="../shop/">Best Sellers</a>
+                <a href="../shop/">New Releases</a>
+            </div>
+            <div class="drawer-section">
+                <h3>Shop By Category</h3>
+                <a href="../shop/?q=electronics">Electronics</a>
+                <a href="../shop/?q=fashion">Fashion</a>
+                <a href="../shop/?q=home">Home & Kitchen</a>
+                <a href="../shop/?q=audio">Audio & Entertainment</a>
+            </div>
+            <div class="drawer-section">
+                <h3>Help & Settings</h3>
+                <a href="../profile/">Your Account</a>
+                <a href="../contact/">Customer Service</a>
+                <a href="../login/">Sign In</a>
+            </div>
+        </div>
+    </div>
     <div class="sub-navbar">
         <a href="../" class="sub-nav-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>

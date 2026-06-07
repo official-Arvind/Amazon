@@ -271,6 +271,101 @@ export async function deleteProduct(productId) {
   }
 }
 
+/**
+ * Bulk import multiple products, updating if ASIN already exists
+ * @param {Array} products - Array of product objects
+ * @returns {Promise<Object>} Results summary
+ */
+export async function bulkImportProducts(products) {
+  try {
+    console.log(`Starting bulk import of ${products.length} products...`);
+    const productsRef = collection(db, 'products');
+    
+    // Fetch all existing products first to check for duplicates by ASIN
+    const snapshot = await getDocs(productsRef);
+    const existingProducts = [];
+    snapshot.forEach((docSnap) => {
+      existingProducts.push({ id: docSnap.id, ...docSnap.data() });
+    });
+    
+    let addedCount = 0;
+    let updatedCount = 0;
+    
+    for (const p of products) {
+      // Check if product with same ASIN already exists
+      const match = p.asin ? existingProducts.find(ep => ep.asin === p.asin) : null;
+      
+      if (match) {
+        // Update price, stock, rating, reviews, badge, and description
+        const productRef = doc(db, 'products', match.id);
+        const updates = {
+          price: p.price,
+          updatedAt: serverTimestamp()
+        };
+        if (p.originalPrice) updates.originalPrice = p.originalPrice;
+        if (p.rating) updates.rating = p.rating;
+        if (p.reviews) updates.reviews = p.reviews;
+        if (p.badge !== undefined) updates.badge = p.badge;
+        if (p.description) updates.description = p.description;
+        if (p.stock !== undefined) updates.stock = p.stock;
+        
+        await updateDoc(productRef, updates);
+        updatedCount++;
+        console.log(`✓ Updated existing product with ASIN: ${p.asin}`);
+      } else {
+        // Insert new product
+        const newProduct = {
+          name: p.name.trim(),
+          price: parseFloat(p.price),
+          stock: p.stock !== undefined ? parseInt(p.stock) : 50,
+          image: p.image.trim(),
+          description: p.description.trim(),
+          category: p.category ? p.category.trim() : 'Uncategorized',
+          rating: p.rating ? parseFloat(p.rating) : 4.5,
+          reviews: p.reviews ? parseInt(p.reviews) : 100,
+          badge: p.badge || '',
+          originalPrice: p.originalPrice ? parseFloat(p.originalPrice) : Math.round(p.price * 1.2),
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+          isActive: true,
+          source: p.source || 'custom'
+        };
+        if (p.asin) newProduct.asin = p.asin;
+        
+        await addDoc(productsRef, newProduct);
+        addedCount++;
+        console.log(`✓ Added new product: ${p.name}`);
+      }
+    }
+    
+    return { added: addedCount, updated: updatedCount, total: products.length };
+  } catch (error) {
+    console.error('✗ Bulk import failed:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Update Amazon product price directly
+ */
+export async function updateAmazonProductPrice(productId, newPrice, newOriginalPrice) {
+  try {
+    const productRef = doc(db, 'products', productId);
+    const updates = {
+      price: parseFloat(newPrice),
+      updatedAt: serverTimestamp()
+    };
+    if (newOriginalPrice) {
+      updates.originalPrice = parseFloat(newOriginalPrice);
+    }
+    await updateDoc(productRef, updates);
+    console.log(`✓ Updated price for product ${productId} -> ${newPrice}`);
+  } catch (error) {
+    console.error('✗ Failed to update Amazon product price:', error.message);
+    throw error;
+  }
+}
+
 // =============================================
 // ORDER FUNCTIONS
 // =============================================

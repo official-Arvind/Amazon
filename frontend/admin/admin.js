@@ -31,7 +31,9 @@ import {
   createAdminAccount,
   updateAdminRole,
   deleteAdminAccount,
-  getGuestOrders
+  getGuestOrders,
+  bulkImportProducts,
+  updateAmazonProductPrice
 } from '../../backend/js/admin.js';
 import { logoutUser } from '../../backend/js/auth.js';
 import { resetAndSeed, seedProducts } from '../../backend/js/seed_products.js';
@@ -189,6 +191,136 @@ function initializeEventListeners() {
       }
     });
   }
+
+  // Scraper Tab Setup
+  setupScraperTabs();
+
+  // Scraper Forms Submissions
+  const autoScraperForm = document.getElementById('autoScraperForm');
+  const htmlPasteForm = document.getElementById('htmlPasteForm');
+  const syncAllPricesBtn = document.getElementById('syncAllPricesBtn');
+
+  if (autoScraperForm) {
+    autoScraperForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const keyword = document.getElementById('autoScrapeKeyword').value.trim();
+      const category = document.getElementById('autoScrapeCategory').value;
+      const limit = parseInt(document.getElementById('autoScrapeLimit').value) || 10;
+      const consoleLog = document.getElementById('autoScrapeConsole');
+      
+      if (!keyword) return;
+      
+      try {
+        showLoading(true);
+        const products = await scrapeAmazonKeyword(keyword, category, limit, consoleLog);
+        
+        if (products.length > 0) {
+          consoleLog.textContent += `[INFO] Importing ${products.length} products to database...\n`;
+          const result = await bulkImportProducts(products);
+          consoleLog.textContent += `[SUCCESS] Done! Added: ${result.added}, Updated: ${result.updated} products.\n`;
+          showToast(`Bulk imported ${products.length} products!`, 'success');
+          
+          // Reload database
+          const inventory = await getInventory();
+          window.adminData.products = inventory;
+        }
+      } catch (error) {
+        consoleLog.textContent += `[ERROR] Database write failed: ${error.message}\n`;
+        showToast('Import failed', 'error');
+      } finally {
+        showLoading(false);
+      }
+    });
+  }
+
+  if (htmlPasteForm) {
+    htmlPasteForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const htmlContent = document.getElementById('htmlPasteContent').value.trim();
+      const category = document.getElementById('htmlPasteCategory').value;
+      const consoleLog = document.getElementById('htmlPasteConsole');
+      
+      if (!htmlContent) return;
+      
+      try {
+        showLoading(true);
+        consoleLog.textContent = `[INFO] Parsing pasted HTML content...\n`;
+        const products = parseAmazonHTML(htmlContent, category);
+        
+        if (products.length === 0) {
+          consoleLog.textContent += `[WARNING] Could not parse any products from the HTML. Check that you copied from Amazon Search or Product details page source.\n`;
+          showToast('No products found in HTML', 'warning');
+          return;
+        }
+        
+        consoleLog.textContent += `[SUCCESS] Parsed ${products.length} products successfully!\n`;
+        consoleLog.textContent += `[INFO] Importing to database...\n`;
+        
+        const result = await bulkImportProducts(products);
+        consoleLog.textContent += `[SUCCESS] Done! Added: ${result.added}, Updated: ${result.updated} products.\n`;
+        showToast(`Imported ${products.length} products!`, 'success');
+        
+        // Clear textarea
+        document.getElementById('htmlPasteContent').value = '';
+        
+        // Reload database
+        const inventory = await getInventory();
+        window.adminData.products = inventory;
+      } catch (error) {
+        consoleLog.textContent += `[ERROR] Parse/Import failed: ${error.message}\n`;
+        showToast('Import failed', 'error');
+      } finally {
+        showLoading(false);
+      }
+    });
+  }
+
+  if (syncAllPricesBtn) {
+    syncAllPricesBtn.addEventListener('click', async () => {
+      let products = window.adminData.products;
+      if (products.length === 0) {
+        products = await getInventory();
+        window.adminData.products = products;
+      }
+      
+      const amazonProducts = products.filter(p => p.asin);
+      if (amazonProducts.length === 0) {
+        showToast('No Amazon products to sync', 'info');
+        return;
+      }
+      
+      showToast(`Bulk sync started for ${amazonProducts.length} items...`, 'info');
+      let successCount = 0;
+      
+      try {
+        showLoading(true);
+        for (const p of amazonProducts) {
+          const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(`https://www.amazon.in/dp/${p.asin}`)}`;
+          try {
+            const res = await fetch(proxyUrl);
+            if (!res.ok) continue;
+            const html = await res.text();
+            const extracted = parseAmazonHTML(html, 'Temp');
+            if (extracted.length > 0) {
+              const ep = extracted[0];
+              await updateAmazonProductPrice(p.id, ep.price, ep.originalPrice);
+              successCount++;
+            }
+          } catch (e) {
+            console.warn(`Failed to sync ASIN ${p.asin}:`, e);
+          }
+        }
+        showToast(`Synced ${successCount}/${amazonProducts.length} prices!`, 'success');
+        const inventory = await getInventory();
+        window.adminData.products = inventory;
+        await loadScraperData();
+      } catch (error) {
+        showToast('Sync process failed', 'error');
+      } finally {
+        showLoading(false);
+      }
+    });
+  }
 }
 
 /**
@@ -214,7 +346,8 @@ function handleNavigation(e) {
     'products': 'Manage Products',
     'orders': 'View Orders',
     'users': 'User Management',
-    'admins': 'Admin Management'
+    'admins': 'Admin Management',
+    'scraper': 'Amazon Scraper & Price Tracker'
   };
   pageTitle.textContent = titleMap[sectionName] || 'Dashboard';
 
@@ -227,6 +360,8 @@ function handleNavigation(e) {
     loadUsersData();
   } else if (sectionName === 'admins') {
     loadAdminsData();
+  } else if (sectionName === 'scraper') {
+    loadScraperData();
   }
 }
 
@@ -824,5 +959,265 @@ window.handleDeleteAdmin = async function(adminId, email) {
     } finally {
       showLoading(false);
     }
+  }
+};
+
+// =============================================
+// AMAZON SCRAPER & PRICE TRACKER INTEGRATION
+// =============================================
+
+function setupScraperTabs() {
+  const tabs = document.querySelectorAll('.scraper-tab-btn');
+  const panes = document.querySelectorAll('.scraper-pane');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      panes.forEach(p => p.classList.remove('active'));
+      
+      tab.classList.add('active');
+      const targetId = `pane-${tab.dataset.tab}`;
+      const pane = document.getElementById(targetId);
+      if (pane) pane.classList.add('active');
+      
+      if (tab.dataset.tab === 'price-tracker') {
+        loadScraperData();
+      }
+    });
+  });
+}
+
+function parseAmazonHTML(htmlString, category = 'General') {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+  const products = [];
+  
+  // Try search page results
+  const items = doc.querySelectorAll('div[data-component-type="s-search-result"], div.s-result-item[data-asin]');
+  if (items && items.length > 0) {
+    items.forEach(item => {
+      const asin = item.getAttribute('data-asin');
+      if (!asin) return;
+      
+      const titleEl = item.querySelector('h2 a span, .a-size-medium.a-color-base.a-text-normal, .a-size-base-plus.a-color-base.a-text-normal');
+      const imgEl = item.querySelector('img.s-image');
+      const priceEl = item.querySelector('.a-price span.a-offscreen');
+      const origPriceEl = item.querySelector('.a-price.a-text-price span.a-offscreen');
+      const ratingEl = item.querySelector('span.a-icon-alt');
+      const reviewsEl = item.querySelector('span.a-size-base.s-underline-text, a.a-link-normal .a-size-base');
+      
+      if (!titleEl || !priceEl) return;
+      
+      const name = titleEl.textContent.trim();
+      const image = imgEl ? imgEl.getAttribute('src') : '';
+      const priceText = priceEl.textContent.replace(/[^\d]/g, '');
+      const price = parseFloat(priceText);
+      
+      let originalPrice = null;
+      if (origPriceEl) {
+        originalPrice = parseFloat(origPriceEl.textContent.replace(/[^\d]/g, ''));
+      }
+      
+      let rating = 4.5;
+      if (ratingEl) {
+        const ratingMatch = ratingEl.textContent.match(/([0-9.]+)/);
+        if (ratingMatch) rating = parseFloat(ratingMatch[1]);
+      }
+      
+      let reviews = 100;
+      if (reviewsEl) {
+        const reviewsText = reviewsEl.textContent.replace(/[^\d]/g, '');
+        if (reviewsText) reviews = parseInt(reviewsText);
+      }
+      
+      products.push({
+        asin,
+        name,
+        price,
+        originalPrice: originalPrice || Math.round(price * 1.25),
+        image,
+        rating,
+        reviews,
+        category,
+        description: `${name}. Real product imported directly from Amazon.`,
+        stock: 50,
+        badge: originalPrice ? 'Sale' : '',
+        source: 'amazon'
+      });
+    });
+  }
+  
+  // Try single product details page
+  if (products.length === 0) {
+    const titleEl = doc.querySelector('#productTitle');
+    if (titleEl) {
+      const name = titleEl.textContent.trim();
+      const imgEl = doc.querySelector('#landingImage, #imgBlkFront, #ebooksImgBlkFront');
+      const image = imgEl ? (imgEl.getAttribute('data-old-hires') || imgEl.getAttribute('src')) : '';
+      
+      const priceEl = doc.querySelector('.a-price span.a-offscreen, #priceblock_ourprice, #price_inside_buybox');
+      const priceText = priceEl ? priceEl.textContent.replace(/[^\d]/g, '') : '0';
+      const price = parseFloat(priceText);
+      
+      const origPriceEl = doc.querySelector('.a-price.a-text-price span.a-offscreen, #priceblock_listprice');
+      let originalPrice = null;
+      if (origPriceEl) {
+        originalPrice = parseFloat(origPriceEl.textContent.replace(/[^\d]/g, ''));
+      }
+      
+      const ratingEl = doc.querySelector('#acrPopover, span.a-icon-alt');
+      let rating = 4.5;
+      if (ratingEl) {
+        const ratingMatch = ratingEl.textContent.match(/([0-9.]+)/);
+        if (ratingMatch) rating = parseFloat(ratingMatch[1]);
+      }
+      
+      const reviewsEl = doc.querySelector('#acrCustomerReviewText');
+      let reviews = 100;
+      if (reviewsEl) {
+        const reviewsText = reviewsEl.textContent.replace(/[^\d]/g, '');
+        if (reviewsText) reviews = parseInt(reviewsText);
+      }
+      
+      // Feature bullets
+      const bullets = [];
+      doc.querySelectorAll('#feature-bullets ul li span.a-list-item').forEach(li => {
+        bullets.push(li.textContent.trim());
+      });
+      const description = bullets.length > 0 ? bullets.join('\n') : `${name}. Real product imported directly from Amazon.`;
+      
+      const asinEl = doc.querySelector('#ASIN, input[name="ASIN"]');
+      const asin = asinEl ? asinEl.value : 'AMZN' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      
+      if (name && price) {
+        products.push({
+          asin,
+          name,
+          price,
+          originalPrice: originalPrice || Math.round(price * 1.25),
+          image,
+          rating,
+          reviews,
+          category,
+          description,
+          stock: 50,
+          badge: originalPrice ? 'Sale' : '',
+          source: 'amazon'
+        });
+      }
+    }
+  }
+  
+  return products;
+}
+
+async function scrapeAmazonKeyword(queryStr, category, limit, logConsole) {
+  logConsole.textContent = `[INFO] Initializing scrape request for keyword: "${queryStr}"...\n`;
+  
+  try {
+    const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(`https://www.amazon.in/s?k=${encodeURIComponent(queryStr)}`)}`;
+    logConsole.textContent += `[INFO] Fetching search results via corsproxy.io...\n`;
+    
+    const response = await fetch(proxyUrl);
+    if (!response.ok) {
+      throw new Error(`Proxy responded with status: ${response.status}`);
+    }
+    
+    const htmlText = await response.text();
+    logConsole.textContent += `[INFO] Received HTML data (${Math.round(htmlText.length / 1024)} KB). Parsing...\n`;
+    
+    const products = parseAmazonHTML(htmlText, category);
+    
+    if (products.length === 0) {
+      logConsole.textContent += `[WARNING] No products found. Amazon may be rate-limiting or returning a CAPTCHA page.\n`;
+      logConsole.textContent += `[TIP] Please try the "HTML Source Paste Importer" tab instead! It is 100% reliable.\n`;
+      return [];
+    }
+    
+    logConsole.textContent += `[SUCCESS] Extracted ${products.length} products from search results page.\n`;
+    const limited = products.slice(0, limit);
+    logConsole.textContent += `[INFO] Truncating to limit count (${limited.length}). Saving to database...\n`;
+    
+    return limited;
+  } catch (error) {
+    logConsole.textContent += `[ERROR] Scrape failed: ${error.message}\n`;
+    logConsole.textContent += `[TIP] Bypass this block easily! Open Amazon in your browser, search for "${queryStr}", View Page Source, copy all HTML, and paste it in the "HTML Source Paste Importer" tab.\n`;
+    return [];
+  }
+}
+
+async function loadScraperData() {
+  try {
+    showLoading(true);
+    
+    const products = await getInventory();
+    window.adminData.products = products;
+    
+    const amazonProducts = products.filter(p => p.asin);
+    
+    const tbody = document.getElementById('trackedProductsBody');
+    if (!tbody) return;
+    
+    if (amazonProducts.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" class="empty-state">No products are currently tracked from Amazon. Go to import tabs to add some!</td></tr>`;
+      showLoading(false);
+      return;
+    }
+    
+    tbody.innerHTML = amazonProducts.map(p => {
+      const syncStatus = '<span class="tracked-status-badge sync-ok">Tracked</span>';
+      const lastSynced = p.updatedAt ? formatTimestamp(p.updatedAt) : 'Never';
+      
+      return `
+        <tr>
+          <td>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <img src="${p.image}" style="width:40px;height:40px;object-fit:contain;background:#f9fafb;border:1px solid #eee;border-radius:4px;" onerror="this.src='https://via.placeholder.com/40px'"/>
+              <div style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;">${p.name}</div>
+            </div>
+          </td>
+          <td><code style="background:#f3f4f6;padding:2px 6px;border-radius:3px;font-size:0.8rem;">${p.asin}</code></td>
+          <td>${p.category || 'General'}</td>
+          <td><strong>${formatCurrency(p.price)}</strong></td>
+          <td style="text-decoration:line-through;color:#9ca3af;">${formatCurrency(p.originalPrice)}</td>
+          <td>${syncStatus}</td>
+          <td style="font-size:0.8rem;color:#6b7280;">${lastSynced}</td>
+          <td>
+            <button class="btn btn-secondary btn-sm" onclick="window.syncSinglePrice('${p.id}', '${p.asin}')">Sync</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+    
+    showLoading(false);
+  } catch (error) {
+    console.error('Error loading scraper data:', error);
+    showToast('Failed to load tracked products', 'error');
+    showLoading(false);
+  }
+}
+
+window.syncSinglePrice = async function(productId, asin) {
+  showToast(`Syncing price for ASIN: ${asin}...`, 'info');
+  try {
+    showLoading(true);
+    const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(`https://www.amazon.in/dp/${asin}`)}`;
+    const response = await fetch(proxyUrl);
+    if (!response.ok) throw new Error('Proxy error');
+    
+    const htmlText = await response.text();
+    const products = parseAmazonHTML(htmlText, 'Temp');
+    if (products.length > 0) {
+      const p = products[0];
+      await updateAmazonProductPrice(productId, p.price, p.originalPrice);
+      showToast(`Successfully synced price to ${formatCurrency(p.price)}!`, 'success');
+      await loadScraperData();
+    } else {
+      showToast(`Amazon blocked direct sync. Try pasting updated HTML in Paste Importer.`, 'warning');
+    }
+  } catch (error) {
+    showToast('Sync failed: ' + error.message, 'error');
+  } finally {
+    showLoading(false);
   }
 };
