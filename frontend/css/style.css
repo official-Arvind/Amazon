@@ -131,21 +131,35 @@ img {
     top: 0;
     z-index: 1000;
     background-color: var(--color-navbar);
+    width: 100%;
 }
 
 .navbar-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 1rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.navbar-row-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1rem;
-    height: 60px;
+    width: 100%;
+    height: 100%;
+    gap: 14px;
 }
 
 .navbar-logo {
     display: flex;
     align-items: center;
-    padding: 5px 10px;
+    padding: 5px 8px;
     border: 1px solid transparent;
+    cursor: pointer;
+    flex-shrink: 0;
 }
 .navbar-logo:hover, .navbar-deliver:hover, .nav-link-custom:hover {
     border: 1px solid white;
@@ -153,7 +167,7 @@ img {
 }
 
 .logo-text {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: #ffffff;
     display: block;
@@ -162,28 +176,47 @@ img {
 
 .navbar-deliver {
     display: flex;
-    flex-direction: column;
-    padding: 5px 10px;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 8px;
     border: 1px solid transparent;
     color: white;
     cursor: pointer;
+    flex-shrink: 0;
+}
+.deliver-pin {
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.deliver-text-container {
+    display: flex;
+    flex-direction: column;
 }
 .deliver-to {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: #cccccc;
+    line-height: 1.1;
 }
 .deliver-location {
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     font-weight: bold;
+    line-height: 1.1;
 }
 
 .navbar-search {
     display: flex;
     flex: 1;
-    margin: 0 1rem;
     height: 40px;
     border-radius: 4px;
     overflow: hidden;
+    background: #fff;
+    transition: outline 0.1s ease-in-out;
+}
+.navbar-search:focus-within {
+    outline: 3px solid #e77600;
+    box-shadow: 0 0 0 1px #fff;
 }
 
 .search-category {
@@ -192,18 +225,24 @@ img {
     padding: 0 10px;
     color: #555;
     border-right: 1px solid #ccc;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     cursor: pointer;
+    height: 100%;
+}
+.search-category:focus {
+    outline: none;
 }
 
 .search-input {
     flex: 1;
     border: none;
-    padding: 0 10px;
-    font-size: 1rem;
+    padding: 0 12px;
+    font-size: 0.95rem;
+    color: #111;
+    height: 100%;
 }
 .search-input:focus {
-    outline: 2px solid #f90;
+    outline: none !important;
 }
 
 .search-btn {
@@ -215,6 +254,8 @@ img {
     justify-content: center;
     cursor: pointer;
     color: #000;
+    height: 100%;
+    transition: background 0.1s ease-in-out;
 }
 .search-btn:hover {
     background: #f3a847;
@@ -223,16 +264,18 @@ img {
 .navbar-icons {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 4px;
+    flex-shrink: 0;
 }
 
 .nav-link-custom {
     display: flex;
     flex-direction: column;
-    padding: 5px 10px;
+    padding: 5px 8px;
     border: 1px solid transparent;
     color: white;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .nav-small {
@@ -1117,7 +1160,6 @@ img {
     .product-card {
         border-radius: 4px;
     }
-}
 
     .cta-button {
         padding: var(--spacing-md) var(--spacing-lg);
@@ -1298,67 +1340,7 @@ img {
    LOGIN & AUTHENTICATION PAGE STYLES
    =============================================== */
 
-:root {
-    --primary-color: #1a1a1a;
-    --secondary-color: #ff9900;
-    --accent-color: #0066cc;
-    --text-primary: #111;
-    --text-secondary: #666;
-    --background: #ffffff;
-    --border-color: #ddd;
-    --error-color: #dc2626;
-    --success-color: #16a34a;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
-    --transition: all 0.3s ease;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    height: 100%;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background-color: var(--background);
-    color: var(--text-primary);
-    line-height: 1.6;
-}
-
-/* Navigation Bar */
-.navbar {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 0;
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
-}
-
-.navbar-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.navbar-logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--secondary-color);
-    text-decoration: none;
-    letter-spacing: 0.05em;
-}
-
-.subtitle {
-    font-size: 0.875rem;
-    color: #ccc;
-    margin: 0;
-}
+/* (Obsolete duplicate navigation/reset rules removed to prevent layout conflicts on store pages) */
 
 /* Main Container */
 .auth-container {
@@ -2793,8 +2775,21 @@ html, body {
     background: linear-gradient(to bottom, #e7ebf0, #d9dce1) !important;
 }
 
-/* Amazon centered login card styles */
 .auth-page-container {
+    --primary-color: #1a1a1a;
+    --secondary-color: #ff9900;
+    --accent-color: #0066cc;
+    --text-primary: #111;
+    --text-secondary: #666;
+    --background: #ffffff;
+    --border-color: #ddd;
+    --error-color: #dc2626;
+    --success-color: #16a34a;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
+    --transition: all 0.3s ease;
+
     background-color: #ffffff;
     min-height: 100vh;
     display: flex;
@@ -2994,6 +2989,7 @@ html, body {
         align-items: center;
         justify-content: space-between;
         width: 100%;
+        flex-wrap: wrap;
     }
     .navbar-logo {
         padding: 0 !important;

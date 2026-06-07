@@ -263,8 +263,11 @@ function renderNavbar() {
         </div>
 
         <div class="navbar-deliver">
-          <span class="deliver-to">Deliver to</span>
-          <span class="deliver-location">📍 India</span>
+          <span class="deliver-pin">📍</span>
+          <div class="deliver-text-container">
+            <span class="deliver-to">Deliver to</span>
+            <span class="deliver-location">India</span>
+          </div>
         </div>
 
         <div class="navbar-search">
