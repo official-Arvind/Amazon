@@ -1,14 +1,14 @@
-name: Deploy to GitHub Pages (Manual - dev-1 only)
+name: Deploy to GitHub Pages (Manual - Dev-1 only)
 
 on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Deploy branch (dev-1 or main)'
+        description: 'Deploy branch (Dev-1 or main)'
         required: true
         type: choice
         options:
-          - dev-1
+          - Dev-1
           - main
 
 permissions:
@@ -49,9 +49,9 @@ jobs:
           echo "✓ Admin folder removed"
 
       - name: Prepare deployment
-        if: github.event.inputs.branch == 'dev-1'
+        if: github.event.inputs.branch == 'Dev-1'
         run: |
-          echo "✓ Preparing dev-1 deployment with admin panel"
+          echo "✓ Preparing Dev-1 deployment with admin panel"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -71,6 +71,6 @@ jobs:
           echo "📊 Deployment Summary"
           echo "═══════════════════════════════════════"
           echo "Branch: ${{ github.event.inputs.branch }}"
-          echo "Admin Panel Included: ${{ github.event.inputs.branch == 'dev-1' && 'Yes ✓' || 'No (Removed)' }}"
+          echo "Admin Panel Included: ${{ github.event.inputs.branch == 'Dev-1' && 'Yes ✓' || 'No (Removed)' }}"
           echo "Deployment URL: ${{ steps.deployment.outputs.page_url }}"
           echo "═══════════════════════════════════════"
