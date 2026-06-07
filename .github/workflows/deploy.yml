@@ -53,6 +53,17 @@ jobs:
         run: |
           echo "✓ Preparing Dev-1 deployment with admin panel"
 
+      - name: Copy backend JS files and adjust paths for GitHub Pages compatibility
+        run: |
+          echo "📦 Copying backend JS files to frontend/backend/js..."
+          mkdir -p frontend/backend/js
+          cp -r backend/js/* frontend/backend/js/
+          
+          echo "🔄 Adjusting import paths in JavaScript files..."
+          # Replace relative imports going outside frontend root (../../backend/js/) with (../backend/js/)
+          find frontend -name "*.js" -type f -exec sed -i 's|\.\./\.\./backend/js/|\.\./backend/js/|g' {} +
+          echo "✓ Paths adjusted successfully!"
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
