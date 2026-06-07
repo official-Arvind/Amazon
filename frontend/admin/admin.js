@@ -295,11 +295,9 @@ function initializeEventListeners() {
       try {
         showLoading(true);
         for (const p of amazonProducts) {
-          const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(`https://www.amazon.in/dp/${p.asin}`)}`;
           try {
-            const res = await fetch(proxyUrl);
-            if (!res.ok) continue;
-            const html = await res.text();
+            const targetUrl = `https://www.amazon.in/dp/${p.asin}`;
+            const html = await fetchAmazonHTML(targetUrl);
             const extracted = parseAmazonHTML(html, 'Temp');
             if (extracted.length > 0) {
               const ep = extracted[0];
@@ -1111,20 +1109,101 @@ function parseAmazonHTML(htmlString, category = 'General') {
   return products;
 }
 
+// List of modern, realistic browser user agents to rotate and emulate browser requests
+const BROWSER_USER_AGENTS = [
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2.1 Safari/605.1.15',
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36'
+];
+
+async function fetchAmazonHTML(targetUrl, logConsole = null) {
+  const userAgent = BROWSER_USER_AGENTS[Math.floor(Math.random() * BROWSER_USER_AGENTS.length)];
+  
+  // Define a series of proxy configurations to rotate/fallback in case of failures (e.g. 413, 403, 502)
+  const proxies = [
+    {
+      name: 'corsproxy.io (Browser Emulation)',
+      url: `https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}` + 
+           `&reqHeaders=User-Agent:${encodeURIComponent(userAgent)}` + 
+           `&reqHeaders=Accept-Language:${encodeURIComponent('en-US,en;q=0.9')}` +
+           `&reqHeaders=Accept:${encodeURIComponent('text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')}` +
+           `&reqHeaders=Upgrade-Insecure-Requests:${encodeURIComponent('1')}` +
+           `&reqHeaders=Sec-Fetch-Dest:${encodeURIComponent('document')}` +
+           `&reqHeaders=Sec-Fetch-Mode:${encodeURIComponent('navigate')}` +
+           `&reqHeaders=Sec-Fetch-Site:${encodeURIComponent('none')}`
+    },
+    {
+      name: 'corsproxy.io (Standard)',
+      url: `https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}`
+    },
+    {
+      name: 'allorigins.win',
+      url: `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`
+    },
+    {
+      name: 'thingproxy.freeboard.io',
+      url: `https://thingproxy.freeboard.io/fetch/${encodeURIComponent(targetUrl)}`
+    }
+  ];
+
+  let lastError = null;
+
+  for (const proxy of proxies) {
+    const logMsg = `[INFO] Attempting fetch via ${proxy.name}...\n`;
+    if (logConsole) {
+      logConsole.textContent += logMsg;
+    } else {
+      console.log(logMsg);
+    }
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 seconds timeout
+
+      const response = await fetch(proxy.url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`HTTP status ${response.status}`);
+      }
+
+      const htmlText = await response.text();
+      
+      if (htmlText && htmlText.length > 500) {
+        const successMsg = `[SUCCESS] Fetch succeeded using ${proxy.name} (${Math.round(htmlText.length / 1024)} KB)\n`;
+        if (logConsole) {
+          logConsole.textContent += successMsg;
+        } else {
+          console.log(successMsg);
+        }
+        return htmlText;
+      } else {
+        throw new Error('Received empty or extremely short HTML response');
+      }
+    } catch (error) {
+      lastError = error;
+      const failMsg = `[WARNING] ${proxy.name} failed: ${error.message}. Trying next proxy...\n`;
+      if (logConsole) {
+        logConsole.textContent += failMsg;
+      } else {
+        console.warn(failMsg);
+      }
+    }
+  }
+
+  throw new Error(`All proxies failed. Last error: ${lastError ? lastError.message : 'Unknown'}`);
+}
+
 async function scrapeAmazonKeyword(queryStr, category, limit, logConsole) {
   logConsole.textContent = `[INFO] Initializing scrape request for keyword: "${queryStr}"...\n`;
   
   try {
-    const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(`https://www.amazon.in/s?k=${encodeURIComponent(queryStr)}`)}`;
-    logConsole.textContent += `[INFO] Fetching search results via corsproxy.io...\n`;
-    
-    const response = await fetch(proxyUrl);
-    if (!response.ok) {
-      throw new Error(`Proxy responded with status: ${response.status}`);
-    }
-    
-    const htmlText = await response.text();
-    logConsole.textContent += `[INFO] Received HTML data (${Math.round(htmlText.length / 1024)} KB). Parsing...\n`;
+    const targetUrl = `https://www.amazon.in/s?k=${encodeURIComponent(queryStr)}`;
+    const htmlText = await fetchAmazonHTML(targetUrl, logConsole);
     
     const products = parseAmazonHTML(htmlText, category);
     
@@ -1201,11 +1280,8 @@ window.syncSinglePrice = async function(productId, asin) {
   showToast(`Syncing price for ASIN: ${asin}...`, 'info');
   try {
     showLoading(true);
-    const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(`https://www.amazon.in/dp/${asin}`)}`;
-    const response = await fetch(proxyUrl);
-    if (!response.ok) throw new Error('Proxy error');
-    
-    const htmlText = await response.text();
+    const targetUrl = `https://www.amazon.in/dp/${asin}`;
+    const htmlText = await fetchAmazonHTML(targetUrl);
     const products = parseAmazonHTML(htmlText, 'Temp');
     if (products.length > 0) {
       const p = products[0];
