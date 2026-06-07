@@ -2112,29 +2112,47 @@ html, body {
 .cat-item {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.3rem;
-    padding: 0.5rem;
-    border-radius: 6px;
-    transition: background 0.15s;
+    padding: 0;
+    border-radius: 0;
     cursor: pointer;
+    text-decoration: none;
+    width: 100%;
 }
-.cat-item:hover { background: #f5f5f5; }
+.cat-item:hover {
+    background: transparent;
+}
 
 .cat-img {
-    width: 56px;
-    height: 56px;
-    border-radius: 8px;
+    width: 100%;
+    height: 102px;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    background: #f7f8f8;
+    overflow: hidden;
+}
+
+.cat-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* contain keeps the item clean, cover fills the space */
+    background: #f7f8f8;
+    padding: 4px;
 }
 
 .cat-item span {
-    font-size: 0.78rem;
-    color: #0f1111;
-    font-weight: 500;
+    font-size: 0.75rem;
+    color: #0c0e12;
+    font-weight: 400;
+    margin-top: 2px;
+}
+
+.cat-item:hover span {
+    color: #007185 !important;
+    text-decoration: underline;
 }
 
 .cat-see-all {
