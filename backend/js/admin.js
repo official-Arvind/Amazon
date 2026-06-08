@@ -225,8 +225,7 @@ export async function getInventory() {
     console.log('Fetching inventory...');
 
     const productsRef = collection(db, 'products');
-    const q = query(productsRef, orderBy('createdAt', 'desc'));
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocs(productsRef);
 
     const products = [];
     snapshot.forEach((doc) => {
@@ -234,6 +233,13 @@ export async function getInventory() {
         id: doc.id,
         ...doc.data()
       });
+    });
+
+    // Sort in memory by createdAt (descending), defaulting to epoch 0 if missing
+    products.sort((a, b) => {
+      const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : (a.createdAt ? new Date(a.createdAt) : new Date(0));
+      const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : (b.createdAt ? new Date(b.createdAt) : new Date(0));
+      return dateB - dateA;
     });
 
     console.log(`✓ Fetched ${products.length} products`);
