@@ -1008,12 +1008,15 @@ function parseAmazonHTML(htmlString, category = 'General') {
       
       const name = titleEl.textContent.trim();
       const image = imgEl ? imgEl.getAttribute('src') : '';
-      const priceText = priceEl.textContent.replace(/[^\d]/g, '');
-      const price = parseFloat(priceText);
+      const priceRaw = priceEl.textContent;
+      const priceText = priceRaw.replace(/,/g, '').match(/([0-9.]+)/);
+      const price = priceText ? parseFloat(priceText[1]) : 0;
       
       let originalPrice = null;
       if (origPriceEl) {
-        originalPrice = parseFloat(origPriceEl.textContent.replace(/[^\d]/g, ''));
+        const origPriceRaw = origPriceEl.textContent;
+        const origPriceText = origPriceRaw.replace(/,/g, '').match(/([0-9.]+)/);
+        originalPrice = origPriceText ? parseFloat(origPriceText[1]) : null;
       }
       
       let rating = 4.5;
@@ -1050,42 +1053,144 @@ function parseAmazonHTML(htmlString, category = 'General') {
     const titleEl = doc.querySelector('#productTitle');
     if (titleEl) {
       const name = titleEl.textContent.trim();
+      
+      // Dynamic image resolution parsing
       const imgEl = doc.querySelector('#landingImage, #imgBlkFront, #ebooksImgBlkFront');
-      const image = imgEl ? (imgEl.getAttribute('data-old-hires') || imgEl.getAttribute('src')) : '';
-      
-      const priceEl = doc.querySelector('.a-price span.a-offscreen, #priceblock_ourprice, #price_inside_buybox');
-      const priceText = priceEl ? priceEl.textContent.replace(/[^\d]/g, '') : '0';
-      const price = parseFloat(priceText);
-      
-      const origPriceEl = doc.querySelector('.a-price.a-text-price span.a-offscreen, #priceblock_listprice');
-      let originalPrice = null;
-      if (origPriceEl) {
-        originalPrice = parseFloat(origPriceEl.textContent.replace(/[^\d]/g, ''));
+      let image = '';
+      if (imgEl) {
+        image = imgEl.getAttribute('data-old-hires') || imgEl.getAttribute('src') || '';
+        const dynamicImageStr = imgEl.getAttribute('data-a-dynamic-image');
+        if (dynamicImageStr) {
+          try {
+            const dynamicImages = JSON.parse(dynamicImageStr);
+            const urls = Object.keys(dynamicImages);
+            if (urls.length > 0) image = urls[0];
+          } catch (e) {}
+        }
       }
       
-      const ratingEl = doc.querySelector('#acrPopover, span.a-icon-alt');
+      // Robust Price Selectors
+      const priceEl = doc.querySelector(
+        '.a-price.priceToPay span.a-offscreen, ' +
+        '#corePrice_feature_div .a-price span.a-offscreen, ' +
+        '#priceblock_ourprice, ' +
+        '#priceblock_dealprice, ' +
+        '#price_inside_buybox, ' +
+        '.apexPriceToPay span.a-offscreen, ' +
+        '.a-price span.a-offscreen'
+      );
+      const priceRaw = priceEl ? priceEl.textContent : '0';
+      const priceText = priceRaw.replace(/,/g, '').match(/([0-9.]+)/);
+      const price = priceText ? parseFloat(priceText[1]) : 0;
+      
+      // Robust MSRP/List Price Selectors
+      const origPriceEl = doc.querySelector(
+        '#corePriceDisplay_desktop_feature_div .a-price.a-text-price span.a-offscreen, ' +
+        '.a-price.a-text-price span.a-offscreen, ' +
+        '.basisPrice .a-offscreen, ' +
+        '#priceblock_listprice'
+      );
+      let originalPrice = null;
+      if (origPriceEl) {
+        const origPriceRaw = origPriceEl.textContent;
+        const origPriceText = origPriceRaw.replace(/,/g, '').match(/([0-9.]+)/);
+        originalPrice = origPriceText ? parseFloat(origPriceText[1]) : null;
+      }
+      
+      // Robust Ratings Selectors
+      const ratingEl = doc.querySelector(
+        'span[data-hook="rating-out-of-five"], ' +
+        '#acrPopover span.a-icon-alt, ' +
+        '#acrPopover, ' +
+        'span.a-icon-alt'
+      );
       let rating = 4.5;
       if (ratingEl) {
         const ratingMatch = ratingEl.textContent.match(/([0-9.]+)/);
         if (ratingMatch) rating = parseFloat(ratingMatch[1]);
       }
       
-      const reviewsEl = doc.querySelector('#acrCustomerReviewText');
+      // Robust Customer Reviews Count
+      const reviewsEl = doc.querySelector(
+        'span[data-hook="total-review-count"], ' +
+        '#acrCustomerReviewText, ' +
+        '#acrCustomerReviewLink'
+      );
       let reviews = 100;
       if (reviewsEl) {
         const reviewsText = reviewsEl.textContent.replace(/[^\d]/g, '');
         if (reviewsText) reviews = parseInt(reviewsText);
       }
       
-      // Feature bullets
+      // Full Description Compilation: Bullets + Paragraphs + Specs Table
       const bullets = [];
       doc.querySelectorAll('#feature-bullets ul li span.a-list-item').forEach(li => {
-        bullets.push(li.textContent.trim());
+        const text = li.textContent.trim();
+        if (text) bullets.push(text);
       });
-      const description = bullets.length > 0 ? bullets.join('\n') : `${name}. Real product imported directly from Amazon.`;
       
+      const descEl = doc.querySelector('#productDescription, #productDescription_feature_div');
+      let prodDesc = '';
+      if (descEl) {
+        prodDesc = descEl.textContent.trim().replace(/\s+/g, ' ');
+      }
+      
+      const specList = [];
+      doc.querySelectorAll('#productDetails_techSpec_section_1 tr, .prodDetTable tr').forEach(tr => {
+        const keyEl = tr.querySelector('th');
+        const valEl = tr.querySelector('td');
+        if (keyEl && valEl) {
+          const key = keyEl.textContent.trim();
+          const val = valEl.textContent.trim().replace(/\s+/g, ' ');
+          if (key && val) specList.push(`${key}: ${val}`);
+        }
+      });
+      
+      if (specList.length === 0) {
+        doc.querySelectorAll('#detailBullets_feature_div ul li span.a-list-item').forEach(li => {
+          const text = li.textContent.replace(/\s+/g, ' ').trim();
+          if (text) {
+            const parts = text.split(':');
+            if (parts.length >= 2) {
+              const key = parts[0].replace(/[^\w\s-]/g, '').trim();
+              const val = parts.slice(1).join(':').trim();
+              if (key && val) specList.push(`${key}: ${val}`);
+            }
+          }
+        });
+      }
+      
+      let description = '';
+      if (bullets.length > 0) {
+        description += "Product Features:\n" + bullets.map(b => `• ${b}`).join('\n') + "\n\n";
+      }
+      if (prodDesc) {
+        description += "Product Description:\n" + prodDesc + "\n\n";
+      }
+      if (specList.length > 0) {
+        description += "Specifications:\n" + specList.map(s => `• ${s}`).join('\n');
+      }
+      description = description.trim();
+      if (!description) {
+        description = `${name}. Real product imported directly from Amazon.`;
+      }
+      
+      // ASIN Extraction (Input value, attribute name, or canonical URL search)
+      let asin = '';
       const asinEl = doc.querySelector('#ASIN, input[name="ASIN"]');
-      const asin = asinEl ? asinEl.value : 'AMZN' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      if (asinEl && asinEl.value) {
+        asin = asinEl.value.trim();
+      } else {
+        const canonicalEl = doc.querySelector('link[rel="canonical"]');
+        if (canonicalEl && canonicalEl.getAttribute('href')) {
+          const canonicalUrl = canonicalEl.getAttribute('href');
+          const match = canonicalUrl.match(/\/dp\/([A-Z0-9]{10})/i);
+          if (match) asin = match[1].toUpperCase();
+        }
+      }
+      if (!asin) {
+        asin = 'AMZN' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      }
       
       if (name && price) {
         products.push({

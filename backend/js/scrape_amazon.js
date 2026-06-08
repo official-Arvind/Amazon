@@ -158,12 +158,15 @@ async function runSingleScrape(queryStr, categoryName, limitCount, idToken, isCo
 
     const name = titleEl.text().trim();
     const image = imgEl.attr('src') || '';
-    const priceText = priceEl.text().replace(/[^\d]/g, '');
-    const price = parseFloat(priceText);
+    const priceRaw = priceEl.text();
+    const priceText = priceRaw.replace(/,/g, '').match(/([0-9.]+)/);
+    const price = priceText ? parseFloat(priceText[1]) : 0;
 
     let originalPrice = null;
     if (origPriceEl.length > 0) {
-      originalPrice = parseFloat(origPriceEl.text().replace(/[^\d]/g, ''));
+      const origPriceRaw = origPriceEl.text();
+      const origPriceText = origPriceRaw.replace(/,/g, '').match(/([0-9.]+)/);
+      originalPrice = origPriceText ? parseFloat(origPriceText[1]) : null;
     }
 
     let rating = 4.5;
@@ -193,6 +196,143 @@ async function runSingleScrape(queryStr, categoryName, limitCount, idToken, isCo
       source: 'amazon'
     });
   });
+
+  if (products.length === 0) {
+    // Try single product details page fallback
+    const titleEl = $('#productTitle');
+    if (titleEl.length > 0) {
+      console.log('💡 Found a single product detail page. Parsing...');
+      const name = titleEl.text().trim();
+      const imgEl = $('#landingImage, #imgBlkFront, #ebooksImgBlkFront');
+      let image = '';
+      if (imgEl.length > 0) {
+        image = imgEl.attr('data-old-hires') || imgEl.attr('src') || '';
+        const dynamicImageStr = imgEl.attr('data-a-dynamic-image');
+        if (dynamicImageStr) {
+          try {
+            const dynamicImages = JSON.parse(dynamicImageStr);
+            const urls = Object.keys(dynamicImages);
+            if (urls.length > 0) image = urls[0];
+          } catch (e) {}
+        }
+      }
+
+      const priceEl = $('.a-price.priceToPay span.a-offscreen, #corePrice_feature_div .a-price span.a-offscreen, #priceblock_ourprice, #priceblock_dealprice, #price_inside_buybox, .apexPriceToPay span.a-offscreen, .a-price span.a-offscreen');
+      const priceRaw = priceEl.length > 0 ? priceEl.first().text() : '0';
+      const priceText = priceRaw.replace(/,/g, '').match(/([0-9.]+)/);
+      const price = priceText ? parseFloat(priceText[1]) : 0;
+
+      const origPriceEl = $('#corePriceDisplay_desktop_feature_div .a-price.a-text-price span.a-offscreen, .a-price.a-text-price span.a-offscreen, .basisPrice .a-offscreen, #priceblock_listprice');
+      let originalPrice = null;
+      if (origPriceEl.length > 0) {
+        const origPriceRaw = origPriceEl.first().text();
+        const origPriceText = origPriceRaw.replace(/,/g, '').match(/([0-9.]+)/);
+        originalPrice = origPriceText ? parseFloat(origPriceText[1]) : null;
+      }
+
+      const ratingEl = $('span[data-hook="rating-out-of-five"], #acrPopover span.a-icon-alt, #acrPopover, span.a-icon-alt');
+      let rating = 4.5;
+      if (ratingEl.length > 0) {
+        const ratingMatch = ratingEl.first().text().match(/([0-9.]+)/);
+        if (ratingMatch) rating = parseFloat(ratingMatch[1]);
+      }
+
+      const reviewsEl = $('span[data-hook="total-review-count"], #acrCustomerReviewText, #acrCustomerReviewLink');
+      let reviews = 100;
+      if (reviewsEl.length > 0) {
+        const reviewsText = reviewsEl.first().text().replace(/[^\d]/g, '');
+        if (reviewsText) reviews = parseInt(reviewsText);
+      }
+
+      // Feature bullets
+      const bullets = [];
+      $('#feature-bullets ul li span.a-list-item').each((i, li) => {
+        const text = $(li).text().trim();
+        if (text) bullets.push(text);
+      });
+
+      // Product Description paragraph
+      const descEl = $('#productDescription, #productDescription_feature_div');
+      let prodDesc = '';
+      if (descEl.length > 0) {
+        prodDesc = descEl.text().trim().replace(/\s+/g, ' ');
+      }
+
+      // Specifications table
+      const specList = [];
+      $('#productDetails_techSpec_section_1 tr, .prodDetTable tr').each((i, tr) => {
+        const keyEl = $(tr).find('th');
+        const valEl = $(tr).find('td');
+        if (keyEl.length > 0 && valEl.length > 0) {
+          const key = keyEl.text().trim();
+          const val = valEl.text().trim().replace(/\s+/g, ' ');
+          if (key && val) specList.push(`${key}: ${val}`);
+        }
+      });
+
+      if (specList.length === 0) {
+        $('#detailBullets_feature_div ul li span.a-list-item').each((i, li) => {
+          const text = $(li).text().replace(/\s+/g, ' ').trim();
+          if (text) {
+            const parts = text.split(':');
+            if (parts.length >= 2) {
+              const key = parts[0].replace(/[^\w\s-]/g, '').trim();
+              const val = parts.slice(1).join(':').trim();
+              if (key && val) specList.push(`${key}: ${val}`);
+            }
+          }
+        });
+      }
+
+      // Combine bullets, description, and specifications
+      let description = '';
+      if (bullets.length > 0) {
+        description += "Product Features:\n" + bullets.map(b => `• ${b}`).join('\n') + "\n\n";
+      }
+      if (prodDesc) {
+        description += "Product Description:\n" + prodDesc + "\n\n";
+      }
+      if (specList.length > 0) {
+        description += "Specifications:\n" + specList.map(s => `• ${s}`).join('\n');
+      }
+      description = description.trim();
+      if (!description) {
+        description = `${name}. Real product imported directly from Amazon.`;
+      }
+
+      let asin = '';
+      const asinEl = $('#ASIN, input[name="ASIN"]');
+      if (asinEl.length > 0) {
+        asin = asinEl.attr('value') || (asinEl.attr('name') === 'ASIN' && asinEl.val()) || '';
+      } else {
+        const canonicalEl = $('link[rel="canonical"]');
+        if (canonicalEl.length > 0 && canonicalEl.attr('href')) {
+          const match = canonicalEl.attr('href').match(/\/dp\/([A-Z0-9]{10})/i);
+          if (match) asin = match[1].toUpperCase();
+        }
+      }
+      if (!asin) {
+        asin = 'AMZN' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      }
+
+      if (name && price) {
+        products.push({
+          asin,
+          name,
+          price,
+          originalPrice: originalPrice || Math.round(price * 1.25),
+          image,
+          rating,
+          reviews,
+          category: categoryName,
+          description,
+          stock: 50,
+          badge: originalPrice ? 'Sale' : '',
+          source: 'amazon'
+        });
+      }
+    }
+  }
 
   if (products.length === 0) {
     console.log('✗ No products found. Amazon may have blocked the request or returned a CAPTCHA page.');
