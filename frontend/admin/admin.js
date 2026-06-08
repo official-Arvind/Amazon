@@ -36,7 +36,7 @@ import {
   updateAmazonProductPrice
 } from '../../backend/js/admin.js';
 import { logoutUser } from '../../backend/js/auth.js';
-import { resetAndSeed, seedProducts } from '../../backend/js/seed_products.js';
+import { resetAndSeed, seedProducts, clearProducts } from '../../backend/js/seed_products.js';
 
 // =============================================
 // DOM ELEMENTS
@@ -185,6 +185,24 @@ function initializeEventListeners() {
           await loadInventoryData();
         } catch (e) {
           showToast('Reset failed: ' + e.message, 'error');
+        } finally {
+          showLoading(false);
+        }
+      }
+    });
+  }
+
+  const clearAllProductsBtn = document.getElementById('clearAllProductsBtn');
+  if (clearAllProductsBtn) {
+    clearAllProductsBtn.addEventListener('click', async () => {
+      if (confirm('⚠️ WARNING: This will permanently DELETE all products in your catalog. This action cannot be undone. Continue?')) {
+        try {
+          showLoading(true);
+          const count = await clearProducts();
+          showToast(`✓ Cleared ${count} products successfully!`, 'success');
+          await loadInventoryData();
+        } catch (e) {
+          showToast('Failed to clear products: ' + e.message, 'error');
         } finally {
           showLoading(false);
         }
