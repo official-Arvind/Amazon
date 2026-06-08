@@ -53,5 +53,22 @@ service cloud.firestore {
       // Only Super admin can manage (add/delete/modify) other admins
       allow write: if isSuperAdmin();
     }
+
+    // 5. WISHLISTS (Users can read/write their own wishlist items)
+    match /users/{userId}/wishlist/{wishlistItemId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if isAdmin() || isSuperAdmin();
+    }
+
+    // 6. PRODUCT REVIEWS (Public read; authenticated users can write)
+    match /products/{productId}/reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5;
+      allow update, delete: if request.auth != null
+        && resource.data.userId == request.auth.uid;
+    }
   }
 }

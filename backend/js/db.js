@@ -53,6 +53,55 @@ export async function getProductById(productId) {
 }
 
 // =============================================
+// REVIEWS FUNCTIONS
+// =============================================
+
+export async function addReview(productId, reviewData) {
+  try {
+    console.log('Adding review to product:', productId);
+    const reviewsRef = collection(db, 'products', productId, 'reviews');
+    const docRef = await addDoc(reviewsRef, {
+      userId: reviewData.userId,
+      userName: reviewData.userName || 'Anonymous',
+      rating: Number(reviewData.rating),
+      title: reviewData.title || '',
+      text: reviewData.text || '',
+      createdAt: Timestamp.now(),
+      helpful: 0
+    });
+    
+    // Note: To implement a real aggregated rating, you would use a transaction 
+    // to update the product document's average rating and review count.
+    
+    console.log('✓ Review added:', docRef.id);
+    return { id: docRef.id, ...reviewData };
+  } catch (error) {
+    console.error('✗ Error adding review:', error.message);
+    throw error;
+  }
+}
+
+export async function getReviews(productId) {
+  try {
+    console.log('Fetching reviews for product:', productId);
+    const reviewsRef = collection(db, 'products', productId, 'reviews');
+    const q = query(reviewsRef, orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
+    
+    const reviews = [];
+    snapshot.forEach((doc) => {
+      reviews.push({ id: doc.id, ...doc.data() });
+    });
+    
+    console.log(`✓ Fetched ${reviews.length} reviews`);
+    return reviews;
+  } catch (error) {
+    console.error('✗ Error fetching reviews:', error.message);
+    throw error;
+  }
+}
+
+// =============================================
 // CART FUNCTIONS
 // =============================================
 
@@ -139,6 +188,90 @@ export async function clearCart(userId) {
     console.log('✓ Cart cleared');
   } catch (error) {
     console.error('✗ Error clearing cart:', error.message);
+    throw error;
+  }
+}
+
+// =============================================
+// WISHLIST FUNCTIONS
+// =============================================
+
+export async function addToWishlist(userId, productId) {
+  try {
+    if (!userId || !productId) {
+      throw new Error('Invalid userId or productId');
+    }
+
+    console.log(`Adding to wishlist: user=${userId}, product=${productId}`);
+
+    const product = await getProductById(productId);
+    if (!product) throw new Error('Product not found');
+
+    const wishlistItemRef = doc(db, 'users', userId, 'wishlist', productId);
+    const wishlistItemSnap = await getDoc(wishlistItemRef);
+
+    if (!wishlistItemSnap.exists()) {
+      await setDoc(wishlistItemRef, {
+        productId: productId,
+        name: product.name,
+        price: product.price,
+        image: product.image || '',
+        addedAt: Timestamp.now()
+      });
+      console.log('✓ Item added to wishlist');
+    } else {
+      console.log('Item already in wishlist');
+    }
+
+    return { productId };
+  } catch (error) {
+    console.error('✗ Error adding to wishlist:', error.message);
+    throw error;
+  }
+}
+
+export async function getWishlistItems(userId) {
+  try {
+    console.log('Fetching wishlist for user:', userId);
+    const wishlistRef = collection(db, 'users', userId, 'wishlist');
+    const snapshot = await getDocs(wishlistRef);
+
+    const wishlistItems = [];
+    snapshot.forEach((doc) => {
+      wishlistItems.push({ id: doc.id, ...doc.data() });
+    });
+
+    console.log(`✓ Fetched ${wishlistItems.length} wishlist items`);
+    return wishlistItems;
+  } catch (error) {
+    console.error('✗ Error fetching wishlist:', error.message);
+    throw error;
+  }
+}
+
+export async function removeFromWishlist(userId, productId) {
+  try {
+    console.log(`Removing from wishlist: user=${userId}, product=${productId}`);
+    const wishlistItemRef = doc(db, 'users', userId, 'wishlist', productId);
+    await deleteDoc(wishlistItemRef);
+    console.log('✓ Item removed from wishlist');
+  } catch (error) {
+    console.error('✗ Error removing from wishlist:', error.message);
+    throw error;
+  }
+}
+
+export async function clearWishlist(userId) {
+  try {
+    console.log('Clearing wishlist for user:', userId);
+    const wishlistItems = await getWishlistItems(userId);
+    const deletePromises = wishlistItems.map(item =>
+      deleteDoc(doc(db, 'users', userId, 'wishlist', item.id))
+    );
+    await Promise.all(deletePromises);
+    console.log('✓ Wishlist cleared');
+  } catch (error) {
+    console.error('✗ Error clearing wishlist:', error.message);
     throw error;
   }
 }
@@ -391,6 +524,10 @@ export default {
   getCartItems,
   removeFromCart,
   clearCart,
+  addToWishlist,
+  getWishlistItems,
+  removeFromWishlist,
+  clearWishlist,
   createOrder,
   getOrders,
   getOrderById,
@@ -399,5 +536,7 @@ export default {
   getUserProfile,
   saveAddress,
   getSavedAddresses,
-  deleteAddress
+  deleteAddress,
+  addReview,
+  getReviews
 };

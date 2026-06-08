@@ -328,11 +328,9 @@ function renderNavbar() {
         </svg>
         All
       </a>
-      <a href="${prefix}shop/" class="sub-nav-link">Fresh</a>
-      <a href="${prefix}shop/" class="sub-nav-link">Amazon miniTV</a>
-      <a href="${prefix}shop/" class="sub-nav-link">Sell</a>
+      <a href="${prefix}deals/" class="sub-nav-link">Today's Deals</a>
+      <a href="${prefix}wishlist/" class="sub-nav-link">Wishlist</a>
       <a href="${prefix}shop/" class="sub-nav-link">Best Sellers</a>
-      <a href="${prefix}shop/" class="sub-nav-link">Today's Deals</a>
       <a href="${prefix}shop/?q=electronics" class="sub-nav-link">Mobiles</a>
       <a href="${prefix}shop/?q=electronics" class="sub-nav-link">Electronics</a>
       <a href="${prefix}shop/?q=fashion" class="sub-nav-link">Prime</a>
@@ -358,32 +356,46 @@ function renderNavbar() {
     drawer = document.createElement('div');
     drawer.id = 'mobileNavDrawer';
     drawer.innerHTML = `
-      <div class="mobile-drawer-overlay" id="drawerOverlay"></div>
-      <div class="mobile-drawer" id="drawerMenu">
-        <div class="mobile-drawer-header">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span id="drawerGreeting">Hello, Sign In</span>
+      <div class="mega-menu-overlay" id="drawerOverlay"></div>
+      <div class="mega-menu-drawer" id="drawerMenu">
+        <div class="mega-menu-header">
+          <div class="mega-menu-user">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span id="drawerGreeting">Hello, Sign In</span>
+          </div>
+          <button class="mega-menu-close" id="drawerCloseBtn" aria-label="Close menu">&times;</button>
         </div>
-        <div class="mobile-drawer-content">
-          <div class="mobile-drawer-title">Trending</div>
-          <a href="${prefix}shop/" class="mobile-drawer-link">Best Sellers <span class="arrow">›</span></a>
-          <a href="${prefix}shop/" class="mobile-drawer-link">New Arrivals <span class="arrow">›</span></a>
-          <a href="${prefix}shop/" class="mobile-drawer-link">Today's Deals <span class="arrow">›</span></a>
-
-          <div class="mobile-drawer-title">Shop by Category</div>
-          <a href="${prefix}shop/?q=electronics" class="mobile-drawer-link">Electronics <span class="arrow">›</span></a>
-          <a href="${prefix}shop/?q=fashion" class="mobile-drawer-link">Fashion <span class="arrow">›</span></a>
-          <a href="${prefix}shop/?q=home" class="mobile-drawer-link">Home & Kitchen <span class="arrow">›</span></a>
-          <a href="${prefix}shop/?q=gaming" class="mobile-drawer-link">Gaming <span class="arrow">›</span></a>
-          <a href="${prefix}shop/?q=audio" class="mobile-drawer-link">Audio & Accessories <span class="arrow">›</span></a>
-
-          <div class="mobile-drawer-title">Help & Settings</div>
-          <a href="${prefix}profile/" class="mobile-drawer-link">Your Account <span class="arrow">›</span></a>
-          <a href="${prefix}help/" class="mobile-drawer-link">Customer Service <span class="arrow">›</span></a>
-          <a href="${prefix}login/" class="mobile-drawer-link" id="drawerAuthBtn">Sign In <span class="arrow">›</span></a>
+        <div class="mega-menu-content">
+          <h3 class="mega-menu-title">Digital Content & Devices</h3>
+          <ul class="mega-menu-list">
+            <li><a href="${prefix}shop/?q=amazon+music">Amazon Music <span class="mega-arrow">›</span></a></li>
+            <li><a href="${prefix}shop/?q=kindle">Kindle E-readers & Books <span class="mega-arrow">›</span></a></li>
+            <li><a href="${prefix}shop/?q=appstore">Appstore for Android <span class="mega-arrow">›</span></a></li>
+          </ul>
+          <hr>
+          <h3 class="mega-menu-title">Shop by Category</h3>
+          <ul class="mega-menu-list">
+            <li><a href="${prefix}shop/?q=electronics">Electronics <span class="mega-arrow">›</span></a></li>
+            <li><a href="${prefix}shop/?q=computers">Computers <span class="mega-arrow">›</span></a></li>
+            <li><a href="${prefix}shop/?q=smart+home">Smart Home <span class="mega-arrow">›</span></a></li>
+            <li><a href="${prefix}shop/?q=arts+crafts">Arts & Crafts <span class="mega-arrow">›</span></a></li>
+          </ul>
+          <hr>
+          <h3 class="mega-menu-title">Programs & Features</h3>
+          <ul class="mega-menu-list">
+            <li><a href="${prefix}shop/?q=gift+cards">Gift Cards <span class="mega-arrow">›</span></a></li>
+            <li><a href="${prefix}shop/?q=amazon+live">Amazon Live <span class="mega-arrow">›</span></a></li>
+            <li><a href="${prefix}shop/?q=international">International Shopping <span class="mega-arrow">›</span></a></li>
+          </ul>
+          <hr>
+          <h3 class="mega-menu-title">Help & Settings</h3>
+          <ul class="mega-menu-list">
+            <li><a href="${prefix}profile/">Your Account</a></li>
+            <li><a href="${prefix}help/">Customer Service</a></li>
+            <li><a href="${prefix}login/" id="drawerAuthBtn">Sign In</a></li>
+          </ul>
         </div>
       </div>
-      <button class="mobile-drawer-close" id="drawerCloseBtn" aria-label="Close menu">&times;</button>
     `;
     document.body.appendChild(drawer);
   }
@@ -449,9 +461,16 @@ function setupNavigation() {
   });
 }
 
+let cachedProducts = [];
+
 function setupSearch() {
   const searchInputs = document.querySelectorAll('.search-input');
   const searchBtns = document.querySelectorAll('.search-btn');
+
+  // Pre-fetch products for autocomplete
+  getProducts().then(products => {
+    cachedProducts = products;
+  }).catch(err => console.error('Failed to load products for autocomplete', err));
 
   const executeSearch = (input) => {
     const query = input.value.trim();
@@ -463,9 +482,57 @@ function setupSearch() {
   };
 
   searchInputs.forEach(input => {
+    // Setup Autocomplete Container
+    const parent = input.parentElement;
+    parent.style.position = 'relative';
+    // Remove overflow hidden from parent if exists
+    parent.style.overflow = 'visible';
+    
+    const dropdown = document.createElement('div');
+    dropdown.className = 'autocomplete-dropdown';
+    parent.appendChild(dropdown);
+
+    input.addEventListener('input', (e) => {
+      const query = e.target.value.trim().toLowerCase();
+      if (!query || cachedProducts.length === 0) {
+        dropdown.classList.remove('active');
+        return;
+      }
+      
+      const results = cachedProducts.filter(p => p.name.toLowerCase().includes(query) || (p.category && p.category.toLowerCase().includes(query))).slice(0, 6);
+      
+      if (results.length > 0) {
+        const inRoot = !window.location.pathname.includes('/frontend/') || window.location.pathname.endsWith('/frontend/') || window.location.pathname.endsWith('/frontend/index.html');
+        dropdown.innerHTML = results.map(p => {
+            const imgPath = p.image || (inRoot ? 'assets/images/placeholder.jpg' : '../assets/images/placeholder.jpg');
+            const productLink = (inRoot ? 'product/' : '../product/') + '?id=' + p.id;
+            return `
+              <a href="${productLink}" class="autocomplete-item">
+                  <img src="${imgPath}" alt="${p.name}" class="autocomplete-img" onerror="this.src='https://via.placeholder.com/40'">
+                  <div class="autocomplete-info">
+                      <div class="autocomplete-name">${p.name}</div>
+                      <div class="autocomplete-cat">${p.category || 'General'}</div>
+                  </div>
+              </a>
+            `;
+        }).join('');
+        dropdown.classList.add('active');
+      } else {
+        dropdown.classList.remove('active');
+      }
+    });
+
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!parent.contains(e.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+
     input.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         executeSearch(input);
+        dropdown.classList.remove('active');
       }
     });
   });

@@ -1,7 +1,7 @@
 import { db } from '../../backend/js/firebase-config.js';
 import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 import { subscribeToAuthState, getCurrentUser } from '../../backend/js/auth.js';
-import { addToCart, getCartItems } from '../../backend/js/db.js';
+import { addToCart, getCartItems, addReview, getReviews } from '../../backend/js/db.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         populateUI(product);
         setupActions(product);
+        loadReviews(productId);
+        setupReviewForm(productId);
 
         document.getElementById('pdpLoading').style.display = 'none';
         document.getElementById('pdpContent').style.display = 'grid';
@@ -158,6 +160,43 @@ function setupActions(product) {
         await handleAdd(e);
         window.location.href = '../checkout/';
     });
+
+    const btnAddToWishlist = document.getElementById('btnAddToWishlist');
+    if (btnAddToWishlist) {
+        btnAddToWishlist.addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (!currentUser) {
+                window.location.href = '../login/';
+                return;
+            }
+
+            const originalText = btnAddToWishlist.innerHTML;
+            btnAddToWishlist.textContent = 'Adding...';
+            btnAddToWishlist.disabled = true;
+
+            try {
+                // Must import addToWishlist, but wait, db.js is exported as default. Let's use db.addToWishlist 
+                // Wait, db is not imported entirely, but wait at top of file: import { addToCart, getCartItems } from '../../backend/js/db.js';
+                // I need to use dynamic import or just modify top imports.
+                // Let's assume I modify the import in a bit or use dynamic import.
+                const dbModule = await import('../../backend/js/db.js');
+                await dbModule.addToWishlist(currentUser.uid, product.id);
+                btnAddToWishlist.innerHTML = '✓ Added to Wishlist';
+                
+                const event = new CustomEvent('show-toast', { detail: 'Added to wishlist!' });
+                window.dispatchEvent(event);
+                
+                setTimeout(() => {
+                    btnAddToWishlist.innerHTML = originalText;
+                    btnAddToWishlist.disabled = false;
+                }, 2000);
+            } catch (err) {
+                console.error('Error adding to wishlist:', err);
+                btnAddToWishlist.innerHTML = originalText;
+                btnAddToWishlist.disabled = false;
+            }
+        });
+    }
 }
 
 function updateBadge(count) {
@@ -189,4 +228,120 @@ function addToGuestCart(product, quantity) {
     }
 
     localStorage.setItem(GUEST_CART_KEY, JSON.stringify(cart));
+}
+
+// ==========================================
+// REVIEWS
+// ==========================================
+async function loadReviews(productId) {
+    try {
+        const reviews = await getReviews(productId);
+        const listContainer = document.getElementById('reviewsList');
+        
+        if (reviews.length === 0) {
+            listContainer.innerHTML = '<p class="no-reviews" style="color: #565959; font-style: italic;">No reviews yet. Be the first to review this product!</p>';
+            document.getElementById('overallStars').textContent = '☆☆☆☆☆';
+            document.getElementById('overallScore').textContent = '0 out of 5';
+            document.getElementById('globalRatingsCount').textContent = '0 global ratings';
+            return;
+        }
+
+        const avgRating = reviews.reduce((sum, r) => sum + Number(r.rating), 0) / reviews.length;
+        const roundedAvg = Math.round(avgRating * 10) / 10;
+        const fullStars = Math.round(roundedAvg);
+        
+        let starsStr = '';
+        for (let i = 1; i <= 5; i++) {
+            starsStr += i <= fullStars ? '★' : '☆';
+        }
+        
+        document.getElementById('overallStars').textContent = starsStr;
+        document.getElementById('overallScore').textContent = `${roundedAvg} out of 5`;
+        document.getElementById('globalRatingsCount').textContent = `${reviews.length} global rating${reviews.length > 1 ? 's' : ''}`;
+        
+        listContainer.innerHTML = reviews.map(r => {
+            let rStars = '';
+            for (let i = 1; i <= 5; i++) rStars += i <= Number(r.rating) ? '★' : '☆';
+            
+            const dateStr = r.createdAt && r.createdAt.toDate ? r.createdAt.toDate().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Recently';
+            
+            return `
+                <div class="review-item">
+                    <div class="review-user">
+                        <div class="review-avatar">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+                        <span class="review-user-name">${r.userName || 'Amazon Customer'}</span>
+                    </div>
+                    <div class="review-rating-row">
+                        <span class="rating-stars" style="font-size: 14px;">${rStars}</span>
+                        <span class="review-title">${r.title || ''}</span>
+                    </div>
+                    <div class="review-date">Reviewed in India on ${dateStr}</div>
+                    <div class="review-verified">Verified Purchase</div>
+                    <div class="review-text">${r.text || ''}</div>
+                </div>
+            `;
+        }).join('');
+        
+    } catch (error) {
+        console.error('Error loading reviews:', error);
+    }
+}
+
+function setupReviewForm(productId) {
+    const btnWrite = document.getElementById('btnWriteReview');
+    const formContainer = document.getElementById('reviewFormContainer');
+    const form = document.getElementById('reviewForm');
+    
+    btnWrite.addEventListener('click', () => {
+        const user = getCurrentUser();
+        if (!user) {
+            window.location.href = '../login/';
+            return;
+        }
+        formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
+    });
+    
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const user = getCurrentUser();
+        if (!user) return;
+        
+        const btnSubmit = form.querySelector('.btn-submit-review');
+        const originalText = btnSubmit.textContent;
+        btnSubmit.textContent = 'Submitting...';
+        btnSubmit.disabled = true;
+        
+        try {
+            const rating = document.getElementById('reviewRating').value;
+            const title = document.getElementById('reviewTitle').value;
+            const text = document.getElementById('reviewText').value;
+            
+            await addReview(productId, {
+                userId: user.uid,
+                userName: user.displayName || 'Amazon Customer',
+                rating: rating,
+                title: title,
+                text: text
+            });
+            
+            form.reset();
+            formContainer.style.display = 'none';
+            btnSubmit.textContent = originalText;
+            btnSubmit.disabled = false;
+            
+            // Reload reviews to show the new one
+            await loadReviews(productId);
+            
+            const event = new CustomEvent('show-toast', { detail: 'Review submitted successfully!' });
+            window.dispatchEvent(event);
+            
+        } catch (error) {
+            console.error('Error submitting review:', error);
+            btnSubmit.textContent = originalText;
+            btnSubmit.disabled = false;
+            alert('Failed to submit review. Please try again later.');
+        }
+    });
 }

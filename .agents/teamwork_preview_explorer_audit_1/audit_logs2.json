@@ -1,0 +1,48 @@
+{
+  "Home": [
+    "[requestfailed] https://images.unsplash.com/photo-1622445262465-2481c4574875?w=150&auto=format&fit=crop&q=60 - net::ERR_BLOCKED_BY_ORB",
+    "[requestfailed] https://images.unsplash.com/photo-1600080972464-8e5f35802d1a?w=150&auto=format&fit=crop&q=60 - net::ERR_BLOCKED_BY_ORB",
+    "[log] ✓ Firebase App initialized successfully",
+    "[warn] [2026-06-08T09:37:53.812Z]  @firebase/firestore: Firestore (9.22.0): enableIndexedDbPersistence() will be deprecated in the future, you can use `FirestoreSettings.cache` instead.",
+    "[log] Firebase configuration loaded (placeholder)",
+    "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "[navigation_error] Navigation timeout of 30000 ms exceeded"
+  ],
+  "Profile": [
+    "[log] ✓ Firebase App initialized successfully",
+    "[warn] [2026-06-08T09:38:19.337Z]  @firebase/firestore: Firestore (9.22.0): enableIndexedDbPersistence() will be deprecated in the future, you can use `FirestoreSettings.cache` instead.",
+    "[log] Firebase configuration loaded (placeholder)",
+    "[requestfailed] http://localhost:8080/frontend/login/ - net::ERR_ABORTED",
+    "[log] ✓ Firebase App initialized successfully",
+    "[warn] [2026-06-08T09:38:19.776Z]  @firebase/firestore: Firestore (9.22.0): enableIndexedDbPersistence() will be deprecated in the future, you can use `FirestoreSettings.cache` instead.",
+    "[log] Firebase configuration loaded (placeholder)"
+  ],
+  "Cart": [
+    "[log] ✓ Firebase App initialized successfully",
+    "[warn] [2026-06-08T09:38:26.181Z]  @firebase/firestore: Firestore (9.22.0): enableIndexedDbPersistence() will be deprecated in the future, you can use `FirestoreSettings.cache` instead.",
+    "[log] Firebase configuration loaded (placeholder)"
+  ],
+  "Checkout": [
+    "[log] ✓ Firebase App initialized successfully",
+    "[warn] [2026-06-08T09:38:32.362Z]  @firebase/firestore: Firestore (9.22.0): enableIndexedDbPersistence() will be deprecated in the future, you can use `FirestoreSettings.cache` instead.",
+    "[log] Firebase configuration loaded (placeholder)",
+    "[log] ✓ Firebase App initialized successfully",
+    "[warn] [2026-06-08T09:38:32.875Z]  @firebase/firestore: Firestore (9.22.0): enableIndexedDbPersistence() will be deprecated in the future, you can use `FirestoreSettings.cache` instead.",
+    "[log] Firebase configuration loaded (placeholder)"
+  ],
+  "Shop": [
+    "[log] ✓ Firebase App initialized successfully",
+    "[warn] [2026-06-08T09:38:39.234Z]  @firebase/firestore: Firestore (9.22.0): enableIndexedDbPersistence() will be deprecated in the future, you can use `FirestoreSettings.cache` instead.",
+    "[log] Firebase configuration loaded (placeholder)"
+  ],
+  "PDP": [
+    "[log] ✓ Firebase App initialized successfully",
+    "[warn] [2026-06-08T09:38:56.605Z]  @firebase/firestore: Firestore (9.22.0): enableIndexedDbPersistence() will be deprecated in the future, you can use `FirestoreSettings.cache` instead.",
+    "[log] Firebase configuration loaded (placeholder)"
+  ],
+  "Login": [
+    "[log] ✓ Firebase App initialized successfully",
+    "[warn] [2026-06-08T09:39:02.954Z]  @firebase/firestore: Firestore (9.22.0): enableIndexedDbPersistence() will be deprecated in the future, you can use `FirestoreSettings.cache` instead.",
+    "[log] Firebase configuration loaded (placeholder)"
+  ]
+}

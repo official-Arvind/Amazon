@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Wishlist - ZONIX</title>
+    <link rel="stylesheet" href="../css/style.css?v=1.2">
+    <style>
+        .wishlist-container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            min-height: 50vh;
+        }
+        .wishlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        .wishlist-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f1111;
+        }
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .wishlist-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        .wishlist-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+        .wishlist-img-container {
+            height: 200px;
+            background: #f8f8f8;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .wishlist-img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+        }
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+            color: #555;
+        }
+        .remove-btn:hover {
+            background: #ffebee;
+            color: #d32f2f;
+            transform: scale(1.1);
+        }
+        .wishlist-details {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .wishlist-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #0f1111;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-decoration: none;
+        }
+        .wishlist-name:hover {
+            color: var(--color-accent-primary);
+        }
+        .wishlist-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0f1111;
+            margin-bottom: 1rem;
+            margin-top: auto;
+        }
+        .add-to-cart-btn {
+            background: var(--color-accent-primary, #ff9900);
+            color: #000;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            text-align: center;
+            text-decoration: none;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .add-to-cart-btn:hover {
+            background: #e38800;
+        }
+        .add-to-cart-btn:active {
+            transform: scale(0.98);
+        }
+        .empty-wishlist {
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+        .empty-wishlist svg {
+            width: 80px;
+            height: 80px;
+            color: #ccc;
+            margin-bottom: 1.5rem;
+        }
+        .empty-wishlist h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .empty-wishlist p {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        .btn-shop {
+            background: var(--color-accent-primary);
+            color: #000;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+        .btn-shop:hover {
+            background: #e38800;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <a href="../" class="logo-text">ZONIX</a>
+            </div>
+            <div class="navbar-deliver">
+                <span class="deliver-to">Deliver to</span>
+                <span class="deliver-location">📍 India</span>
+            </div>
+            <div class="navbar-search">
+                <select class="search-category">
+                    <option>All Categories</option>
+                    <option>Electronics</option>
+                    <option>Fashion</option>
+                    <option>Home & Living</option>
+                </select>
+                <input type="text" class="search-input" placeholder="Search ZONIX for products, brands and more">
+                <button class="search-btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="navbar-icons">
+                <a href="../login/" class="nav-link-custom" id="authNavLink">
+                    <span class="nav-small">Hello, sign in</span>
+                    <span class="nav-bold">Account & Lists</span>
+                </a>
+                <a href="../profile/" class="nav-link-custom">
+                    <span class="nav-small">Returns</span>
+                    <span class="nav-bold">& Orders</span>
+                </a>
+                <a href="../wishlist/" class="nav-link-custom">
+                    <span class="nav-small">Your</span>
+                    <span class="nav-bold">Wishlist</span>
+                </a>
+                <a href="../cart/" class="nav-link-custom cart-link">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count" id="cartBadge" style="display:none;">0</span>
+                    <span class="nav-bold cart-text">Cart</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="sub-navbar">
+        <a href="../" class="sub-nav-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            All
+        </a>
+        <a href="../deals/" class="sub-nav-link">Today's Deals</a>
+        <a href="../shop/?q=electronics" class="sub-nav-link">Electronics</a>
+        <a href="../shop/?q=fashion" class="sub-nav-link">Fashion</a>
+        <a href="../shop/?q=home" class="sub-nav-link">Home & Kitchen</a>
+        <a href="../wishlist/" class="sub-nav-link" style="color:var(--color-accent-primary);">Wishlist</a>
+        <a href="../contact/" class="sub-nav-link">Customer Service</a>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div style="max-width:1300px;margin:0 auto;padding:12px 1rem 0;">
+        <span style="font-size:0.8rem;color:#565959;">
+            <a href="../" style="color:var(--color-accent-primary);">Home</a> › <a href="../profile/" style="color:var(--color-accent-primary);">Account</a> › <strong>Your Wishlist</strong>
+        </span>
+    </div>
+
+    <div class="wishlist-container">
+        <div class="wishlist-header">
+            <h1 class="wishlist-title">Your Wishlist</h1>
+        </div>
+
+        <div id="wishlistLoading" style="text-align: center; padding: 2rem;">Loading your wishlist...</div>
+        
+        <div id="emptyWishlist" class="empty-wishlist" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <h2>Your wishlist is empty</h2>
+            <p>Save items you'd like to buy later. Check out our shop to find something you'll love.</p>
+            <a href="../shop/" class="btn-shop">Explore Products</a>
+        </div>
+
+        <div id="wishlistGrid" class="wishlist-grid">
+            <!-- Wishlist items will be injected here -->
+        </div>
+    </div>
+
+    <div class="footer-back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Get to Know Us</h4>
+                <ul>
+                    <li><a href="../about/">About ZONIX</a></li>
+                    <li><a href="../info/?page=collections">Collections</a></li>
+                    <li><a href="../contact/">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Let Us Help You</h4>
+                <ul>
+                    <li><a href="../info/?page=help">Help Center</a></li>
+                    <li><a href="../info/?page=returns">Returns & Refunds</a></li>
+                    <li><a href="../info/?page=shipping">Shipping Info</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Policies</h4>
+                <ul>
+                    <li><a href="../info/?page=terms">Terms of Service</a></li>
+                    <li><a href="../info/?page=privacy">Privacy Policy</a></li>
+                    <li><a href="../info/?page=returns">Return Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-logo">ZONIX</div>
+            <p>&copy; 2026 ZONIX. The Marketplace, Redefined.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="../js/main.js"></script>
+    <script type="module" src="wishlist.js"></script>
+</body>
+</html>
