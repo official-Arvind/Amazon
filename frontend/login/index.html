@@ -33,8 +33,8 @@
         <!-- Centered Card Container -->
         <div class="auth-card">
             
-            <!-- 1. LOGIN FORM -->
-            <form id="loginForm" class="auth-form active" data-form="login">
+            <!-- 1. LOGIN FORM - Step 1: Email -->
+            <form id="loginFormStep1" class="auth-form active" data-form="login">
                 <h2>Sign in</h2>
                 
                 <div class="form-group">
@@ -46,6 +46,45 @@
                         required
                     />
                     <span class="error-msg" id="loginEmailError"></span>
+                </div>
+
+                <button type="submit" class="auth-button" id="continueBtn">Continue</button>
+                
+                <p class="auth-notice-text">
+                    By continuing, you agree to ZONIX's <a href="../info/?page=terms">Conditions of Use</a> and <a href="../info/?page=privacy">Privacy Notice</a>.
+                </p>
+
+                <!-- Google Sign In Option -->
+                <div class="social-divider" style="margin: 15px 0 10px; text-align: center; position: relative;">
+                    <span style="font-size: 0.72rem; color: #767676; background: #fff; padding: 0 8px; position: relative; z-index: 2;">or</span>
+                    <div style="content: ''; width: 100%; height: 1px; background: #e7e7e7; position: absolute; left: 0; top: 50%; z-index: 1;"></div>
+                </div>
+                
+                <button type="button" class="google-btn" id="googleLoginBtn" style="width: 100%; height: 31px; background: #fff; border: 1px solid #a6a6a6; border-radius: 3px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 1px 0 rgba(255,255,255,.6) inset; color: #111;">
+                    <svg width="15" height="15" viewBox="0 0 24 24">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    Continue with Google
+                </button>
+
+                <!-- Admin Link -->
+                <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 12px; text-align: center;">
+                    <a href="#" id="adminToggleBtn" style="font-size: 0.8rem; color: #0066c0; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                        🔑 Administrator Sign-In
+                    </a>
+                </div>
+            </form>
+
+            <!-- 1. LOGIN FORM - Step 2: Password -->
+            <form id="loginFormStep2" class="auth-form" data-form="login-password">
+                <h2>Sign in</h2>
+                
+                <div style="margin-bottom: 15px; font-size: 0.9rem;">
+                    <span><span id="displayEmail" style="font-weight: 500;"></span></span>
+                    <a href="#" id="changeEmailBtn" style="color: #0066c0; text-decoration: none; margin-left: 5px;">Change</a>
                 </div>
 
                 <div class="form-group">
@@ -72,38 +111,11 @@
 
                 <button type="submit" class="auth-button" id="loginBtn">Sign in</button>
                 
-                <p class="auth-notice-text">
-                    By continuing, you agree to ZONIX's <a href="../info/?page=terms">Conditions of Use</a> and <a href="../info/?page=privacy">Privacy Notice</a>.
-                </p>
-
-                <div style="margin-bottom: 12px;">
+                <div style="margin-bottom: 12px; margin-top: 15px;">
                     <label style="display: flex; align-items: center; gap: 6px; font-weight: normal; font-size: 0.8rem; cursor: pointer; color: #111;">
                         <input type="checkbox" name="rememberMe" id="rememberMe" style="width: 14px; height: 14px; margin: 0; cursor: pointer;" />
                         Keep me signed in
                     </label>
-                </div>
-
-                <!-- Google Sign In Option -->
-                <div class="social-divider" style="margin: 15px 0 10px; text-align: center; position: relative;">
-                    <span style="font-size: 0.72rem; color: #767676; background: #fff; padding: 0 8px; position: relative; z-index: 2;">or</span>
-                    <div style="content: ''; width: 100%; height: 1px; background: #e7e7e7; position: absolute; left: 0; top: 50%; z-index: 1;"></div>
-                </div>
-                
-                <button type="button" class="google-btn" id="googleLoginBtn" style="width: 100%; height: 31px; background: #fff; border: 1px solid #a6a6a6; border-radius: 3px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 1px 0 rgba(255,255,255,.6) inset; color: #111;">
-                    <svg width="15" height="15" viewBox="0 0 24 24">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                    </svg>
-                    Continue with Google
-                </button>
-
-                <!-- Admin Link -->
-                <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 12px; text-align: center;">
-                    <a href="#" id="adminToggleBtn" style="font-size: 0.8rem; color: #0066c0; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                        🔑 Administrator Sign-In
-                    </a>
                 </div>
                 
                 <span class="error-msg" id="loginError"></span>
@@ -302,7 +314,7 @@
             
             // Switch tabs and toggle the alt button visibility
             const syncAltActionsVisibility = () => {
-                const loginForm = document.getElementById('loginForm');
+                const loginForm = document.getElementById('loginFormStep1');
                 if (loginForm && loginForm.classList.contains('active')) {
                     loginAltActions.style.display = 'flex';
                 } else {

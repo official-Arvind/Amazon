@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZONIX - Product Details</title>
+    <link rel="stylesheet" href="../css/style.css?v=1.2">
+    <link rel="stylesheet" href="product.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <!-- Navbar injected by main.js -->
+        </div>
+    </nav>
+
+    <!-- Sub Navbar -->
+    <div class="sub-navbar">
+        <!-- Sub Navbar injected by main.js -->
+    </div>
+
+    <!-- Product Detail Container -->
+    <main class="pdp-container" id="pdpContainer">
+        <div class="pdp-loading" id="pdpLoading">
+            <div class="spinner"></div>
+            <p>Loading product details...</p>
+        </div>
+        
+        <div class="pdp-content" id="pdpContent" style="display: none;">
+            <!-- Left Column: Image -->
+            <div class="pdp-left">
+                <div class="pdp-image-gallery">
+                    <div class="pdp-thumbnails" id="pdpThumbnails">
+                        <!-- Thumbnails injected here -->
+                    </div>
+                    <div class="pdp-main-image-container">
+                        <img src="" alt="Product Image" id="pdpMainImage" class="pdp-main-image">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Column: Details -->
+            <div class="pdp-center">
+                <div class="pdp-header">
+                    <p class="pdp-brand" id="pdpBrand">Brand: ZONIX</p>
+                    <h1 class="pdp-title" id="pdpTitle">Product Title</h1>
+                    <div class="pdp-rating-row">
+                        <span class="pdp-stars" id="pdpStars"></span>
+                        <a href="#reviews" class="pdp-reviews-link" id="pdpReviewsLink">0 ratings</a>
+                    </div>
+                </div>
+
+                <hr class="pdp-divider">
+
+                <div class="pdp-pricing">
+                    <div class="pdp-price-row">
+                        <span class="pdp-discount-badge" id="pdpDiscountBadge" style="display: none;">-0%</span>
+                        <span class="pdp-price-symbol">₹</span>
+                        <span class="pdp-price-whole" id="pdpPriceWhole">0</span>
+                    </div>
+                    <div class="pdp-mrp" id="pdpMrpContainer" style="display: none;">
+                        M.R.P.: <span class="pdp-mrp-value" id="pdpMrpValue">₹0</span>
+                    </div>
+                    <p class="pdp-taxes">Inclusive of all taxes</p>
+                </div>
+
+                <hr class="pdp-divider">
+
+                <div class="pdp-features">
+                    <h3>About this item</h3>
+                    <ul class="pdp-feature-list" id="pdpFeatureList">
+                        <!-- Description points will be injected here -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Right Column: Buy Box -->
+            <div class="pdp-right">
+                <div class="pdp-buybox">
+                    <div class="buybox-price-row">
+                        <span class="buybox-price-symbol">₹</span>
+                        <span class="buybox-price-whole" id="buyboxPrice">0</span>
+                    </div>
+                    <div class="buybox-delivery">
+                        <p><span class="delivery-highlight">FREE delivery</span> <strong>Tomorrow</strong>. Order within <span class="delivery-timer">2 hrs 30 mins</span>. Details</p>
+                        <p class="delivery-location">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Deliver to India
+                        </p>
+                    </div>
+                    
+                    <h4 class="stock-status in-stock" id="stockStatus">In stock</h4>
+
+                    <div class="quantity-selector">
+                        <label for="pdpQty">Quantity: </label>
+                        <select id="pdpQty" class="qty-select">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+
+                    <div class="buybox-actions">
+                        <button class="btn-add-to-cart" id="btnAddToCart">Add to Cart</button>
+                        <button class="btn-buy-now" id="btnBuyNow">Buy Now</button>
+                    </div>
+
+                    <div class="secure-transaction">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#565959" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        Secure transaction
+                    </div>
+
+                    <div class="sold-by">
+                        <p>Ships from <span>ZONIX</span></p>
+                        <p>Sold by <span>ZONIX Retail</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pdp-detailed-description" id="pdpDetailedDescContainer" style="display: none;">
+            <hr class="pdp-divider">
+            <h2>Product Description</h2>
+            <div id="pdpDetailedDescription"></div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Get to Know Us</h4>
+                <ul>
+                    <li><a href="../about/">About ZONIX</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Let Us Help You</h4>
+                <ul>
+                    <li><a href="../help/">Help Center</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-logo">ZONIX</div>
+            <p>&copy; 2026 ZONIX. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="../js/main.js"></script>
+    <script type="module" src="product.js"></script>
+</body>
+</html>

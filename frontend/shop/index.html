@@ -86,44 +86,44 @@
                 <div class="filter-group">
                     <h3 class="filter-title">Department</h3>
                     <div class="filter-options">
-                        <label class="filter-label"><input type="checkbox" name="category"> All Products</label>
-                        <label class="filter-label"><input type="checkbox" name="category"> Electronics</label>
-                        <label class="filter-label"><input type="checkbox" name="category"> Audio</label>
-                        <label class="filter-label"><input type="checkbox" name="category"> Laptops</label>
-                        <label class="filter-label"><input type="checkbox" name="category"> Smartphones</label>
-                        <label class="filter-label"><input type="checkbox" name="category"> Fashion</label>
-                        <label class="filter-label"><input type="checkbox" name="category"> Gaming</label>
-                        <label class="filter-label"><input type="checkbox" name="category"> Home & Kitchen</label>
-                        <label class="filter-label"><input type="checkbox" name="category"> Wearables</label>
+                        <label class="filter-label"><input type="checkbox" name="category" value=""> All Products</label>
+                        <label class="filter-label"><input type="checkbox" name="category" value="Electronics"> Electronics</label>
+                        <label class="filter-label"><input type="checkbox" name="category" value="Audio"> Audio</label>
+                        <label class="filter-label"><input type="checkbox" name="category" value="Laptops"> Laptops</label>
+                        <label class="filter-label"><input type="checkbox" name="category" value="Smartphones"> Smartphones</label>
+                        <label class="filter-label"><input type="checkbox" name="category" value="Fashion"> Fashion</label>
+                        <label class="filter-label"><input type="checkbox" name="category" value="Gaming"> Gaming</label>
+                        <label class="filter-label"><input type="checkbox" name="category" value="Home & Kitchen"> Home & Kitchen</label>
+                        <label class="filter-label"><input type="checkbox" name="category" value="Wearables"> Wearables</label>
                     </div>
                 </div>
 
                 <div class="filter-group">
                     <h3 class="filter-title">Customer Review</h3>
                     <div class="filter-options">
-                        <label class="filter-label" style="color:#f59e0b;">★★★★☆ & Up</label>
-                        <label class="filter-label" style="color:#f59e0b;">★★★☆☆ & Up</label>
-                        <label class="filter-label" style="color:#f59e0b;">★★☆☆☆ & Up</label>
+                        <label class="filter-label" style="color:#f59e0b;"><input type="radio" name="rating" value="4"> ★★★★☆ & Up</label>
+                        <label class="filter-label" style="color:#f59e0b;"><input type="radio" name="rating" value="3"> ★★★☆☆ & Up</label>
+                        <label class="filter-label" style="color:#f59e0b;"><input type="radio" name="rating" value="2"> ★★☆☆☆ & Up</label>
                     </div>
                 </div>
 
                 <div class="filter-group">
                     <h3 class="filter-title">Price</h3>
                     <div class="filter-options">
-                        <label class="filter-label"><a href="./" style="color:var(--color-accent-primary);">Under ₹1,000</a></label>
-                        <label class="filter-label"><a href="./" style="color:var(--color-accent-primary);">₹1,000 - ₹5,000</a></label>
-                        <label class="filter-label"><a href="./" style="color:var(--color-accent-primary);">₹5,000 - ₹20,000</a></label>
-                        <label class="filter-label"><a href="./" style="color:var(--color-accent-primary);">₹20,000 - ₹50,000</a></label>
-                        <label class="filter-label"><a href="./" style="color:var(--color-accent-primary);">Over ₹50,000</a></label>
+                        <label class="filter-label"><input type="radio" name="price" value="0-1000"> Under ₹1,000</label>
+                        <label class="filter-label"><input type="radio" name="price" value="1000-5000"> ₹1,000 - ₹5,000</label>
+                        <label class="filter-label"><input type="radio" name="price" value="5000-20000"> ₹5,000 - ₹20,000</label>
+                        <label class="filter-label"><input type="radio" name="price" value="20000-50000"> ₹20,000 - ₹50,000</label>
+                        <label class="filter-label"><input type="radio" name="price" value="50000-9999999"> Over ₹50,000</label>
                     </div>
                 </div>
 
                 <div class="filter-group">
                     <h3 class="filter-title">Discount</h3>
                     <div class="filter-options">
-                        <label class="filter-label"><input type="checkbox" name="discount"> 10% Off or more</label>
-                        <label class="filter-label"><input type="checkbox" name="discount"> 25% Off or more</label>
-                        <label class="filter-label"><input type="checkbox" name="discount"> 50% Off or more</label>
+                        <label class="filter-label"><input type="radio" name="discount" value="10"> 10% Off or more</label>
+                        <label class="filter-label"><input type="radio" name="discount" value="25"> 25% Off or more</label>
+                        <label class="filter-label"><input type="radio" name="discount" value="50"> 50% Off or more</label>
                     </div>
                 </div>
 
@@ -202,5 +202,6 @@
     </div>
 
     <script type="module" src="../js/main.js"></script>
+    <script type="module" src="shop.js"></script>
 </body>
 </html>

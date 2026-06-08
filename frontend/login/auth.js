@@ -19,7 +19,8 @@ import { subscribeToAuthState } from '../../backend/js/auth.js';
 const ADMIN_EMAIL = 'admin@zonix.com'; // Change this to your admin email
 
 // Form elements
-const loginForm = document.getElementById('loginForm');
+const loginFormStep1 = document.getElementById('loginFormStep1');
+const loginFormStep2 = document.getElementById('loginFormStep2');
 const signupForm = document.getElementById('signupForm');
 const adminForm = document.getElementById('adminForm');
 
@@ -102,9 +103,19 @@ function initializeEventListeners() {
     }
     
     // Form submissions
-    if (loginForm) loginForm.addEventListener('submit', handleLoginSubmit);
+    if (loginFormStep1) loginFormStep1.addEventListener('submit', handleLoginStep1Submit);
+    if (loginFormStep2) loginFormStep2.addEventListener('submit', handleLoginStep2Submit);
     if (signupForm) signupForm.addEventListener('submit', handleSignupSubmit);
     if (adminForm) adminForm.addEventListener('submit', handleAdminLoginSubmit);
+    
+    // Change Email Button
+    const changeEmailBtn = document.getElementById('changeEmailBtn');
+    if (changeEmailBtn) {
+        changeEmailBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchTab('login');
+        });
+    }
     
     // Password visibility toggles
     if (toggleLoginPassword) toggleLoginPassword.addEventListener('click', () => togglePasswordVisibility('loginPassword'));
@@ -250,21 +261,32 @@ function clearAllErrors() {
 // =============================================
 
 /**
- * Handle login form submission
+ * Handle login step 1 (Email)
  */
-async function handleLoginSubmit(e) {
+function handleLoginStep1Submit(e) {
     e.preventDefault();
     clearAllErrors();
     
-    // Validate inputs
     const emailValid = validateEmail('loginEmail');
+    if (!emailValid) return;
+    
+    const email = document.getElementById('loginEmail').value.trim();
+    document.getElementById('displayEmail').textContent = email;
+    switchTab('login-password');
+}
+
+/**
+ * Handle login step 2 (Password)
+ */
+async function handleLoginStep2Submit(e) {
+    e.preventDefault();
+    clearAllErrors();
+    
     const passwordValid = document.getElementById('loginPassword').value.length > 0;
     
-    if (!emailValid || !passwordValid) {
-        if (!passwordValid) {
-            document.getElementById('loginPasswordError').textContent = 'Password is required';
-            document.getElementById('loginPasswordError').classList.add('show');
-        }
+    if (!passwordValid) {
+        document.getElementById('loginPasswordError').textContent = 'Password is required';
+        document.getElementById('loginPasswordError').classList.add('show');
         return;
     }
     

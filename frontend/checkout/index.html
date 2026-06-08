@@ -9,8 +9,8 @@
 </head>
 <body>
     <!-- Minimalist Checkout Header (Amazon style) -->
-    <header style="background: #fcfcfc; border-bottom: 2px solid #eaeded; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; height: 65px; max-width: 1400px; margin: 0 auto; width: 100%;">
-        <div>
+    <header style="background: #fcfcfc; border-bottom: 1px solid #ddd; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; height: 65px; margin: 0 auto; width: 100%;">
+        <div style="max-width: 1000px; margin: 0 auto; width: 100%; display: flex; justify-content: space-between; align-items: center;">
             <a href="../" class="logo-text" style="color:#111; font-size: 1.8rem; position:relative; display:inline-block; font-weight: 700; font-family: sans-serif; text-decoration: none;">
               ZONIX
               <svg viewBox="0 0 100 15" style="position:absolute; bottom:-4px; left:0; width:100%; height:12px; pointer-events:none;">
@@ -18,86 +18,178 @@
                 <path d="M 85 0 L 91 3 L 88 9 Z" fill="#f08804"/>
               </svg>
             </a>
-        </div>
-        <div style="font-size: 1.5rem; font-weight: 400; color: #111; display: flex; align-items: center; gap: 4px;">
-            Checkout <span style="font-size: 1.1rem; color: #007185;">(<span id="checkoutHeaderItemCount">0</span> items)</span>
-        </div>
-        <div style="color: #767676; display: flex; align-items: center; font-size: 1.3rem;" title="Secure Transaction">
-            🔒
+            <div style="font-size: 1.5rem; font-weight: 400; color: #111; display: flex; align-items: center; gap: 4px;">
+                Checkout <span style="font-size: 1.1rem; color: #007185;">(<span id="checkoutHeaderItemCount">0</span> items)</span>
+            </div>
+            <div style="color: #767676; display: flex; align-items: center; font-size: 1.3rem;" title="Secure Transaction">
+                🔒
+            </div>
         </div>
     </header>
 
     <!-- Checkout Content -->
-    <section class="content-section" style="padding: 2rem 0; background: #eaeded; min-height: 70vh;">
-        <div class="checkout-layout" style="max-width: 1400px; margin: 0 auto; display: flex; gap: 2rem; padding: 0 1rem; align-items: flex-start;">
+    <section class="content-section" style="padding: 2rem 0; background: #fff; min-height: 70vh;">
+        <div class="checkout-layout" style="max-width: 1000px; margin: 0 auto; display: flex; gap: 2rem; padding: 0 1rem; align-items: flex-start;">
             
             <!-- Left Column: Accordion Steps -->
             <div class="checkout-steps" style="flex: 1;">
                 
-                <!-- Step 1: Delivery -->
-                <div class="checkout-step" style="background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; margin-bottom: 1rem; overflow: hidden;">
-                    <div style="background: #f0f2f2; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #d5d9d9;">
-                        <h2 style="font-size: 1.25rem; color: #0f1111; margin: 0;"><span style="color: #e77600; margin-right: 10px;">1</span> Delivery Address</h2>
-                        <span style="color: #007185; cursor: pointer; font-size: 0.9rem;">Change</span>
+                <!-- Step 1: Address -->
+                <div id="step-address" class="checkout-step active-step" style="border-bottom: 1px solid #d5d9d9; margin-bottom: 1rem; padding-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="font-size: 1.25rem; color: #c45500; font-weight: 700; margin: 0;">1 &nbsp; Delivery address</h2>
+                        <a href="#" class="step-edit-btn" style="display: none; color: #007185; font-size: 0.9rem; text-decoration: none;">Change</a>
                     </div>
-                    <div style="padding: 1.5rem;">
-                        <form id="checkoutForm">
+                    <div class="step-content" style="padding-left: 2rem;">
+                        <form id="addressForm">
                             <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                                <input type="text" id="firstName" placeholder="First Name" required style="flex: 1; padding: 0.8rem; border: 1px solid #a6a6a6; border-radius: 4px;">
-                                <input type="text" id="lastName" placeholder="Last Name" required style="flex: 1; padding: 0.8rem; border: 1px solid #a6a6a6; border-radius: 4px;">
+                                <div style="flex: 1;">
+                                    <label style="display:block; font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;">Full name (First and Last name)</label>
+                                    <input type="text" id="fullName" required style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px; box-shadow: 0 1px 2px rgba(15,17,17,.15) inset;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="display:block; font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;">Mobile number</label>
+                                    <input type="tel" id="phone" required style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px; box-shadow: 0 1px 2px rgba(15,17,17,.15) inset;">
+                                </div>
                             </div>
-                            <input type="text" id="street" placeholder="Street Address" required style="width: 100%; padding: 0.8rem; border: 1px solid #a6a6a6; border-radius: 4px; margin-bottom: 1rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display:block; font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;">Flat, House no., Building, Company, Apartment</label>
+                                <input type="text" id="street" required style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px; box-shadow: 0 1px 2px rgba(15,17,17,.15) inset;">
+                            </div>
                             <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-                                <input type="text" id="city" placeholder="City" required style="flex: 1; padding: 0.8rem; border: 1px solid #a6a6a6; border-radius: 4px;">
-                                <input type="text" id="zipcode" placeholder="ZIP/Postal Code" required style="flex: 1; padding: 0.8rem; border: 1px solid #a6a6a6; border-radius: 4px;">
+                                <div style="flex: 1;">
+                                    <label style="display:block; font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;">Town/City</label>
+                                    <input type="text" id="city" required style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px; box-shadow: 0 1px 2px rgba(15,17,17,.15) inset;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="display:block; font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;">PIN code</label>
+                                    <input type="text" id="zipcode" required style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px; box-shadow: 0 1px 2px rgba(15,17,17,.15) inset;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="display:block; font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;">State</label>
+                                    <input type="text" id="state" required style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px; box-shadow: 0 1px 2px rgba(15,17,17,.15) inset;">
+                                </div>
                             </div>
-                            <input type="tel" id="phone" placeholder="Phone Number" required style="width: 100%; padding: 0.8rem; border: 1px solid #a6a6a6; border-radius: 4px; margin-bottom: 1.5rem;">
-                            <button type="button" class="btn-amazon-primary" style="display: inline-block; width: auto; padding: 0.6rem 2rem;">Use this address</button>
+                            <button type="submit" class="btn-amazon-primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem; margin-top: 10px; background: #ffd814; border-color: #fcd200; border-radius: 8px;">Use this address</button>
                         </form>
                     </div>
-                </div>
-
-                <!-- Step 2: Payment -->
-                <div class="checkout-step" style="background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; margin-bottom: 1rem; overflow: hidden; opacity: 0.6; pointer-events: none;">
-                    <div style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-                        <h2 style="font-size: 1.25rem; color: #0f1111; margin: 0;"><span style="color: #e77600; margin-right: 10px;">2</span> Payment Method</h2>
+                    <div class="step-summary" style="display: none; padding-left: 2rem; color: #0f1111; font-size: 0.9rem;">
+                        <div id="addressSummaryText"></div>
                     </div>
                 </div>
 
-                <!-- Step 3: Items and Shipping -->
-                <div class="checkout-step" style="background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; overflow: hidden; opacity: 0.6; pointer-events: none;">
-                    <div style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-                        <h2 style="font-size: 1.25rem; color: #0f1111; margin: 0;"><span style="color: #e77600; margin-right: 10px;">3</span> Review items and shipping</h2>
+                <!-- Step 2: Delivery -->
+                <div id="step-delivery" class="checkout-step" style="border-bottom: 1px solid #d5d9d9; margin-bottom: 1rem; padding-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="font-size: 1.25rem; color: #0f1111; font-weight: 700; margin: 0;">2 &nbsp; Choose delivery options</h2>
+                        <a href="#" class="step-edit-btn" style="display: none; color: #007185; font-size: 0.9rem; text-decoration: none;">Change</a>
+                    </div>
+                    <div class="step-content" style="padding-left: 2rem; display: none;">
+                        <form id="deliveryForm">
+                            <div style="border: 1px solid #d5d9d9; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                                <div style="color: #007600; font-weight: 700; margin-bottom: 10px;">Guaranteed delivery date:</div>
+                                <label style="display: flex; gap: 10px; margin-bottom: 10px; cursor: pointer;">
+                                    <input type="radio" name="shipping" value="standard" checked>
+                                    <div>
+                                        <div style="color: #0f1111; font-weight: 700;">Standard Delivery - Free</div>
+                                        <div style="color: #565959; font-size: 0.85rem;">Delivery in 3-5 days</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; gap: 10px; margin-bottom: 10px; cursor: pointer;">
+                                    <input type="radio" name="shipping" value="express">
+                                    <div>
+                                        <div style="color: #0f1111; font-weight: 700;">Express Delivery - ₹299</div>
+                                        <div style="color: #565959; font-size: 0.85rem;">Delivery in 1-2 days</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn-amazon-primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem; background: #ffd814; border-color: #fcd200; border-radius: 8px;">Use this delivery option</button>
+                        </form>
+                    </div>
+                    <div class="step-summary" style="display: none; padding-left: 2rem; color: #0f1111; font-size: 0.9rem;">
+                        <div id="deliverySummaryText"></div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Payment -->
+                <div id="step-payment" class="checkout-step" style="border-bottom: 1px solid #d5d9d9; margin-bottom: 1rem; padding-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="font-size: 1.25rem; color: #0f1111; font-weight: 700; margin: 0;">3 &nbsp; Payment method</h2>
+                        <a href="#" class="step-edit-btn" style="display: none; color: #007185; font-size: 0.9rem; text-decoration: none;">Change</a>
+                    </div>
+                    <div class="step-content" style="padding-left: 2rem; display: none;">
+                        <form id="paymentForm">
+                            <div style="border: 1px solid #d5d9d9; border-radius: 8px; margin-bottom: 1rem;">
+                                <label style="display: flex; gap: 10px; padding: 1rem; border-bottom: 1px solid #d5d9d9; cursor: pointer; background: #fcfcfc;">
+                                    <input type="radio" name="payment" value="card" checked>
+                                    <div>
+                                        <div style="color: #0f1111; font-weight: 700;">Credit or debit card</div>
+                                        <div style="display: flex; gap: 5px; margin-top: 5px;">
+                                            <span style="font-size:0.8rem; border:1px solid #ddd; padding:0 4px; border-radius:2px;">Visa</span>
+                                            <span style="font-size:0.8rem; border:1px solid #ddd; padding:0 4px; border-radius:2px;">MasterCard</span>
+                                            <span style="font-size:0.8rem; border:1px solid #ddd; padding:0 4px; border-radius:2px;">RuPay</span>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; gap: 10px; padding: 1rem; border-bottom: 1px solid #d5d9d9; cursor: pointer;">
+                                    <input type="radio" name="payment" value="upi">
+                                    <div>
+                                        <div style="color: #0f1111; font-weight: 700;">UPI Apps</div>
+                                        <div style="color: #565959; font-size: 0.85rem;">Google Pay, PhonePe, Paytm and more</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; gap: 10px; padding: 1rem; cursor: pointer;">
+                                    <input type="radio" name="payment" value="cod">
+                                    <div>
+                                        <div style="color: #0f1111; font-weight: 700;">Cash on Delivery</div>
+                                        <div style="color: #565959; font-size: 0.85rem;">Pay cash at time of delivery</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn-amazon-primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem; background: #ffd814; border-color: #fcd200; border-radius: 8px;">Use this payment method</button>
+                        </form>
+                    </div>
+                    <div class="step-summary" style="display: none; padding-left: 2rem; color: #0f1111; font-size: 0.9rem;">
+                        <div id="paymentSummaryText"></div>
                     </div>
                 </div>
                 
+                <!-- Items and shipping (Review) -->
+                <div id="step-review" class="checkout-step" style="border-bottom: 1px solid #d5d9d9; margin-bottom: 1rem; padding-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="font-size: 1.25rem; color: #0f1111; font-weight: 700; margin: 0;">4 &nbsp; Review items and delivery</h2>
+                    </div>
+                    <div class="step-content" style="padding-left: 2rem; display: none;">
+                        <div id="reviewItemsContainer" style="border: 1px solid #d5d9d9; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <!-- Items populated by JS -->
+                        </div>
+                        <button id="finalPlaceOrderBtn" class="btn-amazon-primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem; background: #ffd814; border-color: #fcd200; border-radius: 8px; margin-bottom: 10px;">Place your order</button>
+                        <div style="color: #565959; font-size: 0.85rem;">By placing your order, you agree to ZONIX's privacy notice and conditions of use.</div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Right Column: Order Summary -->
-            <div class="checkout-summary-wrapper" style="width: 350px; position: sticky; top: 80px;">
-                <!-- Place Order Box -->
-                <div style="background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                    <button type="submit" form="checkoutForm" class="btn-amazon-primary" style="margin-bottom: 1rem; font-size: 1rem; padding: 0.8rem;">Place your order</button>
+            <div class="checkout-summary-wrapper" style="width: 300px; position: sticky; top: 20px;">
+                <div style="border: 1px solid #d5d9d9; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; background: #fff;">
+                    <button id="summaryPlaceOrderBtn" class="btn-amazon-primary" style="width: 100%; margin-bottom: 1rem; font-size: 0.9rem; padding: 0.6rem; background: #ffd814; border-color: #fcd200; border-radius: 8px; opacity: 0.5; pointer-events: none;">Place your order</button>
                     <p style="font-size: 0.75rem; color: #565959; text-align: center; margin-bottom: 1rem;">By placing your order, you agree to ZONIX's privacy notice and conditions of use.</p>
                     <hr style="border: 0; border-top: 1px solid #d5d9d9; margin-bottom: 1rem;">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: #0f1111;">Order Summary</h3>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: #0f1111; font-weight: 700;">Order Summary</h3>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #0f1111; font-size: 0.9rem;">
                         <span>Items:</span> <span id="checkoutSubtotal">₹0</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #0f1111; font-size: 0.9rem;">
-                        <span>Delivery:</span> <span id="checkoutShipping">Free</span>
+                        <span>Delivery:</span> <span id="checkoutShipping">₹0</span>
                     </div>
-                    <hr style="border: 0; border-top: 1px dashed #d5d9d9; margin: 1rem 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #0f1111; font-size: 0.9rem;">
+                        <span>Tax:</span> <span id="checkoutTax">₹0</span>
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid #d5d9d9; margin: 1rem 0;">
                     <div style="display: flex; justify-content: space-between; color: #b12704; font-size: 1.2rem; font-weight: 700;">
                         <span>Order Total:</span> <span id="checkoutTotal">₹0</span>
                     </div>
-                </div>
-                
-                <!-- Guest Signup Prompt -->
-                <div id="guestSignupPrompt" style="background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                    <h3 style="font-size: 1rem; color: #0f1111; margin-bottom: 0.5rem;">Shopping as a Guest?</h3>
-                    <p style="font-size: 0.85rem; color: #565959; margin-bottom: 1rem;">Save your delivery address and track your order easily by creating an account.</p>
-                    <button onclick="window.location.href='../login/'" style="width: 100%; padding: 0.6rem; background: #fff; border: 1px solid #d5d9d9; border-radius: 8px; color: #0f1111; font-weight: 600; cursor: pointer; box-shadow: 0 2px 5px rgba(213,217,217,.5);">Create Account / Sign In</button>
                 </div>
             </div>
 
@@ -105,42 +197,17 @@
     </section>
 
     <!-- Footer -->
-        <div class="footer-back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Get to Know Us</h4>
-                <ul>
-                    <li><a href="../about/">About ZONIX</a></li>
-                    <li><a href="../info/?page=collections">Collections</a></li>
-                    <li><a href="../contact/">Contact Us</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Let Us Help You</h4>
-                <ul>
-                    <li><a href="../info/?page=help">Help Center</a></li>
-                    <li><a href="../info/?page=returns">Returns & Refunds</a></li>
-                    <li><a href="../info/?page=shipping">Shipping Info</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Policies</h4>
-                <ul>
-                    <li><a href="../info/?page=terms">Terms of Service</a></li>
-                    <li><a href="../info/?page=privacy">Privacy Policy</a></li>
-                    <li><a href="../info/?page=returns">Return Policy</a></li>
-                </ul>
-            </div>
+    <div style="background: #fff; border-top: 1px solid #ddd; padding: 30px; text-align: center; color: #565959; font-size: 0.85rem;">
+        <div style="margin-bottom: 10px;">
+            <a href="#" style="color: #007185; text-decoration: none; margin: 0 10px;">Conditions of Use</a>
+            <a href="#" style="color: #007185; text-decoration: none; margin: 0 10px;">Privacy Notice</a>
+            <a href="#" style="color: #007185; text-decoration: none; margin: 0 10px;">Help</a>
         </div>
-        <div class="footer-bottom">
-            <div class="footer-logo">ZONIX</div>
-            <p>&copy; 2026 ZONIX. The Marketplace, Redefined.</p>
-        </div>
-    </footer>
+        <div>&copy; 2026, ZONIX.com, Inc. or its affiliates</div>
+    </div>
 
     <!-- Scripts -->
     <script type="module" src="../js/main.js"></script>
+    <script type="module" src="checkout.js"></script>
 </body>
 </html>
-

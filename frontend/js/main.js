@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (path.includes('/help/')) {
     initHelp();
   } else if (path.includes('/shop/') || path.endsWith('shop/index.html')) {
-    loadShopProducts();
+    // Let shop.js handle it
   } else if (path.includes('/info/') || path.endsWith('info/index.html')) {
     loadInfoPage();
   } else if (path === '/' || path.endsWith('/index.html') || path.endsWith('/frontend/')) {
@@ -237,18 +237,14 @@ function renderNavbar() {
   // Amazon Logo SVG with yellow curved smile arrow underneath
   const logoHTML = `
     <a href="${prefix}" class="logo-text" style="position:relative; display:inline-block; padding-bottom: 5px;">
-      ZONIX
-      <svg viewBox="0 0 100 15" style="position:absolute; bottom:-4px; left:0; width:100%; height:12px; pointer-events:none;">
-        <path d="M 5 2 Q 45 14 90 2" fill="none" stroke="#f08804" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M 85 0 L 91 3 L 88 9 Z" fill="#f08804"/>
-      </svg>
+      ZONIX<span class="logo-in">.in</span>
     </a>
   `;
 
   // Standard Navbar top row (containing logo, deliver location, search, icons)
   navbar.innerHTML = `
     <div class="navbar-container">
-      <div class="navbar-row-top">
+      <div class="navbar-left">
         <!-- Mobile Hamburger Button -->
         <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menu" style="display:none; align-items:center; color:#fff; padding:6px; background:none; border:none; cursor:pointer;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -263,54 +259,60 @@ function renderNavbar() {
         </div>
 
         <div class="navbar-deliver">
-          <span class="deliver-pin">📍</span>
-          <div class="deliver-text-container">
-            <span class="deliver-to">Deliver to</span>
-            <span class="deliver-location">India</span>
-          </div>
-        </div>
-
-        <div class="navbar-search">
-          <select class="search-category" style="background:#f3f3f3; border:none; padding:0 10px; color:#555; border-right:1px solid #ccc; font-size:0.875rem; cursor:pointer;">
-            <option>All Categories</option>
-            <option>Electronics</option>
-            <option>Fashion</option>
-            <option>Home & Living</option>
-            <option>Gaming</option>
-            <option>Audio</option>
-          </select>
-          <input type="text" class="search-input" placeholder="Search ZONIX for products, brands and more">
-          <button class="search-btn" aria-label="Search">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
-            </svg>
-          </button>
-        </div>
-
-        <div class="navbar-icons">
-          <a href="${prefix}login/" class="nav-link-custom" id="authNavLink" style="position:relative;">
-            <span class="nav-small">Hello, sign in</span>
-            <span class="nav-bold">Account & Lists</span>
-          </a>
-          
-          <a href="${prefix}profile/" class="nav-link-custom">
-            <span class="nav-small">Returns</span>
-            <span class="nav-bold">& Orders</span>
-          </a>
-
-          <a href="${prefix}cart/" class="nav-link-custom cart-link" style="position:relative; display:flex; align-items:center; gap:4px;">
-            <div style="position:relative; display:flex; align-items:center;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="9" cy="21" r="1"></circle>
-                <circle cx="20" cy="21" r="1"></circle>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-              </svg>
-              <span class="cart-count" id="cartBadge">0</span>
+            <div class="deliver-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
             </div>
-            <span class="nav-bold cart-text" style="margin-top:6px;">Cart</span>
-          </a>
+            <div class="deliver-text-container">
+                <span class="deliver-to">Delivering to New Delhi 110001</span>
+                <span class="deliver-location">Update location</span>
+            </div>
         </div>
+      </div>
+
+      <div class="navbar-search">
+        <select class="search-category">
+          <option>All</option>
+          <option>Electronics</option>
+          <option>Fashion</option>
+          <option>Home & Living</option>
+          <option>Gaming</option>
+          <option>Audio</option>
+        </select>
+        <input type="text" class="search-input" placeholder="Search Amazon.in">
+        <button class="search-btn" aria-label="Search">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f1111" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="navbar-right">
+        <div class="navbar-language nav-link-custom">
+            <span class="nav-bold">EN</span>
+        </div>
+        
+        <a href="${prefix}login/" class="nav-link-custom" id="authNavLink">
+          <span class="nav-small">Hello, sign in</span>
+          <span class="nav-bold">Account & Lists</span>
+        </a>
+        
+        <a href="${prefix}profile/" class="nav-link-custom">
+          <span class="nav-small">Returns</span>
+          <span class="nav-bold">& Orders</span>
+        </a>
+
+        <a href="${prefix}cart/" class="nav-link-custom cart-link">
+          <div class="cart-icon-wrapper">
+            <span class="cart-count" id="cartBadge" style="display:none;">0</span>
+            <svg width="38" height="26" viewBox="0 0 38 26" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 24 A2 2 0 1 0 14 24 A2 2 0 1 0 10 24 Z"></path>
+                <path d="M24 24 A2 2 0 1 0 28 24 A2 2 0 1 0 24 24 Z"></path>
+                <path d="M4 4 h4 l3.5 12 h15 l3-9 h-18"></path>
+            </svg>
+          </div>
+          <span class="nav-bold cart-text">Cart</span>
+        </a>
       </div>
     </div>
   `;
@@ -318,7 +320,7 @@ function renderNavbar() {
   // Inject dynamic sub-navbar
   if (subNavbar) {
     subNavbar.innerHTML = `
-      <a href="#" class="sub-nav-link" id="desktopMenuToggle" style="display:flex; align-items:center; gap:4px;">
+      <a href="#" class="sub-nav-link all-menu" id="desktopMenuToggle">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="3" y1="12" x2="21" y2="12"></line>
           <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -326,13 +328,16 @@ function renderNavbar() {
         </svg>
         All
       </a>
+      <a href="${prefix}shop/" class="sub-nav-link">Fresh</a>
+      <a href="${prefix}shop/" class="sub-nav-link">Amazon miniTV</a>
+      <a href="${prefix}shop/" class="sub-nav-link">Sell</a>
+      <a href="${prefix}shop/" class="sub-nav-link">Best Sellers</a>
       <a href="${prefix}shop/" class="sub-nav-link">Today's Deals</a>
+      <a href="${prefix}shop/?q=electronics" class="sub-nav-link">Mobiles</a>
       <a href="${prefix}shop/?q=electronics" class="sub-nav-link">Electronics</a>
-      <a href="${prefix}shop/?q=fashion" class="sub-nav-link">Fashion</a>
-      <a href="${prefix}shop/?q=home" class="sub-nav-link">Home & Kitchen</a>
-      <a href="${prefix}shop/?q=gaming" class="sub-nav-link">Gaming</a>
+      <a href="${prefix}shop/?q=fashion" class="sub-nav-link">Prime</a>
       <a href="${prefix}contact/" class="sub-nav-link">Customer Service</a>
-      <a href="${prefix}help/" class="sub-nav-link">Help</a>
+      <a href="${prefix}help/" class="sub-nav-link">New Releases</a>
       <a href="${prefix}admin/" class="sub-nav-link" style="color:var(--color-accent-primary); font-weight:bold; margin-left:auto;">Admin Dashboard</a>
     `;
   }
@@ -769,20 +774,25 @@ async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) 
           deliveryHTML = `<p class="product-delivery" style="font-size:0.8rem; margin: 4px 0 0; color:#0f1111;">Get it by <strong>${standardStr}</strong><br><span style="color:#565959; font-size:0.75rem;">FREE Delivery over ₹499</span></p>`;
         }
         
+        const inRoot = !window.location.pathname.includes('/frontend/') || window.location.pathname.endsWith('/frontend/') || window.location.pathname.endsWith('/frontend/index.html');
+        const productLink = (inRoot ? 'product/' : '../product/') + '?id=' + product.id;
+
         return `
         <article class="product-card" data-product-id="${product.id}">
-            <div class="product-image-container">
+            <a href="${productLink}" class="product-image-container" style="text-decoration:none;">
                 ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
-                <img src="${product.image || '../assets/images/placeholder.jpg'}" alt="${product.name}" class="product-image" loading="lazy" onerror="this.src='https://via.placeholder.com/400x400?text=Image+Not+Found'"/>
-                <button class="wishlist-btn" aria-label="Add to wishlist">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                </button>
-            </div>
+                <img src="${product.image || (inRoot ? 'assets/images/placeholder.jpg' : '../assets/images/placeholder.jpg')}" alt="${product.name}" class="product-image" loading="lazy" onerror="this.src='https://via.placeholder.com/400x400?text=Image+Not+Found'"/>
+            </a>
+            <button class="wishlist-btn" aria-label="Add to wishlist" style="position:absolute; top:10px; right:10px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            </button>
             <div class="product-info">
                 <p class="product-category">${product.category || 'General'}</p>
-                <h3 class="product-name">${product.name}</h3>
+                <a href="${productLink}" style="text-decoration:none;">
+                    <h3 class="product-name">${product.name}</h3>
+                </a>
                 
                 <div class="product-rating" style="display:flex; align-items:center; gap:4px; margin-bottom: 4px;">
                     ${starsHTML}
@@ -834,15 +844,23 @@ function initCart() {
 
 function updateCartBadge() {
   const badge = document.getElementById('cartBadge');
-  if (!badge) return;
+  const mobileBadge = document.getElementById('mobileCartBadge');
   
   const totalItems = appState.cart.reduce((sum, item) => sum + item.quantity, 0);
-  badge.textContent = totalItems;
-  badge.style.display = totalItems > 0 ? 'flex' : 'none';
   
-  // Bounce animation
-  badge.style.transform = 'scale(1.4)';
-  setTimeout(() => badge.style.transform = 'scale(1)', 300);
+  if (badge) {
+      badge.textContent = totalItems;
+      badge.style.display = totalItems > 0 ? 'flex' : 'none';
+      badge.style.transform = 'scale(1.4)';
+      setTimeout(() => badge.style.transform = 'scale(1)', 300);
+  }
+  
+  if (mobileBadge) {
+      mobileBadge.textContent = totalItems;
+      mobileBadge.style.display = totalItems > 0 ? 'flex' : 'none';
+      mobileBadge.style.transform = 'scale(1.4)';
+      setTimeout(() => mobileBadge.style.transform = 'scale(1)', 300);
+  }
 }
 
 function playFlyToCartAnimation(cardElement) {
@@ -1536,6 +1554,7 @@ function loadInfoPage() {
 // HERO CAROUSEL
 // =============================================
 function initHeroCarousel() {
+  const carousel = document.getElementById('heroCarousel');
   const slides = document.querySelectorAll('.hero-slide');
   const prevBtn = document.querySelector('.hero-prev');
   const nextBtn = document.querySelector('.hero-next');
@@ -1551,6 +1570,22 @@ function initHeroCarousel() {
 
   if (prevBtn) prevBtn.addEventListener('click', () => showSlide(current - 1));
   if (nextBtn) nextBtn.addEventListener('click', () => showSlide(current + 1));
+
+  // Swipe support
+  if (carousel) {
+      let touchStartX = 0;
+      let touchEndX = 0;
+      
+      carousel.addEventListener('touchstart', e => {
+          touchStartX = e.changedTouches[0].screenX;
+      }, {passive: true});
+      
+      carousel.addEventListener('touchend', e => {
+          touchEndX = e.changedTouches[0].screenX;
+          if (touchEndX < touchStartX - 50) showSlide(current + 1); // Swipe left
+          if (touchEndX > touchStartX + 50) showSlide(current - 1); // Swipe right
+      }, {passive: true});
+  }
 
   // Auto-rotate every 5 seconds
   setInterval(() => showSlide(current + 1), 5000);
