@@ -272,6 +272,36 @@ export async function deleteProduct(productId) {
 }
 
 /**
+ * Delete all products from the store (Admin Only)
+ * @returns {Promise<number>} Number of deleted products
+ */
+export async function clearAllProducts() {
+  try {
+    console.log('🗑️ Clearing all products from Firestore...');
+    const productsRef = collection(db, 'products');
+    const snapshot = await getDocs(productsRef);
+    
+    if (snapshot.empty) {
+      console.log('No products to clear.');
+      return 0;
+    }
+    
+    const deletePromises = [];
+    snapshot.forEach((docSnap) => {
+      const productRef = doc(db, 'products', docSnap.id);
+      deletePromises.push(deleteDoc(productRef));
+    });
+    
+    await Promise.all(deletePromises);
+    console.log(`✓ Cleared ${snapshot.size} products successfully`);
+    return snapshot.size;
+  } catch (error) {
+    console.error('✗ Error clearing products:', error.message);
+    throw error;
+  }
+}
+
+/**
  * Bulk import multiple products, updating if ASIN already exists
  * @param {Array} products - Array of product objects
  * @returns {Promise<Object>} Results summary
