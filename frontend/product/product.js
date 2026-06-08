@@ -47,13 +47,31 @@ function populateUI(product) {
     document.getElementById('pdpTitle').textContent = product.name;
     document.getElementById('pdpBrand').textContent = `Brand: ${product.category || 'ZONIX'}`;
 
-    // Images
+    // ======================================
+    // Images — use 'images' array if present
+    // ======================================
     const mainImage = document.getElementById('pdpMainImage');
-    mainImage.src = product.image || '../assets/images/placeholder.jpg';
-    
-    // Thumbnails - just one for now, as schema only has 'image' not an array
     const thumbnailsContainer = document.getElementById('pdpThumbnails');
-    thumbnailsContainer.innerHTML = `<img src="${product.image || '../assets/images/placeholder.jpg'}" class="pdp-thumbnail active" alt="Thumbnail">`;
+    
+    const allImages = (product.images && product.images.length > 0)
+        ? product.images
+        : (product.image ? [product.image] : ['../assets/images/placeholder.jpg']);
+    
+    mainImage.src = allImages[0];
+    mainImage.alt = product.name;
+
+    thumbnailsContainer.innerHTML = allImages.map((url, i) =>
+        `<img src="${url}" class="pdp-thumbnail${i === 0 ? ' active' : ''}" alt="Product image ${i + 1}" data-src="${url}">`
+    ).join('');
+
+    // Click thumbnail → update main image
+    thumbnailsContainer.querySelectorAll('.pdp-thumbnail').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+            mainImage.src = thumb.dataset.src;
+            thumbnailsContainer.querySelectorAll('.pdp-thumbnail').forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+        });
+    });
 
     // Pricing
     const priceNum = Number(product.price) || 0;
@@ -66,7 +84,6 @@ function populateUI(product) {
         const discountBadge = document.getElementById('pdpDiscountBadge');
         discountBadge.textContent = `-${discount}%`;
         discountBadge.style.display = 'inline-block';
-
         document.getElementById('pdpMrpContainer').style.display = 'block';
         document.getElementById('pdpMrpValue').textContent = `₹${Math.floor(product.originalPrice).toLocaleString('en-IN')}`;
     }
@@ -74,11 +91,9 @@ function populateUI(product) {
     // Rating
     const roundedStars = Math.round(product.rating || 4.5);
     let starsStr = '';
-    for (let i = 1; i <= 5; i++) {
-        starsStr += i <= roundedStars ? '★' : '☆';
-    }
+    for (let i = 1; i <= 5; i++) starsStr += i <= roundedStars ? '★' : '☆';
     document.getElementById('pdpStars').textContent = starsStr;
-    document.getElementById('pdpReviewsLink').textContent = `${(product.reviews || 100).toLocaleString()} ratings`;
+    document.getElementById('pdpReviewsLink').textContent = `${(product.reviews || 0).toLocaleString()} ratings`;
 
     // Stock Status
     const stockStatus = document.getElementById('stockStatus');
@@ -92,20 +107,37 @@ function populateUI(product) {
         document.getElementById('btnBuyNow').disabled = true;
     }
 
-    // Description / Features
+    // ======================================
+    // Feature Bullets — prefer 'bullets' array
+    // ======================================
+    const featureList = document.getElementById('pdpFeatureList');
+    const bullets = product.bullets;
+    if (bullets && bullets.length > 0) {
+        featureList.innerHTML = bullets.map(b => `<li>${b}</li>`).join('');
+    } else if (product.description) {
+        const lines = product.description.split('\n').filter(l => l.trim().length > 0).slice(0, 6);
+        featureList.innerHTML = lines.map(line => `<li>${line.replace(/^[•\-]\s*/, '')}</li>`).join('');
+    }
+
+    // ======================================
+    // Full Product Description
+    // ======================================
     if (product.description) {
-        // Simple heuristic: split by newlines for bullets, otherwise just a paragraph
-        const lines = product.description.split('\n').filter(l => l.trim().length > 0);
-        
-        // Populate feature list (bullets)
-        const featureList = document.getElementById('pdpFeatureList');
-        if (lines.length > 1) {
-            featureList.innerHTML = lines.map(line => `<li>${line}</li>`).join('');
-            document.getElementById('pdpDetailedDescription').innerHTML = `<p>${product.description.replace(/\\n/g, '<br>')}</p>`;
-        } else {
-            featureList.innerHTML = `<li>${product.description}</li>`;
-            document.getElementById('pdpDetailedDescription').innerHTML = `<p>${product.description}</p>`;
-        }
+        document.getElementById('pdpDetailedDescContainer').style.display = 'block';
+        document.getElementById('pdpDetailedDescription').innerHTML =
+            `<p>${product.description.replace(/\n/g, '<br>')}</p>`;
+    }
+
+    // ======================================
+    // Specifications Table
+    // ======================================
+    const specs = product.specs;
+    if (specs && Object.keys(specs).length > 0) {
+        document.getElementById('pdpSpecsContainer').style.display = 'block';
+        const table = document.getElementById('pdpSpecsTable');
+        table.innerHTML = Object.entries(specs).map(([key, val]) =>
+            `<tr><th>${key}</th><td>${val}</td></tr>`
+        ).join('');
     }
 }
 

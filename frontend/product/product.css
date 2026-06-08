@@ -345,6 +345,52 @@
     line-height: 22px;
 }
 
+/* Technical Specifications Table */
+.pdp-specs-section {
+    margin-top: 40px;
+}
+.pdp-specs-section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #0f1111;
+}
+.pdp-specs-table {
+    width: 100%;
+    max-width: 800px;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.pdp-specs-table tr:nth-child(even) {
+    background: #f7fafa;
+}
+.pdp-specs-table th {
+    width: 35%;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+    color: #0f1111;
+    background: #eaf6f6;
+    border: 1px solid #d5d9d9;
+    vertical-align: top;
+}
+.pdp-specs-table td {
+    padding: 10px 14px;
+    color: #0f1111;
+    border: 1px solid #d5d9d9;
+    vertical-align: top;
+}
+@media (max-width: 480px) {
+    .pdp-specs-table, .pdp-specs-table tbody, .pdp-specs-table tr, .pdp-specs-table th, .pdp-specs-table td {
+        display: block;
+        width: 100%;
+    }
+    .pdp-specs-table th {
+        background: #f0f2f2;
+        border-bottom: none;
+    }
+}
+
 /* Reviews Section */
 .pdp-reviews-section {
     margin-top: 40px;
