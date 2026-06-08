@@ -68,50 +68,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initializeEventListeners() {
     // Tab switching
-    loginTabBtn.addEventListener('click', () => switchTab('login'));
-    signupTabBtn.addEventListener('click', () => switchTab('signup'));
+    if (loginTabBtn) loginTabBtn.addEventListener('click', () => switchTab('login'));
+    if (signupTabBtn) signupTabBtn.addEventListener('click', () => switchTab('signup'));
     
     // Admin form
-    adminToggleBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        switchTab('admin');
-    });
+    if (adminToggleBtn) {
+        adminToggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchTab('admin');
+        });
+    }
     
-    backFromAdminBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        switchTab('login');
-    });
+    if (backFromAdminBtn) {
+        backFromAdminBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchTab('login');
+        });
+    }
     
     // Form switches
-    switchToSignup.addEventListener('click', (e) => {
-        e.preventDefault();
-        switchTab('signup');
-    });
+    if (switchToSignup) {
+        switchToSignup.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchTab('signup');
+        });
+    }
     
-    switchToLogin.addEventListener('click', (e) => {
-        e.preventDefault();
-        switchTab('login');
-    });
+    if (switchToLogin) {
+        switchToLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchTab('login');
+        });
+    }
     
     // Form submissions
-    loginForm.addEventListener('submit', handleLoginSubmit);
-    signupForm.addEventListener('submit', handleSignupSubmit);
-    adminForm.addEventListener('submit', handleAdminLoginSubmit);
+    if (loginForm) loginForm.addEventListener('submit', handleLoginSubmit);
+    if (signupForm) signupForm.addEventListener('submit', handleSignupSubmit);
+    if (adminForm) adminForm.addEventListener('submit', handleAdminLoginSubmit);
     
     // Password visibility toggles
-    toggleLoginPassword.addEventListener('click', () => togglePasswordVisibility('loginPassword'));
-    toggleSignupPassword.addEventListener('click', () => togglePasswordVisibility('signupPassword'));
-    toggleSignupConfirmPassword.addEventListener('click', () => togglePasswordVisibility('signupConfirmPassword'));
-    toggleAdminPassword.addEventListener('click', () => togglePasswordVisibility('adminPassword'));
+    if (toggleLoginPassword) toggleLoginPassword.addEventListener('click', () => togglePasswordVisibility('loginPassword'));
+    if (toggleSignupPassword) toggleSignupPassword.addEventListener('click', () => togglePasswordVisibility('signupPassword'));
+    if (toggleSignupConfirmPassword) toggleSignupConfirmPassword.addEventListener('click', () => togglePasswordVisibility('signupConfirmPassword'));
+    if (toggleAdminPassword) toggleAdminPassword.addEventListener('click', () => togglePasswordVisibility('adminPassword'));
     
     // Real-time validation
-    document.getElementById('loginEmail').addEventListener('input', () => validateEmail('loginEmail'));
-    document.getElementById('signupEmail').addEventListener('input', () => validateEmail('signupEmail'));
-    document.getElementById('adminEmail').addEventListener('input', () => validateEmail('adminEmail'));
+    const loginEmail = document.getElementById('loginEmail');
+    const signupEmail = document.getElementById('signupEmail');
+    const adminEmail = document.getElementById('adminEmail');
+    const loginPassword = document.getElementById('loginPassword');
+    const signupPassword = document.getElementById('signupPassword');
+    const signupConfirmPassword = document.getElementById('signupConfirmPassword');
     
-    document.getElementById('loginPassword').addEventListener('input', () => clearError('loginPassword'));
-    document.getElementById('signupPassword').addEventListener('input', () => validatePasswordStrength('signupPassword'));
-    document.getElementById('signupConfirmPassword').addEventListener('input', () => validatePasswordMatch());
+    if (loginEmail) loginEmail.addEventListener('input', () => validateEmail('loginEmail'));
+    if (signupEmail) signupEmail.addEventListener('input', () => validateEmail('signupEmail'));
+    if (adminEmail) adminEmail.addEventListener('input', () => validateEmail('adminEmail'));
+    
+    if (loginPassword) loginPassword.addEventListener('input', () => clearError('loginPassword'));
+    if (signupPassword) signupPassword.addEventListener('input', () => validatePasswordStrength('signupPassword'));
+    if (signupConfirmPassword) signupConfirmPassword.addEventListener('input', () => validatePasswordMatch());
 
     // Google sign-in buttons
     const googleLoginBtn = document.getElementById('googleLoginBtn');
