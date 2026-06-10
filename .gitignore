@@ -48,3 +48,8 @@ logs/
 # Testing
 coverage/
 test-results/
+
+# Agent and temporary files
+.agent/
+.gemini/
+.tmp/
