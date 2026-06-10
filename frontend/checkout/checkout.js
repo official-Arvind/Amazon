@@ -307,4 +307,20 @@ function showOrderConfirmation(orderData) {
             <p style="color:#565959;margin-bottom:1.5rem; font-size: 0.95rem;">A confirmation email has been sent to your registered address.</p>
             
             <div style="background: #f8f8f8; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #eee; text-align: left;">
-                <div style="display: flex; justify-co
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 15px;">
+                    <div>
+                        <p style="color:#565959; font-size: 0.85rem; margin-bottom: 5px;">Order Number</p>
+                        <p style="color:#0f1111; font-weight: 700; font-size: 1.1rem;">${orderData.orderNumber}</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="color:#565959; font-size: 0.85rem; margin-bottom: 5px;">Order Total</p>
+                        <p style="color:#b12704; font-weight: 700; font-size: 1.1rem;">₹${orderData.total.toLocaleString()}</p>
+                    </div>
+                </div>
+                <p style="margin-bottom: 5px; color: #565959; font-size: 0.85rem;">Delivering to:</p>
+                <p style="color:#0f1111; font-weight: 500;">${orderData.shippingAddress.name}<br>${orderData.shippingAddress.street}, ${orderData.shippingAddress.city}, ${orderData.shippingAddress.state} ${orderData.shippingAddress.zip}</p>
+            </div>
+            <a href="../shop/" class="btn-amazon-primary" style="display:inline-block; text-decoration: none; padding: 0.8rem 2.5rem; font-size: 1.05rem; font-weight: bold; background: #ffd814; border-color: #fcd200; border-radius: 8px;">Continue Shopping</a>
+        </div>
+    `;
+}
