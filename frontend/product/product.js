@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         populateUI(product);
         setupActions(product);
-        loadReviews(productId);
-        setupReviewForm(productId);
+        loadReviews(productId, product);
+        setupReviewForm(productId, product);
 
         document.getElementById('pdpLoading').style.display = 'none';
         document.getElementById('pdpContent').style.display = 'grid';
@@ -272,16 +272,26 @@ function addToGuestCart(product, quantity) {
 // ==========================================
 // REVIEWS
 // ==========================================
-async function loadReviews(productId) {
+async function loadReviews(productId, product) {
     try {
         const reviews = await getReviews(productId);
         const listContainer = document.getElementById('reviewsList');
         
         if (reviews.length === 0) {
-            listContainer.innerHTML = '<p class="no-reviews" style="color: #565959; font-style: italic;">No reviews yet. Be the first to review this product!</p>';
-            document.getElementById('overallStars').textContent = '☆☆☆☆☆';
-            document.getElementById('overallScore').textContent = '0 out of 5';
-            document.getElementById('globalRatingsCount').textContent = '0 global ratings';
+            const rating = product ? (product.rating || 4.5) : 4.5;
+            const reviewCount = product ? (product.reviews || product.reviewCount || 0) : 0;
+            const fullStars = Math.round(rating);
+            
+            let starsStr = '';
+            for (let i = 1; i <= 5; i++) {
+                starsStr += i <= fullStars ? '★' : '☆';
+            }
+            
+            document.getElementById('overallStars').textContent = starsStr;
+            document.getElementById('overallScore').textContent = `${rating} out of 5`;
+            document.getElementById('globalRatingsCount').textContent = `${reviewCount.toLocaleString()} global ratings`;
+            
+            listContainer.innerHTML = `<p class="no-reviews" style="color: #565959; font-style: italic; margin-top: 1rem;">No local ZONIX reviews yet. This product has a global rating of ${rating} out of 5 based on ${reviewCount.toLocaleString()} reviews. Be the first to review this product on ZONIX!</p>`;
             return;
         }
 
@@ -328,7 +338,7 @@ async function loadReviews(productId) {
     }
 }
 
-function setupReviewForm(productId) {
+function setupReviewForm(productId, product) {
     const btnWrite = document.getElementById('btnWriteReview');
     const formContainer = document.getElementById('reviewFormContainer');
     const form = document.getElementById('reviewForm');
@@ -371,7 +381,7 @@ function setupReviewForm(productId) {
             btnSubmit.disabled = false;
             
             // Reload reviews to show the new one
-            await loadReviews(productId);
+            await loadReviews(productId, product);
             
             const event = new CustomEvent('show-toast', { detail: 'Review submitted successfully!' });
             window.dispatchEvent(event);
