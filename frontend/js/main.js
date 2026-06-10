@@ -280,12 +280,12 @@ function renderNavbar() {
           ${logoHTML}
         </div>
 
-        <div class="navbar-deliver">
+        <div class="navbar-deliver" id="deliverLocationBtn" style="cursor: pointer;" title="Update your delivery location">
             <div class="deliver-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
             </div>
             <div class="deliver-text-container">
-                <span class="deliver-to">Delivering to New Delhi 110001</span>
+                <span class="deliver-to">Delivering to ${localStorage.getItem('zonix_pincode') || 'New Delhi 110001'}</span>
                 <span class="deliver-location">Update location</span>
             </div>
         </div>
@@ -474,6 +474,52 @@ function renderNavbar() {
   if (desktopOpenBtn) desktopOpenBtn.addEventListener('click', (e) => { e.preventDefault(); toggleDrawer(true); });
   if (closeBtn) closeBtn.addEventListener('click', () => toggleDrawer(false));
   if (overlay) overlay.addEventListener('click', () => toggleDrawer(false));
+
+  // Location button modal logic
+  const deliverBtn = document.getElementById('deliverLocationBtn');
+  if (deliverBtn) {
+    deliverBtn.addEventListener('click', showLocationModal);
+  }
+}
+
+function showLocationModal() {
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+  
+  modal.innerHTML = `
+    <div class="modal-content" style="background: white; padding: 2.5rem; border-radius: 8px; max-width: 400px; width: 90%; position: relative;">
+      <button class="modal-close" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #333;">&times;</button>
+      <h2 style="margin-bottom: 1rem; color: #0f1111; font-size: 1.25rem;">Choose your location</h2>
+      <p style="margin-bottom: 1.5rem; color: #565959; font-size: 0.85rem; line-height: 1.4;">Delivery options and delivery speeds may vary for different locations</p>
+      <form id="locationModalForm">
+        <input type="text" id="modalPincode" placeholder="Enter Pincode or City" required style="width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: 1px solid #888c8c; border-radius: 4px; box-sizing: border-box; font-size: 1rem; outline: none; box-shadow: 0 1px 2px rgba(15,17,17,.15) inset;">
+        <button type="submit" style="width: 100%; padding: 0.75rem; background: #ffd814; color: #0f1111; border: 1px solid #fcd200; border-radius: 8px; font-weight: normal; cursor: pointer; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(213,217,217,.5);">Apply</button>
+      </form>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  modal.querySelector('.modal-close').addEventListener('click', () => modal.remove());
+  
+  document.getElementById('locationModalForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const pincode = document.getElementById('modalPincode').value.trim();
+    const deliverToElements = document.querySelectorAll('.deliver-to');
+    
+    // Check if it's purely a number (zipcode) or city string
+    const formatValue = /^\d+$/.test(pincode) ? pincode : pincode;
+    const updateString = 'Delivering to ' + formatValue;
+    
+    deliverToElements.forEach(el => el.textContent = updateString);
+    localStorage.setItem('zonix_pincode', formatValue);
+    
+    modal.remove();
+    if (typeof showNotification === 'function') {
+      showNotification('Delivery location updated!', 'success');
+    }
+  });
 }
 
 function setupNavigation() {
