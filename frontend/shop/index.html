@@ -213,16 +213,105 @@
             </aside>
 
             <div class="shop-products">
-                <div class="products-grid" id="shopProductsGrid">
-                    <!-- Skeleton Loader (12 cards) -->
-                    <script>
-                        for(let i=0; i<12; i++){
-                            document.write(`
-                            <div class="skeleton-card" style="border:1px solid #ddd; border-radius:8px; padding:16px; display:flex; flex-direction:column; gap:10px;">
-                                <div style="width:100%; height:180px; background:#f0f0f0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
-                                <div style="width:80%; height:20px; background:#f0f0f0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
-                                <div style="width:60%; height:15px; background:#f0f0f0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
-                                <div style="width:40%; height:24px; background:#f0f0f0; border-radius:4px; margin-top:auto; animation: pulse 1.5s infinite;"></div>
+                <h2 class="products-count">Showing 12 Products</h2>
+                
+                <div class="products-grid">
+                    <!-- Product Card 1 -->
+                    <article class="product-card">
+                        <div class="product-image">
+                            <img src="../assets/images/headphones.jpg" alt="Premium Wireless Earbuds">
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Premium Wireless Earbuds</h3>
+                            <p class="product-category">Audio</p>
+                            <div class="product-footer">
+                                <span class="product-price">$249.99</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 2 -->
+                    <article class="product-card">
+                        <div class="product-image">
+                            <img src="../assets/images/watch.jpg" alt="Elegant Watch">
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Elegant Watch</h3>
+                            <p class="product-category">Accessories</p>
+                            <div class="product-footer">
+                                <span class="product-price">$399.99</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 3 -->
+                    <article class="product-card">
+                        <div class="product-image">
+                            <img src="../assets/images/phone_stand.jpg" alt="Minimalist Phone Stand">
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Minimalist Phone Stand</h3>
+                            <p class="product-category">Tech Accessories</p>
+                            <div class="product-footer">
+                                <span class="product-price">$79.99</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Product Card 4 -->
+                    <article class="product-card">
+                        <div class="product-image">
+                            <img src="../assets/images/Desk_lamp.jpg" alt="Premium Desk Lamp">
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Premium Desk Lamp</h3>
+                            <p class="product-category">Lighting</p>
+                            <div class="product-footer">
+                                <span class="product-price">$189.99</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Repeat additional products as needed -->
+                    <article class="product-card">
+                        <div class="product-image">
+                            <img src="../assets/images/product-1.jpg" alt="Premium Product">
+                            <button class="wishlist-btn" aria-label="Add to wishlist">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Premium Headphones</h3>
+                            <p class="product-category">Audio</p>
+                            <div class="product-footer">
+                                <span class="product-price">$299.99</span>
+                                <button class="add-to-cart-btn">Add to Cart</button>
                             </div>
                             `);
                         }
@@ -245,25 +334,25 @@
             <div class="footer-section">
                 <h4>Get to Know Us</h4>
                 <ul>
-                    <li><a href="../about/">About ZONIX</a></li>
-                    <li><a href="../info/?page=collections">Collections</a></li>
-                    <li><a href="../contact/">Contact Us</a></li>
+                    <li><a href="../about/">About Us</a></li>
+                    <li><a href="../careers/">Careers</a></li>
+                    <li><a href="../press/">Press</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4>Let Us Help You</h4>
                 <ul>
-                    <li><a href="../info/?page=help">Help Center</a></li>
-                    <li><a href="../info/?page=returns">Returns & Refunds</a></li>
-                    <li><a href="../info/?page=shipping">Shipping Info</a></li>
+                    <li><a href="../help/">Help Center</a></li>
+                    <li><a href="../contact/">Contact Us</a></li>
+                    <li><a href="../faq/">FAQ</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h4>Policies</h4>
                 <ul>
-                    <li><a href="../info/?page=terms">Terms of Service</a></li>
-                    <li><a href="../info/?page=privacy">Privacy Policy</a></li>
-                    <li><a href="../info/?page=returns">Return Policy</a></li>
+                    <li><a href="../privacy/">Privacy Policy</a></li>
+                    <li><a href="../terms/">Terms of Service</a></li>
+                    <li><a href="../cookies/">Cookie Policy</a></li>
                 </ul>
             </div>
         </div>
