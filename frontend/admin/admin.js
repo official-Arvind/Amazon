@@ -127,8 +127,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load initial data
     await loadDashboardData();
     
-    // Reveal the admin UI only after auth is confirmed
-    document.querySelector('.admin-container').classList.add('authenticated');
+    // Reveal the admin UI by hiding auth overlay
+    const authOverlay = document.getElementById('authLoadingOverlay');
+    if (authOverlay) authOverlay.classList.add('hidden');
 
     showLoading(false);
     showToast('Welcome to Admin Panel', 'info');

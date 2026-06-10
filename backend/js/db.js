@@ -146,7 +146,7 @@ export async function addToCart(userId, productId, quantity = 1) {
   }
 }
 
-export async function getCartItems(userId) {
+export async function getCartItems(userId, retries = 3) {
   try {
     console.log('Fetching cart for user:', userId);
     const cartRef = collection(db, 'users', userId, 'cart');
@@ -160,7 +160,11 @@ export async function getCartItems(userId) {
     console.log(`✓ Fetched ${cartItems.length} cart items`);
     return cartItems;
   } catch (error) {
-    console.error('✗ Error fetching cart:', error.message);
+    console.error(`✗ Error fetching cart: ${error.message}. Retries left: ${retries}`);
+    if (retries > 0) {
+      await new Promise(r => setTimeout(r, 1000));
+      return getCartItems(userId, retries - 1);
+    }
     throw error;
   }
 }

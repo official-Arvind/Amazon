@@ -54,12 +54,40 @@
         .admin-container {
             display: flex;
             min-height: 100vh;
-            opacity: 0;
+        }
+
+        /* Full screen initial loader */
+        #authLoadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
             transition: opacity 0.3s ease;
         }
-        .admin-container.authenticated {
-            opacity: 1;
+        
+        #authLoadingOverlay.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
+        
+        .zonix-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* =============================================
            SIDEBAR
@@ -872,6 +900,33 @@
         .tracked-status-badge.sync-pending { background: rgba(245,158,11,.12); color: #b45309; }
         .tracked-status-badge.sync-error { background: rgba(231,76,60,.1); color: var(--accent-danger); }
 
+        /* =============================================
+           RESPONSIVE & POLISH
+           ============================================= */
+        button, .btn {
+            transition: all 0.2s ease, transform 0.1s ease;
+        }
+        button:active, .btn:active {
+            transform: scale(0.96);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-search {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1408,6 +1463,12 @@
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
+    </div>
+
+    <!-- Initial Auth Loading Screen -->
+    <div id="authLoadingOverlay">
+        <div class="zonix-spinner"></div>
+        <h2 style="font-size: 1.2rem; color: #111;">Authenticating Administrator...</h2>
     </div>
 
     <!-- Toast Notification -->

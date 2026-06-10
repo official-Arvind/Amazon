@@ -45,7 +45,7 @@ function renderCart() {
         return `
             <div class="cart-item" data-id="${item.productId}" style="display: flex; gap: 1.5rem; padding: 1.5rem 0; border-top: ${index === 0 ? 'none' : '1px solid #ddd'};">
                 <div style="width: 180px; height: 180px; display: flex; align-items: center; justify-content: center;">
-                    <img src="${item.image || '../assets/images/placeholder.jpg'}" alt="${item.name}" style="max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer;">
+                    <img src="${item.image || '../assets/images/placeholder.jpg'}" alt="${item.name}" loading="lazy" style="max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer;">
                 </div>
                 <div style="flex: 1; display: flex; flex-direction: column;">
                     <div style="display: flex; justify-content: space-between; gap: 1rem;">
