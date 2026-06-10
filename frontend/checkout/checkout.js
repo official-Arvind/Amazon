@@ -100,6 +100,20 @@ function setupAccordion() {
         radio.addEventListener('change', updateCheckoutSummary);
     });
 
+    // Toggle UPI details
+    document.querySelectorAll('input[name="payment"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const upiDetails = document.getElementById('upi-details');
+            if (upiDetails) {
+                if (e.target.value === 'upi') {
+                    upiDetails.style.display = 'block';
+                } else {
+                    upiDetails.style.display = 'none';
+                }
+            }
+        });
+    });
+
     // Step 3: Payment Submit
     paymentForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -113,6 +127,7 @@ function setupAccordion() {
         
         completeStep(stepPayment);
         activateStep(stepReview);
+        renderReviewItems(); // Update review items to show full summary
 
         // Enable final submit buttons
         document.getElementById('summaryPlaceOrderBtn').style.opacity = '1';
@@ -142,6 +157,31 @@ function activateStep(stepEl) {
     stepEl.querySelector('.step-summary').style.display = 'none';
     const editBtn = stepEl.querySelector('.step-edit-btn');
     if(editBtn) editBtn.style.display = 'none';
+
+    // Update Step Indicator
+    const stepId = stepEl.id;
+    let stepNum = 1;
+    if (stepId === 'step-delivery') stepNum = 2;
+    if (stepId === 'step-payment') stepNum = 3;
+    if (stepId === 'step-review') stepNum = 4;
+    
+    for (let i = 2; i <= 4; i++) {
+        const ind = document.getElementById(`indicator-${i}`);
+        const text = document.getElementById(`indicator-text-${i}`);
+        if (ind && text) {
+            if (i <= stepNum) {
+                ind.style.background = '#007185';
+                ind.style.color = 'white';
+                text.style.color = '#007185';
+                text.style.fontWeight = 'bold';
+            } else {
+                ind.style.background = '#ddd';
+                ind.style.color = '#555';
+                text.style.color = '#555';
+                text.style.fontWeight = 'normal';
+            }
+        }
+    }
 }
 
 function completeStep(stepEl) {
@@ -168,7 +208,28 @@ function updateCheckoutSummary() {
 
 function renderReviewItems() {
     const container = document.getElementById('reviewItemsContainer');
-    container.innerHTML = appState.cart.map(item => `
+    
+    // Build full summary
+    let payText = checkoutData.payment === 'upi' ? 'UPI App' : (checkoutData.payment === 'cod' ? 'Cash on Delivery' : 'Credit / Debit Card');
+    let shipText = checkoutData.shipping === 'express' ? 'Express Delivery' : 'Standard Delivery';
+    
+    let summaryHtml = `
+        <div style="display: flex; gap: 20px; background: #f8f8f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem;">
+            <div style="flex: 1;">
+                <strong style="display: block; margin-bottom: 5px;">Delivery Address:</strong>
+                ${checkoutData.address ? `${checkoutData.address.name}<br>${checkoutData.address.street}<br>${checkoutData.address.city}, ${checkoutData.address.state} ${checkoutData.address.zip}` : 'Pending...'}
+            </div>
+            <div style="flex: 1;">
+                <strong style="display: block; margin-bottom: 5px;">Payment Method:</strong>
+                ${payText}<br><br>
+                <strong style="display: block; margin-bottom: 5px;">Delivery Option:</strong>
+                ${shipText}
+            </div>
+        </div>
+        <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: #0f1111;">Items in Order</h3>
+    `;
+    
+    const itemsHtml = appState.cart.map(item => `
         <div style="display: flex; gap: 1rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 1rem;">
             <img src="${item.image || '../assets/images/placeholder.jpg'}" style="width: 80px; height: 80px; object-fit: contain;">
             <div>
@@ -178,6 +239,8 @@ function renderReviewItems() {
             </div>
         </div>
     `).join('');
+    
+    container.innerHTML = summaryHtml + itemsHtml;
 }
 
 async function placeFinalOrder() {
@@ -226,19 +289,22 @@ async function placeFinalOrder() {
 
 function showOrderConfirmation(orderData) {
     const main = document.querySelector('.content-section');
+    
+    // Calculate estimated delivery
+    const deliveryDays = orderData.shippingMethod === 'express' ? 2 : 5;
+    const estDate = new Date();
+    estDate.setDate(estDate.getDate() + deliveryDays);
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const deliveryDateStr = estDate.toLocaleDateString('en-IN', dateOptions);
+    
     main.innerHTML = `
-        <div style="max-width:600px;margin:3rem auto;text-align:center;padding:2rem; background: #fff; border: 1px solid #d5d9d9; border-radius: 8px;">
-            <div style="width:80px;height:80px;border-radius:50%;background:#067d62;margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center;">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <div style="max-width:650px;margin:3rem auto;text-align:center;padding:3rem 2rem; background: #fff; border: 1px solid #d5d9d9; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <div style="width:90px;height:90px;border-radius:50%;background:#067d62;margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center; box-shadow: 0 4px 10px rgba(6, 125, 98, 0.3);">
+                <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
-            <h1 style="color:#0f1111;margin-bottom:0.5rem;">Order Placed, Thank You!</h1>
-            <p style="color:#565959;margin-bottom:1rem;">Confirmation will be sent to your mobile number.</p>
-            <p style="color:#0f1111; font-weight: 700; font-size: 1.1rem; margin-bottom:2rem;">Order Number: ${orderData.orderNumber}</p>
-            <div style="text-align:left; background: #f0f2f2; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-                <p style="margin-bottom: 10px;"><strong>Delivery to:</strong><br>${orderData.shippingAddress.name}<br>${orderData.shippingAddress.city}, ${orderData.shippingAddress.state}</p>
-                <p><strong>Total:</strong> ₹${orderData.total.toLocaleString()}</p>
-            </div>
-            <a href="../shop/" class="btn-amazon-primary" style="display:inline-block; text-decoration: none; padding: 0.6rem 2rem;">Continue Shopping</a>
-        </div>
-    `;
-}
+            <h1 style="color:#0f1111;margin-bottom:0.5rem; font-size: 2rem;">Order Placed, Thank You!</h1>
+            <p style="color:#007600; font-weight: bold; font-size: 1.1rem; margin-bottom:1rem;">Estimated Delivery: ${deliveryDateStr}</p>
+            <p style="color:#565959;margin-bottom:1.5rem; font-size: 0.95rem;">A confirmation email has been sent to your registered address.</p>
+            
+            <div style="background: #f8f8f8; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #eee; text-align: left;">
+                <div style="display: flex; justify-co

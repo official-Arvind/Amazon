@@ -28,6 +28,28 @@
         </div>
     </header>
 
+    <div style="background: #fcfcfc; border-bottom: 1px solid #ddd; padding: 10px 0;">
+        <div style="max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; position: relative;">
+            <div style="position: absolute; top: 50%; left: 10%; right: 10%; height: 2px; background: #ddd; z-index: 1;"></div>
+            <div style="text-align: center; position: relative; z-index: 2; background: #fcfcfc; padding: 0 10px;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: #007185; color: white; line-height: 24px; font-size: 12px; margin: 0 auto 5px; font-weight: bold;">1</div>
+                <div style="font-size: 12px; font-weight: bold; color: #007185;">Address</div>
+            </div>
+            <div style="text-align: center; position: relative; z-index: 2; background: #fcfcfc; padding: 0 10px;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: #ddd; color: #555; line-height: 24px; font-size: 12px; margin: 0 auto 5px; font-weight: bold;" id="indicator-2">2</div>
+                <div style="font-size: 12px; color: #555;" id="indicator-text-2">Delivery</div>
+            </div>
+            <div style="text-align: center; position: relative; z-index: 2; background: #fcfcfc; padding: 0 10px;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: #ddd; color: #555; line-height: 24px; font-size: 12px; margin: 0 auto 5px; font-weight: bold;" id="indicator-3">3</div>
+                <div style="font-size: 12px; color: #555;" id="indicator-text-3">Payment</div>
+            </div>
+            <div style="text-align: center; position: relative; z-index: 2; background: #fcfcfc; padding: 0 10px;">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: #ddd; color: #555; line-height: 24px; font-size: 12px; margin: 0 auto 5px; font-weight: bold;" id="indicator-4">4</div>
+                <div style="font-size: 12px; color: #555;" id="indicator-text-4">Review</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Checkout Content -->
     <section class="content-section" style="padding: 2rem 0; background: #fff; min-height: 70vh;">
         <div class="checkout-layout" style="max-width: 1000px; margin: 0 auto; display: flex; gap: 2rem; padding: 0 1rem; align-items: flex-start;">
@@ -134,15 +156,34 @@
                                 </label>
                                 <label style="display: flex; gap: 10px; padding: 1rem; border-bottom: 1px solid #d5d9d9; cursor: pointer;">
                                     <input type="radio" name="payment" value="upi">
-                                    <div>
+                                    <div style="width: 100%;">
                                         <div style="color: #0f1111; font-weight: 700;">UPI Apps</div>
-                                        <div style="color: #565959; font-size: 0.85rem;">Google Pay, PhonePe, Paytm and more</div>
+                                        <div style="color: #565959; font-size: 0.85rem; margin-bottom: 10px;">Google Pay, PhonePe, Paytm and more</div>
+                                        
+                                        <div id="upi-details" style="display: none; background: #f0f2f2; padding: 1rem; border-radius: 8px; margin-top: 10px; border: 1px solid #ddd;">
+                                            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                                                <div style="flex: 1;">
+                                                    <label style="display: block; font-size: 0.9rem; font-weight: 700; margin-bottom: 5px;">Enter your UPI ID</label>
+                                                    <input type="text" placeholder="Ex: name@bank" style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px; margin-bottom: 10px;">
+                                                    <div style="font-size: 0.8rem; color: #007185; cursor: pointer;">Verify</div>
+                                                </div>
+                                                <div style="text-align: center;">
+                                                    <div style="font-size: 0.85rem; font-weight: 700; margin-bottom: 5px;">Or Scan QR</div>
+                                                    <div style="width: 80px; height: 80px; background: #fff; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=70x70&data=upi://pay?pa=zonix@upi&pn=Zonix" alt="UPI QR" style="width: 70px; height: 70px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </label>
                                 <label style="display: flex; gap: 10px; padding: 1rem; cursor: pointer;">
                                     <input type="radio" name="payment" value="cod">
                                     <div>
-                                        <div style="color: #0f1111; font-weight: 700;">Cash on Delivery</div>
+                                        <div style="color: #0f1111; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                                            Cash on Delivery
+                                            <span style="background: #e6f2f2; color: #007185; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; font-weight: bold;">Pay on Delivery</span>
+                                        </div>
                                         <div style="color: #565959; font-size: 0.85rem;">Pay cash at time of delivery</div>
                                     </div>
                                 </label>

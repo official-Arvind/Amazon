@@ -144,10 +144,10 @@
                 </div>
 
                 <div class="profile-nav-group" style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #d9d9d9;">
-                    <button class="profile-nav-item active" data-tab="orders">
+                    <button class="profile-nav-item" onclick="window.location.href='../orders/'">
                         Your Orders <span>›</span>
                     </button>
-                    <button class="profile-nav-item" data-tab="settings">
+                    <button class="profile-nav-item active" data-tab="settings">
                         Login & Security <span>›</span>
                     </button>
                     <button class="profile-nav-item" data-tab="addresses">
@@ -166,13 +166,7 @@
             <main class="profile-content-area" style="flex: 1; background: #fff; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #d9d9d9; position: relative;">
                 <!-- Tab Content Area -->
                 <div style="margin-top: 0; padding-top: 0;">
-                <!-- Orders Tab -->
-                <div id="ordersTab" class="profile-tab active" style="display: none;">
-                    <h2 style="margin-bottom: 1rem;">Your Orders</h2>
-                    <div id="ordersList" class="orders-list" style="border: 1px solid #d5d9d9; border-radius: 8px; padding: 2rem; text-align: center;">
-                        <p>You have not placed any orders yet. <a href="../shop/" style="color: var(--color-accent-primary);">Start shopping</a></p>
-                    </div>
-                </div>
+                <!-- Orders Tab removed as it's separate now, or we can just hide it completely -->
 
                 <!-- Addresses Tab -->
                 <div id="addressesTab" class="profile-tab" style="display: none;">
@@ -186,7 +180,7 @@
                 </div>
 
                 <!-- Settings Tab -->
-                <div id="settingsTab" class="profile-tab" style="display: none;">
+                <div id="settingsTab" class="profile-tab active" style="display: block;">
                     <h2 style="margin-bottom: 1rem;">Login & Security</h2>
                     <div style="border: 1px solid #d5d9d9; border-radius: 8px; overflow: hidden;">
                         <div style="padding: 1.5rem; border-bottom: 1px solid #d5d9d9; display: flex; justify-content: space-between; align-items: center;">
