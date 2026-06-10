@@ -649,49 +649,7 @@ function initProducts() {
       });
     }
 
-    const wishlistBtn = card.querySelector('.wishlist-btn');
-    if (wishlistBtn) {
-      wishlistBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
 
-        if (!appState.isAuthenticated) {
-          showNotification('Please log in to add to Wishlist', 'warning');
-          return;
-        }
-
-        const productId = card.dataset.productId;
-        if (!productId) return;
-
-        const originalHtml = wishlistBtn.innerHTML;
-        wishlistBtn.innerHTML = '...';
-        wishlistBtn.disabled = true;
-
-        try {
-          const dbModule = await import('../../backend/js/db.js');
-          await dbModule.addToWishlist(appState.currentUser.uid, productId);
-          
-          appState.wishlist = await dbModule.getWishlistItems(appState.currentUser.uid);
-          updateWishlistBadge();
-          
-          showNotification('Added to Wishlist!', 'success');
-          
-          // Change icon to filled
-          wishlistBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="var(--color-accent-primary, #ff9900)" stroke="var(--color-accent-primary, #ff9900)" stroke-width="2">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>`;
-          
-          setTimeout(() => {
-              wishlistBtn.disabled = false;
-          }, 1000);
-        } catch (error) {
-          console.error("Error adding to wishlist", error);
-          showNotification('Failed to add to Wishlist', 'error');
-          wishlistBtn.innerHTML = originalHtml;
-          wishlistBtn.disabled = false;
-        }
-      });
-    }
   });
 }
 
@@ -922,11 +880,6 @@ async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) 
                 ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
                 <img src="${product.image || (inRoot ? 'assets/images/placeholder.jpg' : '../assets/images/placeholder.jpg')}" alt="${product.name}" class="product-image" loading="lazy" onerror="this.src='https://via.placeholder.com/400x400?text=Image+Not+Found'"/>
             </a>
-            <button class="wishlist-btn" aria-label="Add to wishlist" style="position:absolute; top:10px; right:10px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg>
-            </button>
             <div class="product-info">
                 <p class="product-category">${product.category || 'General'}</p>
                 <a href="${productLink}" style="text-decoration:none;">
@@ -954,7 +907,6 @@ async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) 
                     ${deliveryHTML}
                 </div>
 
-                <button class="add-to-cart-btn">Add to Cart</button>
             </div>
         </article>
       `}).join('');

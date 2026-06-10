@@ -526,6 +526,36 @@ img {
     max-width: 100%;
 }
 
+.products-carousel {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding-bottom: 10px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: #d5d9d9 transparent;
+}
+.products-carousel::-webkit-scrollbar {
+    height: 8px;
+}
+.products-carousel::-webkit-scrollbar-track {
+    background: transparent;
+}
+.products-carousel::-webkit-scrollbar-thumb {
+    background-color: #d5d9d9;
+    border-radius: 4px;
+}
+.products-carousel > .product-card {
+    flex: 0 0 220px;
+    scroll-snap-align: start;
+    border: none;
+    box-shadow: none;
+}
+.products-carousel .product-image-container {
+    padding: 0;
+    margin-bottom: 8px;
+}
+
 /* =============================================
    PRODUCT CARDS
    ============================================= */
@@ -586,40 +616,7 @@ img {
     transform: scale(1.08);
 }
 
-.wishlist-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 36px;
-    height: 36px;
-    background-color: rgba(255,255,255,0.9);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
-    opacity: 0;
-    transition: all 0.2s ease;
-    border: 1px solid #e8e8e8;
-    z-index: 5;
-}
 
-.product-card:hover .wishlist-btn {
-    opacity: 1;
-}
-
-.wishlist-btn:hover {
-    background-color: #fff;
-    color: #e74c3c;
-    border-color: #e74c3c;
-}
-
-.wishlist-btn svg {
-    stroke: currentColor;
-    fill: none;
-    width: 18px;
-    height: 18px;
-}
 
 .product-info {
     display: flex;

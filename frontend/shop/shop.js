@@ -28,25 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // View toggles
-    const gridViewBtn = document.getElementById('gridViewBtn');
-    const listViewBtn = document.getElementById('listViewBtn');
-    if (gridViewBtn && listViewBtn) {
-        gridViewBtn.addEventListener('click', () => {
-            grid.className = 'products-grid';
-            gridViewBtn.style.background = 'var(--color-accent-primary)';
-            gridViewBtn.style.color = '#fff';
-            listViewBtn.style.background = '#fff';
-            listViewBtn.style.color = '#333';
-        });
-        listViewBtn.addEventListener('click', () => {
-            grid.className = 'products-list-view';
-            listViewBtn.style.background = 'var(--color-accent-primary)';
-            listViewBtn.style.color = '#fff';
-            gridViewBtn.style.background = '#fff';
-            gridViewBtn.style.color = '#333';
-        });
-    }
+
 
     // Sort by
     const sortBySelect = document.getElementById('sortBySelect');
