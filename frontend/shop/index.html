@@ -6,6 +6,62 @@
     <meta name="description" content="Shop our curated collection of premium products at ZONIX. Electronics, Fashion, Home & more.">
     <title>Shop - ZONIX</title>
     <link rel="stylesheet" href="../css/style.css?v=1.2">
+    <style>
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .filter-badge {
+            display: inline-flex;
+            align-items: center;
+            background: #f0f2f2;
+            border: 1px solid #d5d9d9;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 0.85rem;
+            color: #0f1111;
+            gap: 5px;
+        }
+        .filter-badge .remove-filter {
+            cursor: pointer;
+            color: #565959;
+            font-weight: bold;
+        }
+        .filter-badge .remove-filter:hover {
+            color: #0f1111;
+        }
+        .products-list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .products-list-view .product-card {
+            display: flex;
+            flex-direction: row;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .products-list-view .product-image-container {
+            width: 200px;
+            height: 200px;
+            flex-shrink: 0;
+            margin-right: 16px;
+        }
+        .page-num-btn {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .page-num-btn.active {
+            border-color: var(--color-accent-primary);
+            color: var(--color-accent-primary);
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -39,7 +95,7 @@
                     <span class="nav-small">Hello, sign in</span>
                     <span class="nav-bold">Account & Lists</span>
                 </a>
-                <a href="../profile/" class="nav-link-custom">
+                <a href="../orders/" class="nav-link-custom">
                     <span class="nav-small">Returns</span>
                     <span class="nav-bold">& Orders</span>
                 </a>
@@ -78,7 +134,34 @@
 
     <!-- Results Header -->
     <div style="max-width:1300px;margin:0 auto;padding:0.5rem 1rem;">
-        <h2 class="products-count" style="font-size:1.1rem;font-weight:700;color:#0f1111;">Showing Products</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <h2 class="products-count" style="font-size:1.1rem;font-weight:700;color:#0f1111;">Showing Products</h2>
+            
+            <div style="display:flex; align-items:center; gap:15px;">
+                <div class="view-toggle" style="display:flex; gap:5px;">
+                    <button id="gridViewBtn" aria-label="Grid View" style="background:var(--color-accent-primary); color:#fff; border:none; padding:5px 8px; border-radius:4px; cursor:pointer;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    </button>
+                    <button id="listViewBtn" aria-label="List View" style="background:#fff; color:#333; border:1px solid #ccc; padding:5px 8px; border-radius:4px; cursor:pointer;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                    </button>
+                </div>
+                <div class="sort-dropdown">
+                    <label for="sortBySelect" style="font-size:0.9rem; color:#565959;">Sort by:</label>
+                    <select id="sortBySelect" style="padding:5px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem;">
+                        <option value="best_match">Best Match</option>
+                        <option value="price_low">Price: Low to High</option>
+                        <option value="price_high">Price: High to Low</option>
+                        <option value="rating">Avg. Customer Review</option>
+                        <option value="newest">Newest Arrivals</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div id="activeFiltersStrip" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;">
+            <!-- Active filter badges will be injected here -->
+        </div>
     </div>
 
     <section class="shop-section" style="background:#fff;">
@@ -138,7 +221,26 @@
 
             <div class="shop-products">
                 <div class="products-grid" id="shopProductsGrid">
-                    <div class="loading-state">Loading products...</div>
+                    <!-- Skeleton Loader (12 cards) -->
+                    <script>
+                        for(let i=0; i<12; i++){
+                            document.write(`
+                            <div class="skeleton-card" style="border:1px solid #ddd; border-radius:8px; padding:16px; display:flex; flex-direction:column; gap:10px;">
+                                <div style="width:100%; height:180px; background:#f0f0f0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+                                <div style="width:80%; height:20px; background:#f0f0f0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+                                <div style="width:60%; height:15px; background:#f0f0f0; border-radius:4px; animation: pulse 1.5s infinite;"></div>
+                                <div style="width:40%; height:24px; background:#f0f0f0; border-radius:4px; margin-top:auto; animation: pulse 1.5s infinite;"></div>
+                            </div>
+                            `);
+                        }
+                    </script>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination-container" style="display:flex; justify-content:center; align-items:center; gap:5px; margin-top:2rem; padding-top:1rem; border-top:1px solid #ddd;">
+                    <button id="prevPageBtn" class="btn btn-secondary btn-sm" disabled>Previous</button>
+                    <div id="paginationNumbers" style="display:flex; gap:5px;"></div>
+                    <button id="nextPageBtn" class="btn btn-secondary btn-sm">Next</button>
                 </div>
             </div>
         </div>

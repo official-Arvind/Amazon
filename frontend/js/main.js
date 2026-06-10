@@ -89,6 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loadInfoPage();
   } else if (path === '/' || path.endsWith('/index.html') || path.endsWith('/frontend/')) {
     loadShopProducts('featuredProductsGrid', 8);
+    loadBestSellers();
+    loadRecentlyViewed();
     initHeroCarousel();
   }
 
@@ -1625,20 +1627,35 @@ function initHeroCarousel() {
   const slides = document.querySelectorAll('.hero-slide');
   const prevBtn = document.querySelector('.hero-prev');
   const nextBtn = document.querySelector('.hero-next');
+  const dots = document.querySelectorAll('.hero-dots .dot');
   if (slides.length === 0) return;
 
   let current = 0;
+  let intervalId;
   
   function showSlide(n) {
     slides[current].classList.remove('active');
+    if (dots.length > 0) dots[current].classList.remove('active');
+    
     current = (n + slides.length) % slides.length;
+    
     slides[current].classList.add('active');
+    if (dots.length > 0) dots[current].classList.add('active');
   }
 
-  if (prevBtn) prevBtn.addEventListener('click', () => showSlide(current - 1));
-  if (nextBtn) nextBtn.addEventListener('click', () => showSlide(current + 1));
+  function nextSlide() { showSlide(current + 1); }
+  function prevSlide() { showSlide(current - 1); }
 
-  // Swipe support
+  if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetInterval(); });
+  if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetInterval(); });
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      showSlide(index);
+      resetInterval();
+    });
+  });
+
   if (carousel) {
       let touchStartX = 0;
       let touchEndX = 0;
@@ -1649,13 +1666,97 @@ function initHeroCarousel() {
       
       carousel.addEventListener('touchend', e => {
           touchEndX = e.changedTouches[0].screenX;
-          if (touchEndX < touchStartX - 50) showSlide(current + 1); // Swipe left
-          if (touchEndX > touchStartX + 50) showSlide(current - 1); // Swipe right
+          if (touchEndX < touchStartX - 50) { nextSlide(); resetInterval(); }
+          if (touchEndX > touchStartX + 50) { prevSlide(); resetInterval(); }
       }, {passive: true});
+      
+      carousel.addEventListener('mouseenter', () => clearInterval(intervalId));
+      carousel.addEventListener('mouseleave', () => startInterval());
   }
 
-  // Auto-rotate every 5 seconds
-  setInterval(() => showSlide(current + 1), 5000);
+  function startInterval() {
+    clearInterval(intervalId);
+    intervalId = setInterval(nextSlide, 4000);
+  }
+  
+  function resetInterval() {
+    startInterval();
+  }
+
+  startInterval();
+}
+
+async function loadBestSellers() {
+  const container = document.getElementById('bestSellersRow');
+  if (!container) return;
+  try {
+    const products = await getProducts();
+    products.sort((a, b) => (b.reviews || 0) - (a.reviews || 0));
+    renderHorizontalRow(container, products.slice(0, 12));
+    setupHorizontalScroll('bestSellers');
+  } catch (err) {
+    container.innerHTML = '<div class="loading-state">Failed to load best sellers.</div>';
+  }
+}
+
+async function loadRecentlyViewed() {
+  const section = document.getElementById('recentlyViewedSection');
+  const container = document.getElementById('recentlyViewedRow');
+  if (!section || !container) return;
+  try {
+    let recentIds = JSON.parse(localStorage.getItem('zonix_recently_viewed')) || [];
+    if (recentIds.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+    section.style.display = 'block';
+    const products = await getProducts();
+    const recentProducts = recentIds.map(id => products.find(p => p.id === id)).filter(p => p);
+    renderHorizontalRow(container, recentProducts.slice(0, 8));
+    setupHorizontalScroll('recentlyViewedSection');
+  } catch (err) {
+    section.style.display = 'none';
+  }
+}
+
+function renderHorizontalRow(container, products) {
+  const inRoot = !window.location.pathname.includes('/frontend/') || window.location.pathname.endsWith('/frontend/') || window.location.pathname.endsWith('/frontend/index.html');
+  const pathPrefix = inRoot ? '' : '../';
+  container.innerHTML = products.map(product => {
+    const defaultImage = `${pathPrefix}assets/images/placeholder.jpg`;
+    const image = product.image ? (product.image.startsWith('http') ? product.image : pathPrefix + product.image) : defaultImage;
+    const badgeHTML = product.badge ? `<span class="product-badge">${product.badge}</span>` : '';
+    return `
+      <div class="product-card" data-product-id="${product.id}" onclick="window.location.href='${pathPrefix}product/?id=${product.id}'" style="cursor:pointer;">
+          ${badgeHTML}
+          <div class="product-image-container">
+              <img src="${image}" alt="${product.name}" class="product-image" loading="lazy" onerror="this.src='${defaultImage}'">
+          </div>
+          <div class="product-info">
+              <h3 class="product-name">${product.name}</h3>
+              <div class="product-rating">
+                  <span class="rating-badge">★ ${product.rating || '4.5'}</span>
+              </div>
+              <div class="product-pricing">
+                  <span class="product-price">₹${(product.price || 0).toLocaleString('en-IN')}</span>
+              </div>
+              <button class="add-to-cart-btn" aria-label="Add to cart">Add to Cart</button>
+          </div>
+      </div>
+    `;
+  }).join('');
+  setTimeout(initProducts, 100);
+}
+
+function setupHorizontalScroll(sectionId) {
+  const section = document.getElementById(sectionId);
+  if (!section) return;
+  const row = section.querySelector('.products-row');
+  const prevBtn = section.querySelector('.scroll-prev');
+  const nextBtn = section.querySelector('.scroll-next');
+  if (!row || !prevBtn || !nextBtn) return;
+  prevBtn.addEventListener('click', () => row.scrollBy({ left: -300, behavior: 'smooth' }));
+  nextBtn.addEventListener('click', () => row.scrollBy({ left: 300, behavior: 'smooth' }));
 }
 
 // =============================================

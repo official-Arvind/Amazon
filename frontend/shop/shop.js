@@ -2,6 +2,9 @@ import { db } from '../../backend/js/firebase-config.js';
 import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 
 let allProducts = [];
+let filteredProducts = [];
+let currentPage = 1;
+const itemsPerPage = 20;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const grid = document.getElementById('shopProductsGrid');
@@ -25,6 +28,49 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // View toggles
+    const gridViewBtn = document.getElementById('gridViewBtn');
+    const listViewBtn = document.getElementById('listViewBtn');
+    if (gridViewBtn && listViewBtn) {
+        gridViewBtn.addEventListener('click', () => {
+            grid.className = 'products-grid';
+            gridViewBtn.style.background = 'var(--color-accent-primary)';
+            gridViewBtn.style.color = '#fff';
+            listViewBtn.style.background = '#fff';
+            listViewBtn.style.color = '#333';
+        });
+        listViewBtn.addEventListener('click', () => {
+            grid.className = 'products-list-view';
+            listViewBtn.style.background = 'var(--color-accent-primary)';
+            listViewBtn.style.color = '#fff';
+            gridViewBtn.style.background = '#fff';
+            gridViewBtn.style.color = '#333';
+        });
+    }
+
+    // Sort by
+    const sortBySelect = document.getElementById('sortBySelect');
+    if (sortBySelect) {
+        sortBySelect.addEventListener('change', () => {
+            applyFilters();
+        });
+    }
+
+    // Pagination buttons
+    document.getElementById('prevPageBtn')?.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderPage();
+        }
+    });
+    document.getElementById('nextPageBtn')?.addEventListener('click', () => {
+        const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderPage();
+        }
+    });
+
     try {
         const querySnapshot = await getDocs(collection(db, 'products'));
         allProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -40,7 +86,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('clearMobileFiltersBtn')?.addEventListener('click', () => {
         const checkboxes = document.querySelectorAll('input[type="checkbox"], input[type="radio"]');
         checkboxes.forEach(cb => cb.checked = false);
-        // Also clear URL params by navigating to base URL
         window.history.pushState({}, '', window.location.pathname);
         applyFilters();
     });
@@ -84,19 +129,49 @@ function setupFilters() {
     }
 
     if (params.q) {
-        // We could populate the search box
         const searchInput = document.querySelector('.search-input');
         if (searchInput) searchInput.value = params.q;
     }
 }
 
+function updateActiveFilterBadges() {
+    const strip = document.getElementById('activeFiltersStrip');
+    if (!strip) return;
+    strip.innerHTML = '';
+    
+    const checkboxes = document.querySelectorAll('.shop-sidebar input[type="checkbox"]:checked, .shop-sidebar input[type="radio"]:checked');
+    checkboxes.forEach(cb => {
+        if (cb.name === 'availability') return; // ignore include out of stock
+        if (cb.value === '') return; // ignore "all products"
+        
+        let labelText = cb.parentElement.textContent.trim();
+        const badge = document.createElement('div');
+        badge.className = 'filter-badge';
+        badge.innerHTML = `${labelText} <span class="remove-filter" data-name="${cb.name}" data-value="${cb.value}">&times;</span>`;
+        strip.appendChild(badge);
+    });
+
+    // Add click listeners to remove
+    strip.querySelectorAll('.remove-filter').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const name = e.target.getAttribute('data-name');
+            const val = e.target.getAttribute('data-value');
+            const inputs = document.querySelectorAll(`input[name="${name}"][value="${val}"]`);
+            inputs.forEach(input => {
+                input.checked = false;
+            });
+            applyFilters();
+        });
+    });
+}
+
 function applyFilters() {
     const params = getUrlParams();
-    let filtered = [...allProducts];
+    filteredProducts = [...allProducts];
 
     // URL parameter filtering
     if (params.q) {
-        filtered = filtered.filter(p => 
+        filteredProducts = filteredProducts.filter(p => 
             p.name?.toLowerCase().includes(params.q) || 
             p.description?.toLowerCase().includes(params.q) || 
             p.category?.toLowerCase().includes(params.q)
@@ -104,78 +179,118 @@ function applyFilters() {
     }
     
     // Sidebar Category Filter
-    const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value).filter(v => v !== '');
+    const selectedCategories = Array.from(document.querySelectorAll('.shop-sidebar input[name="category"]:checked')).map(cb => cb.value).filter(v => v !== '');
     if (selectedCategories.length > 0) {
-        filtered = filtered.filter(p => selectedCategories.includes(p.category) || selectedCategories.some(sc => p.category?.toLowerCase() === sc.toLowerCase()));
+        filteredProducts = filteredProducts.filter(p => selectedCategories.includes(p.category) || selectedCategories.some(sc => p.category?.toLowerCase() === sc.toLowerCase()));
     } else {
-        // If "All Products" is checked (value="")
-        const allProductsCb = document.querySelector('input[name="category"][value=""]');
+        const allProductsCb = document.querySelector('.shop-sidebar input[name="category"][value=""]');
         if (allProductsCb?.checked) {
-            // Uncheck other categories visually but no filter applies (show all)
-            document.querySelectorAll('input[name="category"]:not([value=""])').forEach(cb => cb.checked = false);
+            document.querySelectorAll('.shop-sidebar input[name="category"]:not([value=""])').forEach(cb => cb.checked = false);
         }
-        
-        // Also check if category is set in URL and no checkbox selected
         if (params.category) {
-             filtered = filtered.filter(p => p.category === params.category || p.category?.toLowerCase() === params.category.toLowerCase());
+             filteredProducts = filteredProducts.filter(p => p.category === params.category || p.category?.toLowerCase() === params.category.toLowerCase());
         }
     }
 
     // Rating Filter
-    const selectedRating = document.querySelector('input[name="rating"]:checked')?.value;
+    const selectedRating = document.querySelector('.shop-sidebar input[name="rating"]:checked')?.value;
     if (selectedRating) {
-        filtered = filtered.filter(p => (p.rating || 0) >= parseFloat(selectedRating));
+        filteredProducts = filteredProducts.filter(p => (p.rating || 0) >= parseFloat(selectedRating));
     }
 
     // Price Filter
-    const selectedPrice = document.querySelector('input[name="price"]:checked')?.value;
+    const selectedPrice = document.querySelector('.shop-sidebar input[name="price"]:checked')?.value;
     if (selectedPrice) {
         const [min, max] = selectedPrice.split('-').map(Number);
-        filtered = filtered.filter(p => {
+        filteredProducts = filteredProducts.filter(p => {
             const price = Number(p.price) || 0;
             return price >= min && price <= max;
         });
     }
 
     // Discount Filter
-    const selectedDiscount = document.querySelector('input[name="discount"]:checked')?.value;
+    const selectedDiscount = document.querySelector('.shop-sidebar input[name="discount"]:checked')?.value;
     if (selectedDiscount) {
         const discountVal = parseInt(selectedDiscount, 10);
-        filtered = filtered.filter(p => {
+        filteredProducts = filteredProducts.filter(p => {
             if (!p.originalPrice || p.originalPrice <= p.price) return false;
             const discountPercent = ((p.originalPrice - p.price) / p.originalPrice) * 100;
             return discountPercent >= discountVal;
         });
     }
 
-    // Availability Filter (Out of Stock)
-    const includeOutOfStock = document.querySelector('input[name="availability"]')?.checked;
+    // Availability Filter
+    const includeOutOfStock = document.querySelector('.shop-sidebar input[name="availability"]')?.checked;
     if (!includeOutOfStock) {
-        filtered = filtered.filter(p => p.stock > 0);
+        filteredProducts = filteredProducts.filter(p => p.stock > 0);
     }
 
-    renderProducts(filtered);
+    // Sort
+    const sortVal = document.getElementById('sortBySelect')?.value;
+    if (sortVal === 'price_low') {
+        filteredProducts.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+    } else if (sortVal === 'price_high') {
+        filteredProducts.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
+    } else if (sortVal === 'rating') {
+        filteredProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    } else if (sortVal === 'newest') {
+        filteredProducts.sort((a, b) => b.id.localeCompare(a.id));
+    }
+
+    updateActiveFilterBadges();
+
+    // Reset pagination to page 1
+    currentPage = 1;
+    updateResultsText();
+    renderPage();
 }
 
-function renderProducts(products) {
-    const grid = document.getElementById('shopProductsGrid');
+function updateResultsText() {
     const countEl = document.querySelector('.products-count');
+    if (!countEl) return;
+    const params = getUrlParams();
+    if (params.q) {
+        countEl.textContent = `Showing ${filteredProducts.length} results for "${params.q}"`;
+    } else {
+        countEl.textContent = `Showing ${filteredProducts.length} results`;
+    }
+}
+
+function renderPage() {
+    const grid = document.getElementById('shopProductsGrid');
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
     
-    if (countEl) {
-        const params = getUrlParams();
-        if (params.q) {
-            countEl.textContent = `Search Results for "${params.q}" - Showing ${products.length} Products`;
-        } else {
-            countEl.textContent = `Showing ${products.length} Products`;
+    // Pagination UI
+    const prevBtn = document.getElementById('prevPageBtn');
+    const nextBtn = document.getElementById('nextPageBtn');
+    const pageNumContainer = document.getElementById('paginationNumbers');
+    
+    if (prevBtn) prevBtn.disabled = currentPage === 1 || totalPages === 0;
+    if (nextBtn) nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+
+    if (pageNumContainer) {
+        pageNumContainer.innerHTML = '';
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'page-num-btn' + (i === currentPage ? ' active' : '');
+            btn.textContent = i;
+            btn.addEventListener('click', () => {
+                currentPage = i;
+                renderPage();
+            });
+            pageNumContainer.appendChild(btn);
         }
     }
-    
-    if (products.length === 0) {
+
+    if (filteredProducts.length === 0) {
         grid.innerHTML = '<div style="grid-column: 1 / -1; padding: 2rem; text-align: center;">No products found matching your criteria.</div>';
         return;
     }
 
-    grid.innerHTML = products.map(product => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+
+    grid.innerHTML = paginatedProducts.map(product => {
         const price = Number(product.price) || 0;
         const oldPrice = Number(product.originalPrice) || 0;
         
@@ -223,4 +338,7 @@ function renderProducts(products) {
             </a>
         `;
     }).join('');
+    
+    // Scroll to top
+    // window.scrollTo({top: 0, behavior: 'smooth'});
 }

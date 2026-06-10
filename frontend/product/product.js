@@ -24,6 +24,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const product = productSnap.data();
         product.id = productSnap.id;
         
+        // Track recently viewed
+        let recentIds = JSON.parse(localStorage.getItem('zonix_recently_viewed')) || [];
+        recentIds = recentIds.filter(id => id !== product.id);
+        recentIds.unshift(product.id);
+        if (recentIds.length > 8) recentIds = recentIds.slice(0, 8);
+        localStorage.setItem('zonix_recently_viewed', JSON.stringify(recentIds));
+        
         populateUI(product);
         setupActions(product);
         loadReviews(productId);
