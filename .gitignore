@@ -11,6 +11,8 @@
 *~
 .DS_Store
 Thumbs.db
+.agents
+Testing\
 
 # Node.js (if you add npm later)
 node_modules/
