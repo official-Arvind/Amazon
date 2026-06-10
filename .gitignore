@@ -12,7 +12,11 @@
 .DS_Store
 Thumbs.db
 .agents
-Testing\
+testing
+replace_links.py
+firebase.json
+favicon.ico
+firestore.rules
 
 # Node.js (if you add npm later)
 node_modules/
