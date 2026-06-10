@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn about ZONIX - our mission, values, and commitment to premium e-commerce.">
+    <title>Sell on ZONIX</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+        <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <button class="mobile-menu-btn mobile-only" aria-label="Menu" id="mobileMenuBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <div class="navbar-logo">
+                    <a href="../" class="logo-text">ZONIX<span class="logo-in">.in</span></a>
+                </div>
+            </div>
+            
+            <div class="navbar-deliver desktop-only">
+                <span class="deliver-to">Deliver to</span>
+                <span class="deliver-location">📍 India</span>
+            </div>
+
+            <div class="navbar-search desktop-only">
+                <select class="search-category">
+                    <option>All Categories</option>
+                    <option>Electronics</option>
+                    <option>Fashion</option>
+                    <option>Home & Living</option>
+                    <option>Gaming</option>
+                    <option>Audio</option>
+                </select>
+                <input type="text" class="search-input" placeholder="Search ZONIX for products, brands and more">
+                <button class="search-btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="navbar-icons">
+                <a href="../orders/" class="nav-link-custom mobile-only mobile-user-icon">
+                    <span class="nav-small">Sign in ›</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </a>
+
+                <a href="../login/" class="nav-link-custom desktop-only" id="authNavLink">
+                    <span class="nav-small">Hello, sign in</span>
+                    <span class="nav-bold">Account & Lists</span>
+                </a>
+                
+                <a href="<a href="../orders/" class="nav-link-custom desktop-only">
+                    <span class="nav-small">Returns</span>
+                    <span class="nav-bold">& Orders</span>
+                </a>
+
+                <a href="../cart/" class="nav-link-custom cart-link">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count" id="cartBadge" style="display:none;">0</span>
+                    <span class="nav-bold cart-text">Cart</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Mobile Search Bar (Full Width) -->
+        <div class="mobile-search-bar mobile-only">
+            <div class="navbar-search mobile-search-inner">
+                <input type="text" class="search-input" placeholder="Search ZONIX">
+                <button class="search-btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Drawer Overlay & Menu -->
+    <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <div class="drawer-header">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span class="drawer-greeting">Hello, sign in</span>
+            <button class="drawer-close" id="drawerCloseBtn">&times;</button>
+        </div>
+        <div class="drawer-content">
+            <div class="drawer-section">
+                <h3>Trending</h3>
+                <a href="../shop/">Best Sellers</a>
+                <a href="../shop/">New Releases</a>
+            </div>
+            <div class="drawer-section">
+                <h3>Shop By Category</h3>
+                <a href="../shop/?q=electronics">Electronics</a>
+                <a href="../shop/?q=fashion">Fashion</a>
+                <a href="../shop/?q=home">Home & Kitchen</a>
+                <a href="../shop/?q=audio">Audio & Entertainment</a>
+            </div>
+            <div class="drawer-section">
+                <h3>Help & Settings</h3>
+                <a href="../profile/">Your Account</a>
+                <a href="../contact/">Customer Service</a>
+                <a href="../login/">Sign In</a>
+            </div>
+        </div>
+    </div>
+    <div class="sub-navbar">
+        <a href="../" class="sub-nav-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            All
+        </a>
+        <a href="../shop/" class="sub-nav-link" style="color:var(--color-accent-primary);">Today's Deals</a>
+        <a href="../shop/?q=electronics" class="sub-nav-link">Electronics</a>
+        <a href="../shop/?q=fashion" class="sub-nav-link">Fashion</a>
+        <a href="../shop/?q=home" class="sub-nav-link">Home & Kitchen</a>
+        <a href="../shop/?q=gaming" class="sub-nav-link">Gaming</a>
+        <a href="../contact/" class="sub-nav-link">Customer Service</a>
+    </div>
+
+    
+    
+    <!-- Hero Section -->
+    <section class="hero" style="background: linear-gradient(135deg, #131921 0%, #37475a 100%); padding: 120px 20px; text-align: center; color: white;">
+        <div class="hero-wrapper" style="max-width: 800px; margin: 0 auto;">
+            <h1 style="font-size: 3.5rem; margin-bottom: 20px; color: #fff;">Grow Your Business with ZONIX</h1>
+            <p style="font-size: 1.3rem; margin-bottom: 40px; color: #ddd; line-height: 1.6;">
+                Join India's most transparent marketplace. Reach millions of engaged customers with lower fees, faster payouts, and dedicated support.
+            </p>
+            <a href="../contact/" style="background: #f3a847; color: #111; padding: 15px 40px; font-size: 1.2rem; font-weight: bold; border-radius: 4px; text-decoration: none; display: inline-block; transition: background 0.3s;">Start Selling Today</a>
+        </div>
+    </section>
+
+    <!-- Why Sell on ZONIX -->
+    <section style="background: #fff; padding: 80px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 style="font-size: 2.5rem; text-align: center; color: #111; margin-bottom: 50px;">Why Sell on ZONIX?</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+                <div style="text-align: center; padding: 30px; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">💰</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Lower Fees than Amazon</h3>
+                    <p style="color: #555; line-height: 1.6;">Keep more of what you earn. Our commission structures are transparent and significantly lower than competitors, allowing you to price competitively.</p>
+                </div>
+                <div style="text-align: center; padding: 30px; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">⚡</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Faster Payouts</h3>
+                    <p style="color: #555; line-height: 1.6;">No more waiting 14 days for your money. Receive your funds within 48 hours of successful delivery.</p>
+                </div>
+                <div style="text-align: center; padding: 30px; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🤝</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Dedicated Support</h3>
+                    <p style="color: #555; line-height: 1.6;">Speak to real humans. You get a dedicated account manager to help you onboard, optimize listings, and grow your sales.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section style="background: #f7f7f7; padding: 80px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 style="font-size: 2.5rem; text-align: center; color: #111; margin-bottom: 50px;">What Our Sellers Say</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    <div style="color: #f3a847; font-size: 1.2rem; margin-bottom: 15px;">★★★★★</div>
+                    <p style="font-style: italic; color: #444; margin-bottom: 20px; line-height: 1.6;">"Moving to ZONIX was the best decision for our electronics brand. The lower fees meant we could pass savings to customers, doubling our sales volume in just 3 months."</p>
+                    <div style="font-weight: bold; color: #111;">— Rahul Sharma, TechGear India</div>
+                </div>
+                <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    <div style="color: #f3a847; font-size: 1.2rem; margin-bottom: 15px;">★★★★★</div>
+                    <p style="font-style: italic; color: #444; margin-bottom: 20px; line-height: 1.6;">"The transparency is refreshing. I know exactly what I'm being charged and why. Plus, the 48-hour payouts keep our cash flow healthy."</p>
+                    <div style="font-weight: bold; color: #111;">— Priya Patel, Elegant Attire</div>
+                </div>
+                <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    <div style="color: #f3a847; font-size: 1.2rem; margin-bottom: 15px;">★★★★★</div>
+                    <p style="font-style: italic; color: #444; margin-bottom: 20px; line-height: 1.6;">"Whenever I have an issue, I just call my dedicated account manager. No automated bots, no endless tickets. Just real, helpful support."</p>
+                    <div style="font-weight: bold; color: #111;">— Vikram Singh, HomeEssentials</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section style="background: #232f3e; padding: 60px 20px; text-align: center; color: white;">
+        <h2 style="font-size: 2.2rem; margin-bottom: 20px;">Ready to reach more customers?</h2>
+        <p style="font-size: 1.2rem; margin-bottom: 30px; color: #ddd;">Join thousands of successful sellers on ZONIX.in</p>
+        <a href="../contact/" style="background: #f3a847; color: #111; padding: 15px 40px; font-size: 1.2rem; font-weight: bold; border-radius: 4px; text-decoration: none; display: inline-block;">Start Selling Today</a>
+    </section>
+
+
+    <!-- Footer -->
+        <div class="footer-back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Get to Know Us</h4>
+                <ul>
+                    <li><a href="../about/">About ZONIX</a></li>
+                    <li><a href="../info/?page=collections">Collections</a></li>
+                    <li><a href="../contact/">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Let Us Help You</h4>
+                <ul>
+                    <li><a href="../info/?page=help">Help Center</a></li>
+                    <li><a href="../info/?page=returns">Returns & Refunds</a></li>
+                    <li><a href="../info/?page=shipping">Shipping Info</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Policies</h4>
+                <ul>
+                    <li><a href="../info/?page=terms">Terms of Service</a></li>
+                    <li><a href="../info/?page=privacy">Privacy Policy</a></li>
+                    <li><a href="../info/?page=returns">Return Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-logo">ZONIX<span class="logo-in">.in</span></div>
+            <p>&copy; 2026 ZONIX. The Marketplace, Redefined.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="../js/main.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your Orders - ZONIX">
+    <title>Your Orders - ZONIX</title>
+    <link rel="stylesheet" href="../css/style.css?v=1.2">
+    <style>
+        .orders-page-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        .orders-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .orders-title {
+            font-size: 1.75rem;
+            font-weight: 500;
+        }
+        .orders-filters {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .search-orders-container {
+            display: flex;
+            align-items: center;
+        }
+        .search-orders-input {
+            padding: 6px 10px;
+            border: 1px solid #888C8C;
+            border-radius: 4px 0 0 4px;
+            border-right: none;
+            outline: none;
+            width: 250px;
+        }
+        .search-orders-btn {
+            background: #333;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 0 4px 4px 0;
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+        .filter-dropdown {
+            padding: 6px;
+            border: 1px solid #d5d9d9;
+            border-radius: 4px;
+            background: #f0f2f2;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(15,17,17,.15);
+        }
+        .order-card {
+            border: 1px solid #d5d9d9;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            background: #fff;
+        }
+        .order-card-header {
+            background: #f0f2f2;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #d5d9d9;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .order-header-info {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.85rem;
+            color: #565959;
+        }
+        .order-header-info div {
+            display: flex;
+            flex-direction: column;
+        }
+        .order-header-info span {
+            color: #0f1111;
+            font-weight: 500;
+        }
+        .order-header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-size: 0.85rem;
+        }
+        .order-card-body {
+            padding: 1.5rem;
+        }
+        .order-status {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .status-processing { background: #fef08a; color: #854d0e; }
+        .status-shipped { background: #bfdbfe; color: #1e3a8a; }
+        .status-delivered { background: #bbf7d0; color: #166534; }
+        .status-cancelled { background: #fecaca; color: #991b1b; }
+        
+        .order-item {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .order-item-img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+        }
+        .order-item-details {
+            flex: 1;
+            min-width: 250px;
+        }
+        .order-item-title {
+            color: #007185;
+            font-weight: 500;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .order-item-title:hover {
+            color: #c45500;
+            text-decoration: underline;
+        }
+        .order-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-width: 200px;
+        }
+        .btn-order-action {
+            width: 100%;
+            padding: 6px 12px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: block;
+        }
+        .btn-track {
+            background: #ffd814;
+            border: 1px solid #fcd200;
+            color: #0f1111;
+        }
+        .btn-track:hover { background: #f7ca00; }
+        .btn-return {
+            background: #fff;
+            border: 1px solid #d5d9d9;
+            color: #0f1111;
+            box-shadow: 0 2px 5px rgba(15,17,17,.15);
+        }
+        .btn-return:hover { background: #f7fafa; }
+        
+        .timeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1rem;
+            position: relative;
+            padding: 0 20px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            right: 30px;
+            height: 4px;
+            background: #d5d9d9;
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+        .timeline-progress {
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            height: 4px;
+            background: #007185;
+            z-index: 2;
+            transform: translateY(-50%);
+            transition: width 0.3s ease;
+        }
+        .timeline-step {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #d5d9d9;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 1px #d5d9d9;
+        }
+        .timeline-dot.active {
+            background: #007185;
+            box-shadow: 0 0 0 1px #007185;
+        }
+        .timeline-label {
+            font-size: 0.8rem;
+            color: #565959;
+            font-weight: 500;
+        }
+        .timeline-label.active {
+            color: #0f1111;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <a href="../" class="logo-text">ZONIX<span class="logo-in">.in</span></a>
+            </div>
+            <div class="navbar-icons" style="margin-left: auto;">
+                <a href="../login/" class="nav-link-custom desktop-only" id="authNavLink">
+                    <span class="nav-small">Hello, sign in</span>
+                    <span class="nav-bold">Account & Lists</span>
+                </a>
+                <a href="../orders/" class="nav-link-custom desktop-only">
+                    <span class="nav-small">Returns</span>
+                    <span class="nav-bold">& Orders</span>
+                </a>
+                <a href="../cart/" class="nav-link-custom cart-link">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count" id="cartBadge" style="display:none;">0</span>
+                    <span class="nav-bold cart-text">Cart</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="sub-navbar">
+        <a href="../" class="sub-nav-link">All</a>
+        <a href="../shop/" class="sub-nav-link">Today's Deals</a>
+        <a href="../shop/?q=electronics" class="sub-nav-link">Electronics</a>
+        <a href="../shop/?q=fashion" class="sub-nav-link">Fashion</a>
+        <a href="../contact/" class="sub-nav-link">Customer Service</a>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div style="max-width:1000px;margin:0 auto;padding:12px 1rem 0;">
+        <span style="font-size:0.8rem;color:#565959;">
+            <a href="../profile/" style="color:var(--color-accent-primary);">Your Account</a> › <strong style="color:#c45500">Your Orders</strong>
+        </span>
+    </div>
+
+    <main class="orders-page-container">
+        <div class="orders-header">
+            <h1 class="orders-title">Your Orders</h1>
+            <div class="orders-filters">
+                <div class="search-orders-container">
+                    <input type="text" id="searchOrdersInput" class="search-orders-input" placeholder="Search all orders">
+                    <button id="searchOrdersBtn" class="search-orders-btn">Search Orders</button>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size:0.9rem; color:#0f1111;"><strong>Filter orders:</strong></span>
+            <select id="timeFilter" class="filter-dropdown">
+                <option value="30">Last 30 days</option>
+                <option value="90">Past 3 months</option>
+                <option value="180">Past 6 months</option>
+                <option value="all" selected>All time</option>
+            </select>
+        </div>
+
+        <div id="ordersListContainer">
+            <div style="padding: 3rem; text-align: center; color: #565959;">
+                Loading your orders...
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer" style="margin-top:auto;">
+        <div class="footer-bottom">
+            <div class="footer-logo">ZONIX</div>
+            <p>&copy; 2026 ZONIX. The Marketplace, Redefined.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="../js/main.js"></script>
+    <script type="module" src="orders.js"></script>
+</body>
+</html>

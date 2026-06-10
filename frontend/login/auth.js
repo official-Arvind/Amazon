@@ -8,7 +8,7 @@
 
 'use strict';
 
-import { loginWithEmail, signUpWithEmail, logoutUser, signInWithGoogle } from '../../backend/js/auth.js';
+import { loginWithEmail, signUpWithEmail, logoutUser, signInWithGoogle, resetPassword } from '../../backend/js/auth.js';
 import { subscribeToAuthState } from '../../backend/js/auth.js';
 
 // =============================================
@@ -138,6 +138,30 @@ function initializeEventListeners() {
     if (loginPassword) loginPassword.addEventListener('input', () => clearError('loginPassword'));
     if (signupPassword) signupPassword.addEventListener('input', () => validatePasswordStrength('signupPassword'));
     if (signupConfirmPassword) signupConfirmPassword.addEventListener('input', () => validatePasswordMatch());
+
+
+    // Forgot Password
+    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+    if (forgotPasswordLink) {
+        forgotPasswordLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            if (!email) {
+                showToast('Please enter your email on the first screen to reset your password.', 'error');
+                switchTab('login');
+                return;
+            }
+            try {
+                showLoading(true);
+                await resetPassword(email);
+                showToast('Password reset email sent! Please check your inbox.', 'success');
+            } catch (error) {
+                showToast(error.message || 'Failed to send reset email.', 'error');
+            } finally {
+                showLoading(false);
+            }
+        });
+    }
 
     // Google sign-in buttons
     const googleLoginBtn = document.getElementById('googleLoginBtn');
