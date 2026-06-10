@@ -300,7 +300,7 @@ function renderNavbar() {
           <option>Gaming</option>
           <option>Audio</option>
         </select>
-        <input type="text" class="search-input" placeholder="Search Amazon.in">
+        <input type="text" class="search-input" placeholder="Search ZONIX.in">
         <button class="search-btn" aria-label="Search">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f1111" stroke-width="2.5">
             <circle cx="11" cy="11" r="8"></circle>
