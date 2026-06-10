@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <a href="../product/?id=${item.productId}" class="wishlist-name">${item.name}</a>
                 <div class="wishlist-price">${priceFormatted}</div>
                 <button class="add-to-cart-btn" data-id="${item.productId}">
-                    Add to Cart
+                    Move to Cart
                 </button>
             </div>
         `;
@@ -96,21 +96,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const addToCartBtn = div.querySelector('.add-to-cart-btn');
+        addToCartBtn.innerText = 'Move to Cart';
         addToCartBtn.addEventListener('click', async () => {
             addToCartBtn.disabled = true;
-            addToCartBtn.innerText = 'Adding...';
+            addToCartBtn.innerText = 'Moving...';
             try {
                 await db.addToCart(currentUser.uid, item.productId, 1);
-                const event = new CustomEvent('show-toast', { detail: 'Added to cart!' });
+                await db.removeFromWishlist(currentUser.uid, item.productId);
+                
+                div.remove();
+                if (wishlistGrid.children.length === 0) {
+                    emptyEl.style.display = 'block';
+                }
+
+                const event = new CustomEvent('show-toast', { detail: 'Moved to cart!' });
                 window.dispatchEvent(event);
                 
-                // Optionally trigger cart refresh if your main.js handles it via custom event
                 window.dispatchEvent(new Event('cart-updated'));
+                window.dispatchEvent(new Event('wishlist-updated'));
             } catch (error) {
-                console.error("Error adding to cart", error);
-            } finally {
+                console.error("Error moving to cart", error);
                 addToCartBtn.disabled = false;
-                addToCartBtn.innerText = 'Add to Cart';
+                addToCartBtn.innerText = 'Move to Cart';
             }
         });
 

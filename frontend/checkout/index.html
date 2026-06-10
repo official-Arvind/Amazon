@@ -143,6 +143,19 @@
                     <div class="step-content" style="padding-left: 2rem; display: none;">
                         <form id="paymentForm">
                             <div style="border: 1px solid #d5d9d9; border-radius: 8px; margin-bottom: 1rem;">
+                                <label style="display: flex; gap: 10px; padding: 1rem; border-bottom: 1px solid #d5d9d9; cursor: pointer; background: #f0f8ff;">
+                                    <input type="checkbox" id="useWalletBalance" value="500">
+                                    <div style="width: 100%;">
+                                        <div style="color: #0f1111; font-weight: 700; display: flex; align-items: center; justify-content: space-between;">
+                                            <div>
+                                                ZONIX Pay Balance
+                                                <span style="background: #007185; color: #fff; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-left: 8px;">₹500 Available</span>
+                                            </div>
+                                            <div id="walletAppliedText" style="color: #007185; font-size: 0.9rem; font-weight: bold; display: none;">- ₹0</div>
+                                        </div>
+                                        <div style="color: #565959; font-size: 0.85rem; margin-top: 4px;">Automatically apply balance to this order</div>
+                                    </div>
+                                </label>
                                 <label style="display: flex; gap: 10px; padding: 1rem; border-bottom: 1px solid #d5d9d9; cursor: pointer; background: #fcfcfc;">
                                     <input type="radio" name="payment" value="card" checked>
                                     <div>

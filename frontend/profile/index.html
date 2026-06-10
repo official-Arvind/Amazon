@@ -153,6 +153,9 @@
                     <button class="profile-nav-item" data-tab="addresses">
                         Your Addresses <span>›</span>
                     </button>
+                    <button class="profile-nav-item" data-tab="wallet">
+                        ZONIX Pay Wallet <span>›</span>
+                    </button>
                     <button class="profile-nav-item" style="border-top: 1px solid #f0f2f2;" onclick="window.location.href='../contact/'">
                         Contact Us <span>›</span>
                     </button>
@@ -172,9 +175,83 @@
                 <div id="addressesTab" class="profile-tab" style="display: none;">
                     <h2 style="margin-bottom: 1rem;">Your Addresses</h2>
                     <div id="addressesList" class="addresses-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
-                        <div style="border: 1px dashed #a6a6a6; border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 250px;">
+                        <div id="addAddressBtn" style="border: 1px dashed #a6a6a6; border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 250px;">
                             <span style="font-size: 3rem; color: #a6a6a6;">+</span>
                             <h3 style="color: #565959; font-weight: 500; font-size: 1.2rem;">Add address</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Modal -->
+                <div id="addressModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+                    <div style="background: #fff; padding: 2rem; border-radius: 8px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                        <h3 id="addressModalTitle" style="margin-bottom: 1rem;">Add a new address</h3>
+                        <form id="profileAddressForm">
+                            <input type="hidden" id="profAddressId">
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display:block; font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;">Full name</label>
+                                <input type="text" id="profFullName" required style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px;">
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display:block; font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;">Mobile number</label>
+                                <input type="tel" id="profPhone" required style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px;">
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display:block; font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;">Flat, House no., Building, Company, Apartment</label>
+                                <input type="text" id="profStreet" required style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px;">
+                            </div>
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="flex: 1;">
+                                    <label style="display:block; font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;">Town/City</label>
+                                    <input type="text" id="profCity" required style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="display:block; font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;">PIN code</label>
+                                    <input type="text" id="profZip" required style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="display:block; font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;">State</label>
+                                    <input type="text" id="profState" required style="width: 100%; padding: 0.5rem; border: 1px solid #a6a6a6; border-radius: 3px;">
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                                <button type="button" id="closeAddressModal" style="padding: 0.5rem 1.5rem; background: #f0f2f2; border: 1px solid #d5d9d9; border-radius: 8px; cursor: pointer;">Cancel</button>
+                                <button type="submit" class="btn-amazon-primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem; background: #ffd814; border-color: #fcd200; border-radius: 8px;">Save Address</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Wallet Tab -->
+                <div id="walletTab" class="profile-tab" style="display: none;">
+                    <h2 style="margin-bottom: 1rem;">ZONIX Pay Wallet</h2>
+                    <div style="border: 1px solid #d5d9d9; border-radius: 8px; padding: 2rem; margin-bottom: 1rem; background: linear-gradient(135deg, #007185, #00a6c2); color: white;">
+                        <h3 style="margin-bottom: 0.5rem; font-weight: normal;">Current Balance</h3>
+                        <div style="font-size: 3rem; font-weight: bold; margin-bottom: 1rem;">₹500.00</div>
+                        <button style="background: #fff; color: #007185; border: none; padding: 0.5rem 1rem; border-radius: 4px; font-weight: bold; cursor: pointer;">Add Money</button>
+                    </div>
+                    
+                    <h3 style="margin-bottom: 1rem;">Saved Payment Methods</h3>
+                    <div style="display: grid; gap: 1rem;">
+                        <div style="border: 1px solid #d5d9d9; border-radius: 8px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <div style="background: #f0f2f2; padding: 0.5rem; border-radius: 4px; font-weight: bold;">UPI</div>
+                                <div>
+                                    <div style="font-weight: bold;">Google Pay</div>
+                                    <div style="color: #565959; font-size: 0.85rem;">user@okaxis</div>
+                                </div>
+                            </div>
+                            <button class="secondary-button" style="padding: 5px 15px; font-size: 0.9rem;">Remove</button>
+                        </div>
+                        <div style="border: 1px solid #d5d9d9; border-radius: 8px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <div style="background: #f0f2f2; padding: 0.5rem; border-radius: 4px; font-weight: bold;">VISA</div>
+                                <div>
+                                    <div style="font-weight: bold;">HDFC Bank Credit Card</div>
+                                    <div style="color: #565959; font-size: 0.85rem;">Ending in 4242</div>
+                                </div>
+                            </div>
+                            <button class="secondary-button" style="padding: 5px 15px; font-size: 0.9rem;">Remove</button>
                         </div>
                     </div>
                 </div>

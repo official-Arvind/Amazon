@@ -24,7 +24,8 @@ import {
   createGuestOrder,
   getOrders,
   getSavedAddresses,
-  saveAddress
+  saveAddress,
+  getWishlistItems
 } from '../../backend/js/db.js';
 
 // =============================================
@@ -36,6 +37,7 @@ const appState = {
   cart: [],
   orders: [],
   addresses: [],
+  wishlist: [],
   isLoading: false
 };
 
@@ -96,6 +98,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 3. Initialize Products (Add to Cart buttons) everywhere
   initProducts();
+
+  // 4. Listen for custom events to update cart and wishlist badges
+  window.addEventListener('cart-updated', async () => {
+    if (appState.isAuthenticated && appState.currentUser) {
+      appState.cart = await getCartItems(appState.currentUser.uid);
+      updateCartBadge();
+    }
+  });
+
+  window.addEventListener('wishlist-updated', async () => {
+    if (appState.isAuthenticated && appState.currentUser) {
+      appState.wishlist = await getWishlistItems(appState.currentUser.uid);
+      updateWishlistBadge();
+    }
+  });
 });
 
 // =============================================
@@ -164,6 +181,9 @@ async function loadUserData() {
 
     appState.cart = await getCartItems(appState.currentUser.uid);
     updateCartBadge();
+    
+    appState.wishlist = await getWishlistItems(appState.currentUser.uid);
+    updateWishlistBadge();
     
     if (window.location.pathname.includes('/cart/')) displayCartItems();
     if (window.location.pathname.includes('/checkout/')) updateCheckoutSummary();
@@ -304,6 +324,12 @@ function renderNavbar() {
           <span class="nav-bold">& Orders</span>
         </a>
 
+        <a href="${prefix}wishlist/" class="nav-link-custom wishlist-link" style="position: relative;">
+          <span class="wishlist-count" id="wishlistBadge" style="display:none; position:absolute; top:2px; right:5px; background:var(--color-accent-primary, #ff9900); color:#000; border-radius:10px; font-size:12px; font-weight:bold; padding:2px 6px; align-items:center; justify-content:center;">0</span>
+          <span class="nav-small">Your</span>
+          <span class="nav-bold">Wishlist</span>
+        </a>
+
         <a href="${prefix}cart/" class="nav-link-custom cart-link">
           <div class="cart-icon-wrapper">
             <span class="cart-count" id="cartBadge" style="display:none;">0</span>
@@ -335,7 +361,7 @@ function renderNavbar() {
       <a href="${prefix}shop/" class="sub-nav-link">Best Sellers</a>
       <a href="${prefix}shop/?q=electronics" class="sub-nav-link">Mobiles</a>
       <a href="${prefix}shop/?q=electronics" class="sub-nav-link">Electronics</a>
-      <a href="${prefix}shop/?q=fashion" class="sub-nav-link">Prime</a>
+      <a href="${prefix}premium/" class="sub-nav-link" style="color: #ffd700; font-weight: bold;">ZONIX Premium</a>
       <a href="${prefix}contact/" class="sub-nav-link">Customer Service</a>
       <a href="${prefix}help/" class="sub-nav-link">New Releases</a>
       <a href="${prefix}admin/" class="sub-nav-link" style="color:var(--color-accent-primary); font-weight:bold; margin-left:auto;">Admin Dashboard</a>
@@ -622,6 +648,50 @@ function initProducts() {
         }
       });
     }
+
+    const wishlistBtn = card.querySelector('.wishlist-btn');
+    if (wishlistBtn) {
+      wishlistBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!appState.isAuthenticated) {
+          showNotification('Please log in to add to Wishlist', 'warning');
+          return;
+        }
+
+        const productId = card.dataset.productId;
+        if (!productId) return;
+
+        const originalHtml = wishlistBtn.innerHTML;
+        wishlistBtn.innerHTML = '...';
+        wishlistBtn.disabled = true;
+
+        try {
+          const dbModule = await import('../../backend/js/db.js');
+          await dbModule.addToWishlist(appState.currentUser.uid, productId);
+          
+          appState.wishlist = await dbModule.getWishlistItems(appState.currentUser.uid);
+          updateWishlistBadge();
+          
+          showNotification('Added to Wishlist!', 'success');
+          
+          // Change icon to filled
+          wishlistBtn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="var(--color-accent-primary, #ff9900)" stroke="var(--color-accent-primary, #ff9900)" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>`;
+          
+          setTimeout(() => {
+              wishlistBtn.disabled = false;
+          }, 1000);
+        } catch (error) {
+          console.error("Error adding to wishlist", error);
+          showNotification('Failed to add to Wishlist', 'error');
+          wishlistBtn.innerHTML = originalHtml;
+          wishlistBtn.disabled = false;
+        }
+      });
+    }
   });
 }
 
@@ -880,7 +950,7 @@ async function loadShopProducts(containerId = 'shopProductsGrid', maxItems = 0) 
                 </div>
 
                 <div style="margin-bottom: 8px; display:flex; flex-direction:column; gap:2px;">
-                    ${priceNum >= 499 ? '<span class="prime-badge"><span class="prime-badge-text">prime</span></span>' : ''}
+                    ${priceNum >= 499 ? '<span class="zonix-premium-badge" style="background: linear-gradient(90deg, #d4af37, #f3e5ab); color: #1a1a2e; padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; max-width: max-content; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">ZONIX Premium</span>' : ''}
                     ${deliveryHTML}
                 </div>
 
@@ -930,6 +1000,17 @@ function updateCartBadge() {
       mobileBadge.style.transform = 'scale(1.4)';
       setTimeout(() => mobileBadge.style.transform = 'scale(1)', 300);
   }
+}
+
+function updateWishlistBadge() {
+  const badge = document.getElementById('wishlistBadge');
+  if (!badge) return;
+  const totalItems = appState.wishlist ? appState.wishlist.length : 0;
+  badge.textContent = totalItems;
+  badge.style.display = totalItems > 0 ? 'flex' : 'none';
+  badge.style.transform = 'scale(1.4)';
+  badge.style.transition = 'transform 0.3s ease';
+  setTimeout(() => badge.style.transform = 'scale(1)', 300);
 }
 
 function playFlyToCartAnimation(cardElement) {

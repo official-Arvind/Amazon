@@ -10,7 +10,9 @@ let appState = {
 let checkoutData = {
     address: null,
     shipping: 'standard',
-    payment: 'card'
+    payment: 'card',
+    useWallet: false,
+    walletApplied: 0
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -137,6 +139,14 @@ function setupAccordion() {
     // Final Review Placed Order
     document.getElementById('finalPlaceOrderBtn').addEventListener('click', placeFinalOrder);
     document.getElementById('summaryPlaceOrderBtn').addEventListener('click', placeFinalOrder);
+
+    const useWalletBalance = document.getElementById('useWalletBalance');
+    if (useWalletBalance) {
+        useWalletBalance.addEventListener('change', (e) => {
+            checkoutData.useWallet = e.target.checked;
+            updateCheckoutSummary();
+        });
+    }
 }
 
 function activateStep(stepEl) {
@@ -195,11 +205,49 @@ function updateCheckoutSummary() {
     if(shippingMethod === 'express') shippingCost = 299;
     
     const tax = Math.round(subtotal * 0.18);
-    const total = subtotal + shippingCost + tax;
+    let total = subtotal + shippingCost + tax;
+
+    let walletApplied = 0;
+    if (checkoutData.useWallet) {
+        const walletBalance = 500;
+        walletApplied = Math.min(walletBalance, total);
+        total -= walletApplied;
+        const appliedText = document.getElementById('walletAppliedText');
+        if (appliedText) {
+            appliedText.textContent = `- ₹${walletApplied.toLocaleString()}`;
+            appliedText.style.display = walletApplied > 0 ? 'block' : 'none';
+        }
+    } else {
+        const appliedText = document.getElementById('walletAppliedText');
+        if (appliedText) appliedText.style.display = 'none';
+    }
+
+    checkoutData.walletApplied = walletApplied;
 
     document.getElementById('checkoutSubtotal').textContent = `₹${subtotal.toLocaleString()}`;
     document.getElementById('checkoutShipping').textContent = shippingCost === 0 ? 'Free' : `₹${shippingCost}`;
     document.getElementById('checkoutTax').textContent = `₹${tax.toLocaleString()}`;
+    
+    let walletRow = document.getElementById('checkoutWalletRow');
+    if (walletApplied > 0) {
+        if (!walletRow) {
+            const taxRow = document.getElementById('checkoutTax').parentNode;
+            walletRow = document.createElement('div');
+            walletRow.id = 'checkoutWalletRow';
+            walletRow.style.display = 'flex';
+            walletRow.style.justifyContent = 'space-between';
+            walletRow.style.marginBottom = '0.5rem';
+            walletRow.style.color = '#007185';
+            walletRow.style.fontSize = '0.9rem';
+            walletRow.innerHTML = `<span>ZONIX Pay Balance:</span> <span id="checkoutWalletApplied">-₹0</span>`;
+            taxRow.parentNode.insertBefore(walletRow, taxRow.nextSibling);
+        }
+        document.getElementById('checkoutWalletApplied').textContent = `-₹${walletApplied.toLocaleString()}`;
+        walletRow.style.display = 'flex';
+    } else if (walletRow) {
+        walletRow.style.display = 'none';
+    }
+
     document.getElementById('checkoutTotal').textContent = `₹${total.toLocaleString()}`;
     
     const totalItems = appState.cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -221,7 +269,7 @@ function renderReviewItems() {
             </div>
             <div style="flex: 1;">
                 <strong style="display: block; margin-bottom: 5px;">Payment Method:</strong>
-                ${payText}<br><br>
+                ${payText}${checkoutData.useWallet && checkoutData.walletApplied > 0 ? `<br><span style="color: #007185; font-weight: bold;">ZONIX Pay (-₹${checkoutData.walletApplied})</span>` : ''}<br><br>
                 <strong style="display: block; margin-bottom: 5px;">Delivery Option:</strong>
                 ${shipText}
             </div>
@@ -252,13 +300,21 @@ async function placeFinalOrder() {
     const subtotal = appState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     let shippingCost = checkoutData.shipping === 'express' ? 299 : 0;
     const tax = Math.round(subtotal * 0.18);
-    const total = subtotal + shippingCost + tax;
+    let total = subtotal + shippingCost + tax;
+
+    let walletApplied = 0;
+    if (checkoutData.useWallet) {
+        walletApplied = Math.min(500, total);
+        total -= walletApplied;
+    }
 
     const orderData = {
         items: appState.cart,
         shippingAddress: checkoutData.address,
         shippingMethod: checkoutData.shipping,
         paymentMethod: checkoutData.payment,
+        useWallet: checkoutData.useWallet,
+        walletApplied: walletApplied,
         subtotal,
         shippingCost,
         tax,
